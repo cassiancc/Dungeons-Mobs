@@ -44,14 +44,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -59,9 +59,9 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class DrownedNecromancerEntity extends Drowned implements IAnimatable, SpawnArmoredMob {
+public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, SpawnArmoredMob {
 
     public int landShootAnimationTick;
     public int landShootAnimationLength = 20;
@@ -86,7 +86,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
     public int shootAnimationActionPoint = 23;
     public int tridentStormAnimationTick;
     public int tridentStormAnimationLength = 45;
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public DrownedNecromancerEntity(EntityType<? extends DrownedNecromancerEntity> type, Level worldIn) {
         super(type, worldIn);
@@ -109,7 +109,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         this.goalSelector.addGoal(5, new ApproachTargetGoal(this, 7.5, 1.1D, true));
         this.goalSelector.addGoal(6, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(7, new DrownedNecromancerEntity.GoToBeachGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new DrownedNecromancerEntity.SwimUpGoal(this, 1.0D, this.level.getSeaLevel()));
+        this.goalSelector.addGoal(8, new DrownedNecromancerEntity.SwimUpGoal(this, 1.0D, this.level().getSeaLevel()));
         this.goalSelector.addGoal(9, new RandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
@@ -242,49 +242,55 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.tridentStormAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_trident_storm", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_trident_storm", LOOP));
         } else if (this.rainTridentStormAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_trident_storm_land", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_trident_storm_land", LOOP));
         } else if (this.summonAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_summon", LOOP));
         } else if (this.landSummonAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("necromancer_summon", LOOP));
         } else if (this.shootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_shoot", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_shoot", LOOP));
         } else if (this.rainShootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_shoot_land", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_shoot_land", LOOP));
         } else if (this.landShootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_shoot", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("necromancer_shoot", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
             if (this.isInWater()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_swim", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_swim", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_walk", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("necromancer_walk", LOOP));
             }
         } else {
             if (this.isInWater()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("drowned_necromancer_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("drowned_necromancer_idle", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("necromancer_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
 
     private boolean isInRain() {
         BlockPos blockpos = this.blockPosition();
-        return this.level.isRainingAt(blockpos) || this.level.isRainingAt(new BlockPos(blockpos.getX(), this.getBoundingBox().maxY, blockpos.getZ()));
+        return this.level().isRainingAt(blockpos) || this.level().isRainingAt(new BlockPos(blockpos.getX(), (int) this.getBoundingBox().maxY, blockpos.getZ()));
     }
 
     @Override
@@ -305,7 +311,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         }
 
         public boolean canUse() {
-            return !this.drowned.level.isDay() && this.drowned.isInWater() && this.drowned.getY() < (double) (this.seaLevel - 2);
+            return !this.drowned.level().isDay() && this.drowned.isInWater() && this.drowned.getY() < (double) (this.seaLevel - 2);
         }
 
         public boolean canContinueToUse() {
@@ -346,7 +352,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         public GoToWaterGoal(PathfinderMob p_i48910_1_, double p_i48910_2_) {
             this.mob = p_i48910_1_;
             this.speedModifier = p_i48910_2_;
-            this.level = p_i48910_1_.level;
+            this.level = p_i48910_1_.level();
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
@@ -401,7 +407,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         }
 
         public boolean canUse() {
-            return super.canUse() && !this.drowned.level.isDay() && this.drowned.level.isRaining() && this.drowned.isInWater() && this.drowned.getY() >= (double) (this.drowned.level.getSeaLevel() - 7);
+            return super.canUse() && !this.drowned.level().isDay() && this.drowned.level().isRaining() && this.drowned.isInWater() && this.drowned.getY() >= (double) (this.drowned.level().getSeaLevel() - 7);
         }
 
         public boolean canContinueToUse() {
@@ -467,7 +473,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         public void start() {
             mob.playSound(ModSoundEvents.NECROMANCER_PREPARE_SUMMON.get(), 1.0F, 1.0F);
             mob.landSummonAnimationTick = mob.landSummonAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 9);
+            mob.level().broadcastEntityEvent(mob, (byte) 9);
         }
 
         @Override
@@ -482,7 +488,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                             mob.landSummonAnimationTick == mob.landSummonAnimationActionPoint3 ||
                             (mob.landSummonAnimationTick == mob.landSummonAnimationActionPoint4 && mob.random.nextBoolean()) ||
                             (mob.landSummonAnimationTick == mob.landSummonAnimationActionPoint5 && mob.random.nextBoolean()))) {
-                SummonSpotEntity mobSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
+                SummonSpotEntity mobSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
                 mobSummonSpot.mobSpawnRotation = mob.random.nextInt(360);
                 mobSummonSpot.setSummonType(2);
                 BlockPos summonPos = mob.blockPosition().offset(-mobSummonRange + mob.random.nextInt((mobSummonRange * 2) + 1), 0, -mobSummonRange + mob.random.nextInt((mobSummonRange * 2) + 1));
@@ -497,7 +503,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                 if (mobSummonSpot.isInWall() || !canSee(mobSummonSpot, target)) {
                     summonPos = mob.blockPosition();
                 }
-                ((ServerLevel) mob.level).addFreshEntityWithPassengers(mobSummonSpot);
+                ((ServerLevel) mob.level()).addFreshEntityWithPassengers(mobSummonSpot);
                 PositionUtils.moveToCorrectHeight(mobSummonSpot);
 
                 EntityType<?> entityType = getEntityType();
@@ -516,10 +522,10 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                 }
 
                 summonedMob.setTarget(target);
-                summonedMob.finalizeSpawn(((ServerLevel) mob.level), mob.level.getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
                 mobSummonSpot.playSound(ModSoundEvents.NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                 if (mob.getTeam() != null) {
-                    Scoreboard scoreboard = mob.level.getScoreboard();
+                    Scoreboard scoreboard = mob.level().getScoreboard();
                     scoreboard.addPlayerToTeam(summonedMob.getScoreboardName(), scoreboard.getPlayerTeam(mob.getTeam().getName()));
                 }
                 mobSummonSpot.summonedEntity = summonedMob;
@@ -554,9 +560,9 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         public boolean canSee(Entity entitySeeing, Entity p_70685_1_) {
             Vec3 vector3d = new Vec3(entitySeeing.getX(), entitySeeing.getEyeY(), entitySeeing.getZ());
             Vec3 vector3d1 = new Vec3(p_70685_1_.getX(), p_70685_1_.getEyeY(), p_70685_1_.getZ());
-            if (p_70685_1_.level != entitySeeing.level || vector3d1.distanceToSqr(vector3d) > 128.0D * 128.0D)
+            if (p_70685_1_.level() != entitySeeing.level() || vector3d1.distanceToSqr(vector3d) > 128.0D * 128.0D)
                 return false; //Forge Backport MC-209819
-            return entitySeeing.level.clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entitySeeing)).getType() == HitResult.Type.MISS;
+            return entitySeeing.level().clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entitySeeing)).getType() == HitResult.Type.MISS;
         }
 
     }
@@ -595,7 +601,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         @Override
         public void start() {
             mob.landShootAnimationTick = mob.landShootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 11);
+            mob.level().broadcastEntityEvent(mob, (byte) 11);
         }
 
         @Override
@@ -609,11 +615,11 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                 double d1 = target.getX() - pos.x;
                 double d2 = target.getY(0.6D) - pos.y;
                 double d3 = target.getZ() - pos.z;
-                NecromancerOrbEntity necromancerOrb = new NecromancerOrbEntity(mob.level, mob, d1, d2, d3);
+                NecromancerOrbEntity necromancerOrb = new NecromancerOrbEntity(mob.level(), mob, d1, d2, d3);
                 necromancerOrb.setDelayedForm(true);
                 necromancerOrb.rotateToMatchMovement();
                 necromancerOrb.moveTo(pos.x, pos.y, pos.z);
-                mob.level.addFreshEntity(necromancerOrb);
+                mob.level().addFreshEntity(necromancerOrb);
                 mob.playSound(ModSoundEvents.NECROMANCER_SHOOT.get(), 1.0F, 1.0F);
             }
         }
@@ -665,7 +671,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         @Override
         public void start() {
             mob.rainTridentStormAnimationTick = mob.rainTridentStormAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override
@@ -679,11 +685,11 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
             }
 
             if (target != null && mob.rainTridentStormAnimationTick <= 30 && mob.rainTridentStormAnimationTick >= 10 && mob.random.nextBoolean()) {
-                TridentStormEntity tridentStorm = ModEntityTypes.TRIDENT_STORM.get().create(mob.level);
+                TridentStormEntity tridentStorm = ModEntityTypes.TRIDENT_STORM.get().create(mob.level());
                 tridentStorm.owner = mob;
-                tridentStorm.moveTo(new BlockPos(mob.getX() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2), mob.getY(), mob.getZ() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2)), 0, 0);
+                tridentStorm.moveTo(new BlockPos((int) (mob.getX() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2)), (int) mob.getY(), (int) (mob.getZ() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2))), 0, 0);
                 tridentStorm.setYRot(mob.random.nextInt(360));
-                mob.level.addFreshEntity(tridentStorm);
+                mob.level().addFreshEntity(tridentStorm);
                 PositionUtils.moveToCorrectHeight(tridentStorm);
             }
         }
@@ -733,7 +739,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         @Override
         public void start() {
             mob.rainShootAnimationTick = mob.rainShootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 8);
+            mob.level().broadcastEntityEvent(mob, (byte) 8);
         }
 
         @Override
@@ -751,10 +757,10 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                 double d1 = target.getX() - pos.x;
                 double d2 = target.getY(0.6D) - pos.y;
                 double d3 = target.getZ() - pos.z;
-                DrownedNecromancerOrbEntity necromancerOrb = new DrownedNecromancerOrbEntity(mob.level, mob, d1 + (mob.random.nextGaussian() * 1.0), d2 + (mob.random.nextGaussian() * 0.25), d3 + (mob.random.nextGaussian() * 1.0));
+                DrownedNecromancerOrbEntity necromancerOrb = new DrownedNecromancerOrbEntity(mob.level(), mob, d1 + (mob.random.nextGaussian() * 1.0), d2 + (mob.random.nextGaussian() * 0.25), d3 + (mob.random.nextGaussian() * 1.0));
                 necromancerOrb.rotateToMatchMovement();
                 necromancerOrb.moveTo(pos.x, pos.y, pos.z);
-                mob.level.addFreshEntity(necromancerOrb);
+                mob.level().addFreshEntity(necromancerOrb);
             }
         }
 
@@ -807,7 +813,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         public void start() {
             mob.playSound(ModSoundEvents.DROWNED_NECROMANCER_STRONG_ATTACK.get(), 1.0F, 1.0F);
             mob.summonAnimationTick = mob.summonAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 7);
+            mob.level().broadcastEntityEvent(mob, (byte) 7);
         }
 
         @Override
@@ -819,7 +825,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
             if (target != null &&
                     mob.summonAnimationTick == mob.summonAnimationActionPoint) {
                 for (int i = 0; i < 6; i++) {
-                    SummonSpotEntity mobSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
+                    SummonSpotEntity mobSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
                     mobSummonSpot.mobSpawnRotation = mob.random.nextInt(360);
                     mobSummonSpot.setSummonType(2);
                     BlockPos summonPos = mob.blockPosition().offset(-mobSummonRange + mob.random.nextInt((mobSummonRange * 2) + 1), 0, -mobSummonRange + mob.random.nextInt((mobSummonRange * 2) + 1));
@@ -834,7 +840,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                     if (mobSummonSpot.isInWall() || !canSee(mobSummonSpot, target)) {
                         summonPos = mob.blockPosition();
                     }
-                    ((ServerLevel) mob.level).addFreshEntityWithPassengers(mobSummonSpot);
+                    ((ServerLevel) mob.level()).addFreshEntityWithPassengers(mobSummonSpot);
 
                     EntityType<?> entityType = getEntityType();
 
@@ -852,10 +858,10 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                     }
 
                     summonedMob.setTarget(target);
-                    summonedMob.finalizeSpawn(((ServerLevel) mob.level), mob.level.getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                    summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
                     mobSummonSpot.playSound(ModSoundEvents.DROWNED_NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                     if (mob.getTeam() != null) {
-                        Scoreboard scoreboard = mob.level.getScoreboard();
+                        Scoreboard scoreboard = mob.level().getScoreboard();
                         scoreboard.addPlayerToTeam(summonedMob.getScoreboardName(), scoreboard.getPlayerTeam(mob.getTeam().getName()));
                     }
                     mobSummonSpot.summonedEntity = summonedMob;
@@ -891,9 +897,9 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         public boolean canSee(Entity entitySeeing, Entity p_70685_1_) {
             Vec3 vector3d = new Vec3(entitySeeing.getX(), entitySeeing.getEyeY(), entitySeeing.getZ());
             Vec3 vector3d1 = new Vec3(p_70685_1_.getX(), p_70685_1_.getEyeY(), p_70685_1_.getZ());
-            if (p_70685_1_.level != entitySeeing.level || vector3d1.distanceToSqr(vector3d) > 128.0D * 128.0D)
+            if (p_70685_1_.level() != entitySeeing.level() || vector3d1.distanceToSqr(vector3d) > 128.0D * 128.0D)
                 return false; //Forge Backport MC-209819
-            return entitySeeing.level.clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entitySeeing)).getType() == HitResult.Type.MISS;
+            return entitySeeing.level().clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entitySeeing)).getType() == HitResult.Type.MISS;
         }
 
     }
@@ -934,7 +940,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         @Override
         public void start() {
             mob.shootAnimationTick = mob.shootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 6);
+            mob.level().broadcastEntityEvent(mob, (byte) 6);
             mob.playSound(ModSoundEvents.DROWNED_NECROMANCER_STEAM_MISSILE.get(), 1.5F, 1.0F);
         }
 
@@ -954,10 +960,10 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
                 double d1 = target.getX() - pos.x;
                 double d2 = target.getY(0.6D) - pos.y;
                 double d3 = target.getZ() - pos.z;
-                DrownedNecromancerOrbEntity necromancerOrb = new DrownedNecromancerOrbEntity(mob.level, mob, d1 + (mob.random.nextGaussian() * 1.25), d2 + (mob.random.nextGaussian() * 0.5), d3 + (mob.random.nextGaussian() * 1.25));
+                DrownedNecromancerOrbEntity necromancerOrb = new DrownedNecromancerOrbEntity(mob.level(), mob, d1 + (mob.random.nextGaussian() * 1.25), d2 + (mob.random.nextGaussian() * 0.5), d3 + (mob.random.nextGaussian() * 1.25));
                 necromancerOrb.rotateToMatchMovement();
                 necromancerOrb.moveTo(pos.x, pos.y, pos.z);
-                mob.level.addFreshEntity(necromancerOrb);
+                mob.level().addFreshEntity(necromancerOrb);
             }
         }
 
@@ -1013,7 +1019,7 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
         @Override
         public void start() {
             mob.tridentStormAnimationTick = mob.tridentStormAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 5);
+            mob.level().broadcastEntityEvent(mob, (byte) 5);
         }
 
         @Override
@@ -1027,11 +1033,11 @@ public class DrownedNecromancerEntity extends Drowned implements IAnimatable, Sp
             }
 
             if (target != null && mob.tridentStormAnimationTick <= 30 && mob.tridentStormAnimationTick >= 10) {
-                TridentStormEntity tridentStorm = ModEntityTypes.TRIDENT_STORM.get().create(mob.level);
+                TridentStormEntity tridentStorm = ModEntityTypes.TRIDENT_STORM.get().create(mob.level());
                 tridentStorm.owner = mob;
-                tridentStorm.moveTo(new BlockPos(mob.getX() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2), mob.getY(), mob.getZ() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2)), 0, 0);
+                tridentStorm.moveTo(new BlockPos.MutableBlockPos(mob.getX() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2), mob.getY(), mob.getZ() - tridentSummonRange + mob.random.nextInt(tridentSummonRange * 2)), 0, 0);
                 tridentStorm.setYRot(mob.random.nextInt(360));
-                mob.level.addFreshEntity(tridentStorm);
+                mob.level().addFreshEntity(tridentStorm);
                 PositionUtils.moveToCorrectHeight(tridentStorm);
             }
         }

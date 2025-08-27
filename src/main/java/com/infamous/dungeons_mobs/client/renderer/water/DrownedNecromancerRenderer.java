@@ -6,7 +6,7 @@ import com.infamous.dungeons_mobs.client.renderer.layers.PulsatingGlowLayer;
 import com.infamous.dungeons_mobs.entities.water.DrownedNecromancerEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,12 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.example.client.DefaultBipedBoneIdents;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.item.GeoArmorItem;
-import software.bernie.geckolib3.renderers.geo.ExtendedGeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import javax.annotation.Nullable;
 
@@ -96,19 +91,19 @@ public class DrownedNecromancerRenderer extends ExtendedGeoEntityRenderer<Drowne
     }
 
     @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, DrownedNecromancerEntity currentEntity, IBone bone) {
+    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, DrownedNecromancerEntity currentEntity, GeoBone bone) {
         if (item == this.mainHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem)
                 stack.translate(0, 0.125, -0.25);
         }
         else if (item == this.offHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem) {
                 stack.translate(0, 0.125, 0.25);
-                stack.mulPose(Vector3f.YP.rotationDegrees(180));
+                stack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
     }

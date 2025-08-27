@@ -32,24 +32,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
 
-public class GeomancerEntity extends SpellcasterIllager implements IAnimatable, SpawnArmoredMob {
+public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable, SpawnArmoredMob {
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public int summonBombsAttackAnimationTick;
     public int summonBombsAttackAnimationLength = 35;
@@ -128,26 +124,26 @@ public class GeomancerEntity extends SpellcasterIllager implements IAnimatable, 
         data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.summonBombsAttackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("geomancer_attack", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("geomancer_attack", EDefaultLoopTypes.LOOP));
         } else if (this.summonWallsAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("geomancer_summon", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("geomancer_summon", EDefaultLoopTypes.LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("geomancer_walk", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("geomancer_walk", EDefaultLoopTypes.LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("geomancer_celebrate", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("geomancer_celebrate", EDefaultLoopTypes.LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("geomancer_idle", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("geomancer_idle", EDefaultLoopTypes.LOOP));
             }
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getInstanceCache() {
+        return cache;
     }
 
     @Override

@@ -4,39 +4,38 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.ender.BlastlingEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-public class BlastlingModel extends AnimatedGeoModel {
+public class BlastlingModel extends GeoModel<BlastlingEntity> {
 
     @Override
-    public ResourceLocation getAnimationResource(Object entity) {
+    public ResourceLocation getAnimationResource(BlastlingEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/blastling.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Object entity) {
+    public ResourceLocation getModelResource(BlastlingEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/blastling.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Object entity) {
+    public ResourceLocation getTextureResource(BlastlingEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entity).flameTicks) % 3) + ".png");
     }
 
     @Override
-    public void setCustomAnimations(IAnimatable entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(BlastlingEntity entity, long uniqueID, AnimationState<BlastlingEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head");
+        var head = this.getAnimationProcessor().getBone("head");
 
         LivingEntity entityIn = (LivingEntity) entity;
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if (extraData.headPitch != 0 || extraData.netHeadYaw != 0) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * ((float) Math.PI / 180F)));
-            head.setRotationY(head.getRotationY() + (extraData.netHeadYaw * ((float) Math.PI / 180F)));
+        EntityModelData extraData = customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
+        if (extraData.headPitch() != 0 || extraData.netHeadYaw() != 0) {
+            head.setRotX(head.getRotX() + (extraData.headPitch() * ((float) Math.PI / 180F)));
+            head.setRotY(head.getRotY() + (extraData.netHeadYaw() * ((float) Math.PI / 180F)));
         }
     }
 }

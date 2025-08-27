@@ -10,11 +10,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.core.util.Color;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class OrbProjectileRenderer extends GeoProjectilesRenderer<NecromancerOrbEntity> {
+public class OrbProjectileRenderer extends GeoEntityRenderer<NecromancerOrbEntity> {
 
     private Color color;
 
@@ -24,7 +23,7 @@ public class OrbProjectileRenderer extends GeoProjectilesRenderer<NecromancerOrb
 
     public OrbProjectileRenderer(EntityRendererProvider.Context renderManager, int color, boolean renderTrail) {
         super(renderManager, new OrbProjectileModel(renderTrail));
-        this.color = Color.ofTransparent(color);
+        this.color = new Color(color);
     }
 
     @Override

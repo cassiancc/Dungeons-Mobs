@@ -7,7 +7,6 @@ import com.infamous.dungeons_mobs.goals.GoToWaterGoal;
 import com.infamous.dungeons_mobs.goals.SwimUpGoal;
 import com.infamous.dungeons_mobs.interfaces.IAquaticMob;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
-import com.mojang.math.Vector3f;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -40,6 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAttackMob, IAquaticMob {
     private final RangedBowAttackGoal<SunkenSkeletonEntity> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
@@ -67,7 +67,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
     public SunkenSkeletonEntity(EntityType<? extends SunkenSkeletonEntity> entityType, Level world) {
         super(entityType, world);
         this.isConstructed = true;
-        this.maxUpStep = 1.0F;
+        this.setMaxUpStep(1.0F);
         this.moveControl = new AquaticMoveHelperController<>(this);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         this.waterNavigation = new WaterBoundPathNavigation(this, world);
@@ -133,7 +133,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new GoToWaterGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new GoToBeachGoal<>(this, 1.0D));
-        this.goalSelector.addGoal(6, new SwimUpGoal<>(this, 1.2D, this.level.getSeaLevel()));
+        this.goalSelector.addGoal(6, new SwimUpGoal<>(this, 1.2D, this.level().getSeaLevel()));
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -147,7 +147,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
 
     @Override
     public void reassessWeaponGoal() {
-        if (this.isConstructed && this.level != null && !this.level.isClientSide) {
+        if (this.isConstructed && this.level() != null && !this.level().isClientSide) {
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
             this.goalSelector.removeGoal(this.crossbowGoal);
@@ -155,7 +155,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
             ItemStack crossbowStack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
             if (bowStack.getItem() instanceof BowItem) {
                 int i = 20;
-                if (this.level.getDifficulty() != Difficulty.HARD) {
+                if (this.level().getDifficulty() != Difficulty.HARD) {
                     i = 40;
                 }
 
@@ -235,7 +235,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
         double d2 = Mth.sqrt((float) (d0 * d0 + d1 * d1));
         double d3 = p_234279_2_.getY(0.3333333333333333D) - p_234279_3_.getY() + d2 * (double) 0.2F;
         Vector3f vector3f = this.getProjectileShotVector(p_234279_1_, new Vec3(d0, d3, d1), p_234279_4_);
-        p_234279_3_.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_234279_5_, (float) (14 - p_234279_1_.level.getDifficulty().getId() * 4));
+        p_234279_3_.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_234279_5_, (float) (14 - p_234279_1_.level().getDifficulty().getId() * 4));
         p_234279_1_.playSound(this.isInWater() ? ModSoundEvents.SUNKEN_SKELETON_SHOOT.get() : SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (p_234279_1_.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 

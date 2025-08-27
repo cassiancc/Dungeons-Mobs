@@ -2,7 +2,7 @@ package com.infamous.dungeons_mobs.client.renderer.illager;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +17,10 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.example.client.DefaultBipedBoneIdents;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.item.GeoArmorItem;
@@ -30,14 +33,14 @@ import java.util.List;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
-public class DefaultIllagerRenderer<T extends Mob & IAnimatable> extends ExtendedGeoEntityRenderer<T> {
+public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends DynamicGeoEntityRenderer<T> {
     private float scaleFactor = 0.9375F;
 
-    public DefaultIllagerRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> modelProvider) {
+    public DefaultIllagerRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
-    public DefaultIllagerRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> modelProvider, float scaleFactor) {
+    public DefaultIllagerRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider, float scaleFactor) {
         super(renderManager, modelProvider);
         this.scaleFactor = scaleFactor;
     }
@@ -59,11 +62,11 @@ public class DefaultIllagerRenderer<T extends Mob & IAnimatable> extends Extende
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (this.isArmorBone(bone)) {
             bone.setCubesHidden(true);
         }
-        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
@@ -111,11 +114,11 @@ public class DefaultIllagerRenderer<T extends Mob & IAnimatable> extends Extende
                 stack.translate(0, 0.125, -0.25);
         }
         else if (item == this.offHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem) {
                 stack.translate(0, 0.125, 0.25);
-                stack.mulPose(Vector3f.YP.rotationDegrees(180));
+                stack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
     }

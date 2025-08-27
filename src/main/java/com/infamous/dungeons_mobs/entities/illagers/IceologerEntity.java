@@ -108,14 +108,14 @@ public class IceologerEntity extends AbstractIllager implements IAnimatable, Spa
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         if (this.summonAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("iceologer_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("iceologer_summon", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("iceologer_walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("iceologer_walk", LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("iceologer_celebrate", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("iceologer_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("iceologer_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("iceologer_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;

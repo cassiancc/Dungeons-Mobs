@@ -205,16 +205,16 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         if (this.appearAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_appear", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_appear", EDefaultLoopTypes.LOOP));
         } else if (this.shootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_shoot", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_shoot", EDefaultLoopTypes.LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_walk", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_walk", EDefaultLoopTypes.LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_celebrate", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("mage_celebrate", EDefaultLoopTypes.LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_idle", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("mage_idle", EDefaultLoopTypes.LOOP));
             }
         }
         return PlayState.CONTINUE;

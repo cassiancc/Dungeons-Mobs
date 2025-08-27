@@ -11,10 +11,7 @@ import com.infamous.dungeons_mobs.items.shield.VanguardShieldItem;
 import com.infamous.dungeons_mobs.utils.GeneralHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -24,6 +21,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
+import static net.minecraft.world.item.ArmorItem.Type.*;
 
 
 public class ModItems {
@@ -32,49 +30,49 @@ public class ModItems {
 
     public static final Map<ResourceLocation, RegistryObject<Item>> ARTIFACTS = new HashMap<>();
 
-    public static final Item.Properties ARMOR_PROPERTIES = new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS);
+    public static final Item.Properties ARMOR_PROPERTIES = new Item.Properties();
     public static final Map<ResourceLocation, RegistryObject<Item>> ARMORS = new HashMap<>();
 
     // SHIELD
     public static final RegistryObject<Item> ROYAL_GUARD_SHIELD = ITEMS.register("royal_guard_shield",
-            () -> new RoyalGuardShieldItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS).durability(336)));
+            () -> new RoyalGuardShieldItem(new Item.Properties().durability(336)));
 
     public static final RegistryObject<Item> VANGUARD_SHIELD = ITEMS.register("vanguard_shield",
-            () -> new VanguardShieldItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS).durability(336)));
+            () -> new VanguardShieldItem(new Item.Properties().durability(336)));
 
     // HELMETS
     public static final RegistryObject<Item> GOLD_PILLAGER_HELMET = registerArmor("gold_pillager_helmet",
-            () -> new ArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, null,
+            () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     new ResourceLocation(MODID, "geo/armor/pillager_helmet.geo.json"),
                     new ResourceLocation(MODID, "textures/models/armor/gold_pillager_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> DIAMOND_PILLAGER_HELMET = ITEMS.register("diamond_pillager_helmet",
-            () -> new ArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, null,
+            () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     new ResourceLocation(MODID, "geo/armor/pillager_helmet.geo.json"),
                     new ResourceLocation(MODID, "textures/models/armor/diamond_pillager_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> GOLD_VINDICATOR_HELMET = ITEMS.register("gold_vindicator_helmet",
-            () -> new ArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, null,
+            () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     new ResourceLocation(MODID, "geo/armor/vindicator_helmet.geo.json"),
                     new ResourceLocation(MODID, "textures/models/armor/gold_vindicator_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> DIAMOND_VINDICATOR_HELMET = ITEMS.register("diamond_vindicator_helmet",
-            () -> new ArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, null,
+            () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     new ResourceLocation(MODID, "geo/armor/vindicator_helmet.geo.json"),
                     new ResourceLocation(MODID, "textures/models/armor/diamond_vindicator_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> NETHERITE_PIGLIN_HELMET = ITEMS.register("netherite_piglin_helmet",
-            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, EquipmentSlot.HEAD, new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, EquipmentSlot.HEAD, new Item.Properties()));
     public static final RegistryObject<Item> CRACKED_NETHERITE_PIGLIN_HELMET = ITEMS.register("cracked_netherite_piglin_helmet",
-            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, EquipmentSlot.HEAD, new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, EquipmentSlot.HEAD, new Item.Properties()));
     public static final RegistryObject<Item> GOLD_PIGLIN_HELMET = ITEMS.register("gold_piglin_helmet",
-            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, EquipmentSlot.HEAD, new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, EquipmentSlot.HEAD, new Item.Properties()));
     public static final RegistryObject<Item> CRACKED_GOLD_PIGLIN_HELMET = ITEMS.register("cracked_gold_piglin_helmet",
-            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, EquipmentSlot.HEAD, new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, EquipmentSlot.HEAD, new Item.Properties()));
 
     public static final ArmorSet CHEF_ARMOR = registerArmorSet("chef_armor", "chef_helmet", "chef_chestplate", null, null);
     public static final ArmorSet DROWNED_NECROMANCER_ARMOR = registerArmorSetDrownedNecromancer("drowned_necromancer_armor", "drowned_necromancer_helmet", "drowned_necromancer_chestplate", "drowned_necromancer_leggings", null);
@@ -95,40 +93,40 @@ public class ModItems {
 
     // SPATULA
     public static final RegistryObject<Item> WOODEN_LADLE = ITEMS.register("wooden_ladle",
-            () -> new WoodenLadleItem(Tiers.WOOD, 0.5F, (2.0F - 4.0F), new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new WoodenLadleItem(Tiers.WOOD, 0.5F, (2.0F - 4.0F), new Item.Properties()));
 
     // MOUNTAINEER AXES
     public static final RegistryObject<Item> MOUNTAINEER_AXE = ITEMS.register("mountaineer_axe",
-            () -> new MountaineerAxeItem(Tiers.IRON, 1, (1.2F - 4.0F), new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new MountaineerAxeItem(Tiers.IRON, 1, (1.2F - 4.0F), new Item.Properties()));
 
     public static final RegistryObject<Item> GOLD_MOUNTAINEER_AXE = ITEMS.register("gold_mountaineer_axe",
-            () -> new MountaineerAxeItem(Tiers.IRON, 1, (1.2F - 4.0F), new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new MountaineerAxeItem(Tiers.IRON, 1, (1.2F - 4.0F), new Item.Properties()));
 
     public static final RegistryObject<Item> DIAMOND_MOUNTAINEER_AXE = ITEMS.register("diamond_mountaineer_axe",
-            () -> new MountaineerAxeItem(Tiers.DIAMOND, 1, (1.2F - 4.0F), new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new MountaineerAxeItem(Tiers.DIAMOND, 1, (1.2F - 4.0F), new Item.Properties()));
 
     // ARTIFACTS
     public static final RegistryObject<Item> WINDCALLER_STAFF = registerArtifact("windcaller_staff",
-            () -> new WindcallerStaffItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new WindcallerStaffItem(new Item.Properties()));
 
     public static final RegistryObject<Item> GEOMANCER_STAFF = registerArtifact("geomancer_staff",
-            () -> new GeomancerStaffItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new GeomancerStaffItem(new Item.Properties()));
 
     public static final RegistryObject<Item> NECROMANCER_STAFF = registerArtifact("necromancer_staff",
-            () -> new NecromancerStaffItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new NecromancerStaffItem(new Item.Properties()));
 
     public static final RegistryObject<Item> NECROMANCER_TRIDENT = registerArtifact("necromancer_trident",
-            () -> new NecromancerTridentItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)));
+            () -> new NecromancerTridentItem(new Item.Properties()));
 
     public static final RegistryObject<Item> BLUE_NETHERSHROOM = ITEMS.register("blue_nethershroom",
-            () -> new BlueNethershroomItem(new Item.Properties().tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS).stacksTo(16)));
+            () -> new BlueNethershroomItem(new Item.Properties().stacksTo(16)));
 
     //TRIDENTS
     public static final RegistryObject<Item> YELLOW_TRIDENT = ITEMS.register("yellow_trident",
-            () -> new ColoredTridentItem((new Item.Properties().durability(250).tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)), DyeColor.YELLOW));
+            () -> new ColoredTridentItem((new Item.Properties().durability(250)), DyeColor.YELLOW));
 
     public static final RegistryObject<Item> PURPLE_TRIDENT = ITEMS.register("purple_trident",
-            () -> new ColoredTridentItem((new Item.Properties().durability(250).tab(DungeonsMobs.DUNGEONS_MOBS_ITEMS)), DyeColor.PURPLE));
+            () -> new ColoredTridentItem((new Item.Properties().durability(250)), DyeColor.PURPLE));
 
 
     private static ArmorSet registerArmorSet(String armorSetId, String helmetId, String chestId, String legsId, String bootsId, boolean animated) {
@@ -138,10 +136,10 @@ public class ModItems {
         ResourceLocation animationFileLocation = animated ? new ResourceLocation(MODID, "animations/armor/" + armorSetId + ".animation.json") : DEFAULT_ANIMATION_RESOURCE;
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new ArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new ArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new ArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(bootsId, () -> new ArmorGear(EquipmentSlot.FEET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
+                registerArmor(helmetId, () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new ArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new ArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(bootsId, () -> new ArmorGear(BOOTS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
         );
     }
 
@@ -151,10 +149,10 @@ public class ModItems {
         ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new ArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new ArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new ArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(bootsId, () -> new ArmorGear(EquipmentSlot.FEET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
+                registerArmor(helmetId, () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new ArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new ArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(bootsId, () -> new ArmorGear(BOOTS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
         );
     }
 
@@ -169,10 +167,10 @@ public class ModItems {
         ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new MageArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new MageArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new MageArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(bootsId, () -> new MageArmorGear(EquipmentSlot.FEET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
+                registerArmor(helmetId, () -> new MageArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new MageArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new MageArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(bootsId, () -> new MageArmorGear(BOOTS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
         );
     }
 
@@ -183,10 +181,10 @@ public class ModItems {
         ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new WindcallerArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new WindcallerArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new WindcallerArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(bootsId, () -> new WindcallerArmorGear(EquipmentSlot.FEET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
+                registerArmor(helmetId, () -> new WindcallerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new WindcallerArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new WindcallerArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(bootsId, () -> new WindcallerArmorGear(BOOTS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
         );
     }
 
@@ -197,10 +195,10 @@ public class ModItems {
         ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new IceologerArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new IceologerArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new IceologerArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(bootsId, () -> new IceologerArmorGear(EquipmentSlot.FEET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
+                registerArmor(helmetId, () -> new IceologerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new IceologerArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new IceologerArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(bootsId, () -> new IceologerArmorGear(BOOTS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
         );
     }
 
@@ -239,9 +237,9 @@ public class ModItems {
         ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new NecromancerArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new NecromancerArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new NecromancerArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(helmetId, () -> new NecromancerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new NecromancerArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new NecromancerArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
                 null
         );
     }

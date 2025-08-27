@@ -36,8 +36,8 @@ public class IcyCreeperEntity extends Creeper {
 
     @Override
     public void aiStep() {
-        if (this.level.isClientSide) {
-            this.level.addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(), (this.random.nextDouble() - 0.5D) * 2.0D);
+        if (this.level().isClientSide) {
+            this.level().addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(), (this.random.nextDouble() - 0.5D) * 2.0D);
         }
         super.aiStep();
     }
@@ -77,11 +77,11 @@ public class IcyCreeperEntity extends Creeper {
     }
 
     private void explodeCreeper() {
-        if (!this.level.isClientSide) {
-            Explosion.BlockInteraction explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+        if (!this.level().isClientSide) {
+            Level.ExplosionInteraction explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this) ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE;
             float f = this.isPowered() ? 2.0F : 1.0F;
             this.dead = true;
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float) this.explosionRadius * f, explosion$mode);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float) this.explosionRadius * f, explosion$mode);
             this.playSound(ModSoundEvents.ICY_CREEPER_EXPLODE.get(), 2.0F, 1.0F);
             this.remove(RemovalReason.DISCARDED);
             this.spawnLingeringCloud();
@@ -91,14 +91,14 @@ public class IcyCreeperEntity extends Creeper {
             double d0 = this.random.nextGaussian() * 0.3D;
             double d1 = this.random.nextGaussian() * 0.2D;
             double d2 = this.random.nextGaussian() * 0.3D;
-            this.level.addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), d0, d1, d2);
+            this.level().addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), d0, d1, d2);
         }
 
         for (int i = 0; i < 50; ++i) {
             double d0 = this.random.nextGaussian() * 0.6D;
             double d1 = this.random.nextGaussian() * 0.3D;
             double d2 = this.random.nextGaussian() * 0.6D;
-            this.level.addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getX(), this.getY(), this.getZ(), d0, d1, d2);
+            this.level().addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getX(), this.getY(), this.getZ(), d0, d1, d2);
         }
 
     }
@@ -106,7 +106,7 @@ public class IcyCreeperEntity extends Creeper {
     private void spawnLingeringCloud() {
         Collection<MobEffectInstance> collection = this.getActiveEffects();
         if (!collection.isEmpty()) {
-            AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, this.getX(), this.getY(), this.getZ());
+            AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level(), this.getX(), this.getY(), this.getZ());
             areaeffectcloudentity.setRadius(2.5F);
             areaeffectcloudentity.setRadiusOnUse(-0.5F);
             areaeffectcloudentity.setWaitTime(10);
@@ -117,7 +117,7 @@ public class IcyCreeperEntity extends Creeper {
                 areaeffectcloudentity.addEffect(new MobEffectInstance(effectinstance));
             }
 
-            this.level.addFreshEntity(areaeffectcloudentity);
+            this.level().addFreshEntity(areaeffectcloudentity);
         }
 
     }

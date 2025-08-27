@@ -44,28 +44,28 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, IAnimatable, SpawnArmoredMob, AnimatableMeleeAttackMob {
+public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, GeoAnimatable, SpawnArmoredMob, AnimatableMeleeAttackMob {
 
     private static final UUID SPEED_MODIFIER_BLOCKING_UUID = UUID.fromString("e4c96392-42f5-4028-ac44-cad469c10d51");
     private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_BLOCKING_UUID,
             "Blocking speed decrease", -0.05D, AttributeModifier.Operation.ADDITION);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private int shieldCooldownTime;
 
@@ -203,34 +203,29 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, IAn
             this.attackAnimationTick--;
         }
     }
-
+    
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.attackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("skeleton_vanguard_attack", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("skeleton_vanguard_attack", LOOP));
         } else if (this.isBlocking()) {
             if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
                 event.getController()
-                        .setAnimation(new AnimationBuilder().addAnimation("skeleton_vanguard_new_walk_blocking", LOOP));
+                        .setAnimation(RawAnimation.begin().then("skeleton_vanguard_new_walk_blocking", LOOP));
             } else {
                 event.getController()
-                        .setAnimation(new AnimationBuilder().addAnimation("skeleton_vanguard_new_blocking", LOOP));
+                        .setAnimation(RawAnimation.begin().then("skeleton_vanguard_new_blocking", LOOP));
             }
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("skeleton_vanguard_new_walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("skeleton_vanguard_new_walk", LOOP));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("skeleton_vanguard_new_idle", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("skeleton_vanguard_new_idle", LOOP));
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     // SHIELD STUFF
@@ -248,9 +243,9 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, IAn
     @Override
     protected void playHurtSound(DamageSource damageSource) {
         if (this.shieldCooldownTime == 100) {
-            this.playSound(SoundEvents.SHIELD_BREAK, 1.0F, 0.8F + this.level.random.nextFloat() * 0.4F);
+            this.playSound(SoundEvents.SHIELD_BREAK, 1.0F, 0.8F + this.level().random.nextFloat() * 0.4F);
         } else if (this.isBlocking()) {
-            this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.8F + this.level.random.nextFloat() * 0.4F);
+            this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.8F + this.level().random.nextFloat() * 0.4F);
         } else {
             super.playHurtSound(damageSource);
         }
@@ -282,7 +277,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, IAn
                     }
 
                     this.useItem = ItemStack.EMPTY;
-                    this.playSound(SoundEvents.SHIELD_BREAK, 1.0F, 0.8F + this.level.random.nextFloat() * 0.4F);
+                    this.playSound(SoundEvents.SHIELD_BREAK, 1.0F, 0.8F + this.level().random.nextFloat() * 0.4F);
                 }
             }
         }
@@ -305,10 +300,10 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, IAn
             f += 0.75F;
         }
         if (this.random.nextFloat() < f) {
-            this.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + this.level.random.nextFloat() * 0.4F);
+            this.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
             this.shieldCooldownTime = 100;
             this.stopUsingItem();
-            this.level.broadcastEntityEvent(this, (byte) 30);
+            this.level().broadcastEntityEvent(this, (byte) 30);
         }
     }
 
@@ -322,4 +317,13 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, IAn
         return ModItems.VANGUARD_ARMOR;
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
 }

@@ -22,19 +22,19 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class PoisonQuillEntity extends StraightMovingProjectileEntity implements IAnimatable {
+public class PoisonQuillEntity extends StraightMovingProjectileEntity implements GeoAnimatable {
 
     private static final EntityDataAccessor<Boolean> KELP = SynchedEntityData.defineId(PoisonQuillEntity.class, EntityDataSerializers.BOOLEAN);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PoisonQuillEntity(Level worldIn) {
         super(ModEntityTypes.POISON_QUILL.get(), worldIn);
@@ -81,19 +81,18 @@ public class PoisonQuillEntity extends StraightMovingProjectileEntity implements
         return MovementEmission.NONE;
     }
 
+
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
+
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         return PlayState.CONTINUE;
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
+
 
     public boolean isOnFire() {
         return false;
@@ -109,15 +108,15 @@ public class PoisonQuillEntity extends StraightMovingProjectileEntity implements
     }
 
     public void onHitEntity(Entity entity) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide()) {
             super.onHitEntity(entity);
             boolean flag;
             flag = entity.hurt(ModDamageSources.poisonQuill(this, MoreObjects.firstNonNull(this.getOwner(), this)), 5.0F);
             if (entity instanceof LivingEntity) {
                 int i = 0;
-                if (this.level.getDifficulty() == Difficulty.NORMAL) {
+                if (this.level().getDifficulty() == Difficulty.NORMAL) {
                     i = 8;
-                } else if (this.level.getDifficulty() == Difficulty.HARD) {
+                } else if (this.level().getDifficulty() == Difficulty.HARD) {
                     i = 16;
                 }
 
@@ -172,5 +171,15 @@ public class PoisonQuillEntity extends StraightMovingProjectileEntity implements
     @Override
     public SoundEvent getImpactSound() {
         return null;
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

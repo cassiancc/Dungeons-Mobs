@@ -30,20 +30,21 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class WraithEntity extends Monster implements IAnimatable {
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+
+public class WraithEntity extends Monster implements GeoAnimatable {
 
     public int summonFireAttackAnimationTick;
     public int summonFireAttackAnimationLength = 40;
@@ -53,7 +54,7 @@ public class WraithEntity extends Monster implements IAnimatable {
     public int teleportAnimationLength = 40;
     public int teleportAnimationActionPoint = 18;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public WraithEntity(EntityType<? extends WraithEntity> type, Level world) {
         super(type, world);
@@ -117,7 +118,7 @@ public class WraithEntity extends Monster implements IAnimatable {
         this.tickDownAnimTimers();
 
         if (this.teleportAnimationTick > 0) {
-            this.level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getRandomX(1), this.getY(), this.getRandomZ(1), this.random.nextGaussian() * 0.01, 0.1, this.random.nextGaussian() * 0.01);
+            this.level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getRandomX(1), this.getY(), this.getRandomZ(1), this.random.nextGaussian() * 0.01, 0.1, this.random.nextGaussian() * 0.01);
         }
     }
 
@@ -133,7 +134,7 @@ public class WraithEntity extends Monster implements IAnimatable {
 
     public void aiStep() {
 
-        if (!this.onGround && this.getDeltaMovement().y < 0.0D) {
+        if (!this.onGround() && this.getDeltaMovement().y < 0.0D) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.75D, 1.0D));
         }
 
@@ -200,37 +201,32 @@ public class WraithEntity extends Monster implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.summonFireAttackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("wraith_attack", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("wraith_attack", LOOP));
         } else if (this.teleportAnimationTick > 10) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("wraith_teleport", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("wraith_teleport", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("wraith_fly", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("wraith_fly", LOOP));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("wraith_idle", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("wraith_idle", LOOP));
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     private boolean teleport(double pX, double pY, double pZ) {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(pX, pY, pZ);
 
-        while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
+        while(blockpos$mutableblockpos.getY() > this.level().getMinBuildHeight() && !this.level().getBlockState(blockpos$mutableblockpos).blocksMotion()) {
             blockpos$mutableblockpos.move(Direction.DOWN);
         }
 
-        BlockState blockstate = this.level.getBlockState(blockpos$mutableblockpos);
-        boolean flag = blockstate.getMaterial().blocksMotion();
+        BlockState blockstate = this.level().getBlockState(blockpos$mutableblockpos);
+        boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
             EntityTeleportEvent.EnderEntity event = ForgeEventFactory.onEnderTeleport(this, pX, pY, pZ);
@@ -240,9 +236,9 @@ public class WraithEntity extends Monster implements IAnimatable {
                 Vec3 vec3 = this.position();
                 boolean randomTeleport = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
                 if (randomTeleport) {
-                    this.level.gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(this));
+                    this.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(this));
                     if (!this.isSilent()) {
-                        this.level.playSound((Player)null, this.xo, this.yo, this.zo, ModSoundEvents.WRAITH_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
+                        this.level().playSound((Player)null, this.xo, this.yo, this.zo, ModSoundEvents.WRAITH_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
                         this.playSound(ModSoundEvents.WRAITH_TELEPORT.get(), 1.0F, 1.0F);
                     }
                 }
@@ -252,6 +248,16 @@ public class WraithEntity extends Monster implements IAnimatable {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class TeleportGoal extends Goal {
@@ -297,7 +303,7 @@ public class WraithEntity extends Monster implements IAnimatable {
         public void start() {
             mob.playSound(ModSoundEvents.WRAITH_IDLE.get(), 1.0F, mob.getVoicePitch());
             mob.teleportAnimationTick = mob.teleportAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override
@@ -370,7 +376,7 @@ public class WraithEntity extends Monster implements IAnimatable {
         public void start() {
             mob.playSound(ModSoundEvents.WRAITH_ATTACK.get(), 1.0F, mob.getVoicePitch());
             mob.summonFireAttackAnimationTick = mob.summonFireAttackAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 11);
+            mob.level().broadcastEntityEvent(mob, (byte) 11);
         }
 
         @Override
@@ -384,10 +390,10 @@ public class WraithEntity extends Monster implements IAnimatable {
             }
 
             if (target != null && mob.summonFireAttackAnimationTick == mob.summonFireAttackAnimationActionPoint) {
-                WraithFireEntity wraithFire = ModEntityTypes.WRAITH_FIRE.get().create(mob.level);
+                WraithFireEntity wraithFire = ModEntityTypes.WRAITH_FIRE.get().create(mob.level());
                 wraithFire.owner = mob;
                 wraithFire.moveTo(target.position());
-                mob.level.addFreshEntity(wraithFire);
+                mob.level().addFreshEntity(wraithFire);
                 PositionUtils.moveToCorrectHeight(wraithFire);
             }
         }

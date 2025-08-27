@@ -34,23 +34,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArmoredMob {
+public class MageEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
     public int attackAnimationTick;
     public int attackAnimationLength = 50;
@@ -63,7 +63,7 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
 
     public int appearDelay = 0;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public MageEntity(EntityType<? extends MageEntity> type, Level world) {
         super(type, world);
@@ -108,7 +108,7 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         } else if (p_28844_ == 8) {
             this.vanishAnimationTick = vanishAnimationLength;
@@ -127,9 +127,9 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
             this.appearDelay--;
         }
 
-        if (!this.level.isClientSide && this.appearDelay == 1) {
+        if (!this.level().isClientSide && this.appearDelay == 1) {
             this.appearAnimationTick = appearAnimationLength;
-            this.level.broadcastEntityEvent(this, (byte) 9);
+            this.level().broadcastEntityEvent(this, (byte) 9);
         }
     }
 
@@ -146,35 +146,28 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
             this.appearAnimationTick--;
         }
     }
-
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.appearAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_appear", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_appear", LOOP));
         } else if (this.vanishAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_vanish", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_vanish", LOOP));
         } else if (this.attackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_throw", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_throw", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_walk", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_walk", LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_celebrate", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("mage_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("mage_idle", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("mage_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -239,6 +232,16 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
         return ModItems.MAGE_ARMOR;
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     class CreateIllusionsGoal extends Goal {
         public MageEntity mob;
         @Nullable
@@ -269,7 +272,7 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
         public boolean canUse() {
             target = mob.getTarget();
 
-            int nearbyClones = mob.level.getEntities(mob, mob.getBoundingBox().inflate(30.0D), MAGE_CLONE)
+            int nearbyClones = mob.level().getEntities(mob, mob.getBoundingBox().inflate(30.0D), MAGE_CLONE)
                     .size();
 
             return target != null && mob.tickCount >= this.nextUseTime && mob.random.nextInt(10) == 0 && mob.hasLineOfSight(target) && nearbyClones <= 0 && animationsUseable();
@@ -284,7 +287,7 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
         public void start() {
             mob.playSound(SoundEvents.ILLUSIONER_PREPARE_MIRROR, 1.0F, 1.0F);
             mob.vanishAnimationTick = mob.vanishAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 8);
+            mob.level().broadcastEntityEvent(mob, (byte) 8);
         }
 
         @Override
@@ -298,18 +301,18 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
             }
 
             if (target != null && mob.vanishAnimationTick == 1) {
-                SummonSpotEntity summonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
-                summonSpot.moveTo(target.blockPosition().offset(-12.5 + mob.random.nextInt(25), 0, -12.5 + mob.random.nextInt(25)), 0.0F, 0.0F);
+                SummonSpotEntity summonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
+                summonSpot.moveTo(target.getX() -12.5 + mob.random.nextInt(25), target.getY(), target.getZ() -12.5 + mob.random.nextInt(25), 0.0F, 0.0F);
                 summonSpot.setSummonType(3);
-                ((ServerLevel) mob.level).addFreshEntityWithPassengers(summonSpot);
+                ((ServerLevel) mob.level()).addFreshEntityWithPassengers(summonSpot);
                 PositionUtils.moveToCorrectHeight(summonSpot);
 
-                mob.level.broadcastEntityEvent(mob, (byte) 7);
+                mob.level().broadcastEntityEvent(mob, (byte) 7);
                 mob.moveTo(summonSpot.blockPosition(), 0.0F, 0.0F);
                 mob.setYBodyRot(mob.random.nextInt(360));
                 mob.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(mob.getX(), mob.getEyeY(), mob.getZ()));
                 mob.appearDelay = 11;
-                mob.level.broadcastEntityEvent(mob, (byte) 6);
+                mob.level().broadcastEntityEvent(mob, (byte) 6);
                 mob.playSound(SoundEvents.ILLUSIONER_MIRROR_MOVE, 1.0F, 1.0F);
                 PositionUtils.moveToCorrectHeight(mob);
 
@@ -324,18 +327,18 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
                     }
                 }
 
-                int clonesByDifficulty = mob.level.getCurrentDifficultyAt(mob.blockPosition()).getDifficulty().getId();
+                int clonesByDifficulty = mob.level().getCurrentDifficultyAt(mob.blockPosition()).getDifficulty().getId();
 
                 for (int i = 0; i < clonesByDifficulty * 4; i++) {
-                    SummonSpotEntity cloneSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
-                    cloneSummonSpot.moveTo(target.blockPosition().offset(-12.5 + mob.random.nextInt(25), 0, -12.5 + mob.random.nextInt(25)), 0.0F, 0.0F);
+                    SummonSpotEntity cloneSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
+                    cloneSummonSpot.moveTo(target.getX() -12.5 + mob.random.nextInt(25), target.getY(), target.getZ() -12.5 + mob.random.nextInt(25), 0.0F, 0.0F);
                     cloneSummonSpot.setSummonType(3);
                     cloneSummonSpot.mobSpawnRotation = mob.random.nextInt(360);
-                    ((ServerLevel) mob.level).addFreshEntityWithPassengers(cloneSummonSpot);
+                    ((ServerLevel) mob.level()).addFreshEntityWithPassengers(cloneSummonSpot);
                     PositionUtils.moveToCorrectHeight(cloneSummonSpot);
 
-                    MageCloneEntity clone = ModEntityTypes.MAGE_CLONE.get().create(mob.level);
-                    clone.finalizeSpawn(((ServerLevel) mob.level), mob.level.getCurrentDifficultyAt(cloneSummonSpot.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                    MageCloneEntity clone = ModEntityTypes.MAGE_CLONE.get().create(mob.level());
+                    clone.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(cloneSummonSpot.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
                     clone.setOwner(mob);
                     clone.setHealth(mob.getHealth());
                     for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
@@ -406,7 +409,7 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
             this.slammedTarget = false;
             mob.playSound(ModSoundEvents.NECROMANCER_PREPARE_SUMMON.get(), 1.0F, mob.getVoicePitch());
             mob.attackAnimationTick = mob.attackAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override
@@ -424,8 +427,8 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
                 if (mob.attackAnimationTick >= mob.attackAnimationLength - 32) {
                     if (target.getY() < mob.getY() + 7) {
                         target.push(0, 0.1, 0);
-                        if (target.verticalCollision && !target.isOnGround()) {
-                            target.hurt(DamageSource.FLY_INTO_WALL, 10.0F);
+                        if (target.verticalCollision && !target.onGround()) {
+                            target.hurt(damageSources().flyIntoWall(), 10.0F);
                         }
                     } else {
                         target.setDeltaMovement(target.getDeltaMovement().x * 0.5, 0, target.getDeltaMovement().z * 0.5);
@@ -436,7 +439,7 @@ public class MageEntity extends AbstractIllager implements IAnimatable, SpawnArm
                         target.push(0, -0.5, 0);
                         if (target.verticalCollision) {
                             this.slammedTarget = true;
-                            target.hurt(DamageSource.FLY_INTO_WALL, 10.0F);
+                            target.hurt(damageSources().flyIntoWall(), 10.0F);
                         }
                     }
                 }

@@ -91,8 +91,8 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
     }
 
     public void tryToDealDamage() {
-        List<Entity> list = this.level.getEntities(this, this.getBoundingBox(), CAN_HIT);
-        if (!list.isEmpty() && !this.level.isClientSide) {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), CAN_HIT);
+        if (!list.isEmpty() && !this.level().isClientSide) {
             for (Entity entity : list) {
                 this.onHitEntity(entity);
             }
@@ -133,7 +133,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
             }
         }
 
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             if (this.lifeTime < this.vanishAfterTime() + this.getVanishAnimationLength()) {
                 this.lifeTime++;
             }
@@ -149,7 +149,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
             this.noPhysics = false;
         }
 
-        if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
+        if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
             super.tick();
             if (this.shouldBurn()) {
                 this.setSecondsOnFire(1);
@@ -227,7 +227,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
             this.playImpactSound();
         }
         if (!this.getsStuckInBlocks()) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.remove(RemovalReason.DISCARDED);
             }
         } else {
@@ -244,11 +244,11 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
     }
 
     public void spawnTrailParticle() {
-        this.level.addParticle(this.getTrailParticle(), this.getX(), this.getY() + this.getSpawnParticlesY(), this.getZ(), 0, 0, 0);
+        this.level().addParticle(this.getTrailParticle(), this.getX(), this.getY() + this.getSpawnParticlesY(), this.getZ(), 0, 0, 0);
     }
 
     public void spawnUnderWaterTrailParticle() {
-        this.level.addParticle(this.getUnderWaterTrailParticle(), this.getX(), this.getY() + this.getSpawnParticlesY(), this.getZ(), 0, 0, 0);
+        this.level().addParticle(this.getUnderWaterTrailParticle(), this.getX(), this.getY() + this.getSpawnParticlesY(), this.getZ(), 0, 0, 0);
     }
 
     public double getSpawnParticlesY() {

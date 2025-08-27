@@ -98,8 +98,8 @@ public class FrozenZombieEntity extends Zombie implements RangedAttackMob {
 
     @Override
     public void aiStep() {
-        if (this.level.isClientSide) {
-            this.level.addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(), (this.random.nextDouble() - 0.5D) * 2.0D);
+        if (this.level().isClientSide) {
+            this.level().addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(), (this.random.nextDouble() - 0.5D) * 2.0D);
         }
         super.aiStep();
     }
@@ -109,9 +109,9 @@ public class FrozenZombieEntity extends Zombie implements RangedAttackMob {
         if (super.doHurtTarget(targetEntity)) {
             if (targetEntity instanceof LivingEntity) {
                 int i = 0;
-                if (this.level.getDifficulty() == Difficulty.NORMAL) {
+                if (this.level().getDifficulty() == Difficulty.NORMAL) {
                     i = 4;
-                } else if (this.level.getDifficulty() == Difficulty.HARD) {
+                } else if (this.level().getDifficulty() == Difficulty.HARD) {
                     i = 8;
                 }
 
@@ -128,7 +128,7 @@ public class FrozenZombieEntity extends Zombie implements RangedAttackMob {
 
     @Override
     public void performRangedAttack(LivingEntity livingEntity, float v) {
-        Snowball snowballentity = new Snowball(this.level, this);
+        Snowball snowballentity = new Snowball(this.level(), this);
         double adjustedEyeY = livingEntity.getEyeY() - 1.100000023841858D;
         double xDifference = livingEntity.getX() - this.getX();
         double yDifference = adjustedEyeY - snowballentity.getY();
@@ -136,7 +136,7 @@ public class FrozenZombieEntity extends Zombie implements RangedAttackMob {
         float adjustedHorizontalDistance = Mth.sqrt((float) (xDifference * xDifference + zDifference * zDifference)) * 0.2F;
         snowballentity.shoot(xDifference, yDifference + (double) adjustedHorizontalDistance, zDifference, 1.6F, 7.5F);
         this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(snowballentity);
+        this.level().addFreshEntity(snowballentity);
     }
 
     static class FrozenZombieAttackGoal extends ThrowAndMeleeAttackGoal {

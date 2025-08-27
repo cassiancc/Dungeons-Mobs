@@ -4,11 +4,10 @@ package com.infamous.dungeons_mobs.client.models.projectile;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.projectiles.NecromancerOrbEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
 
-public class OrbProjectileModel extends AnimatedGeoModel<NecromancerOrbEntity> {
+public class OrbProjectileModel extends GeoModel<NecromancerOrbEntity> {
 
     private final boolean renderTrail;
 
@@ -32,14 +31,14 @@ public class OrbProjectileModel extends AnimatedGeoModel<NecromancerOrbEntity> {
     }
 
     @Override
-    public void setCustomAnimations(NecromancerOrbEntity entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(NecromancerOrbEntity entity, long uniqueID, AnimationState<NecromancerOrbEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        IBone everything = this.getAnimationProcessor().getBone("everything");
+        var everything = this.getAnimationProcessor().getBone("everything");
         if(!renderTrail) {
-            IBone trail = this.getAnimationProcessor().getBone("trail1");
+            var trail = this.getAnimationProcessor().getBone("trail1");
             trail.setHidden(true);
         }
 
-        everything.setRotationY(-1.5708F);
+        everything.setRotY(-1.5708F);
     }
 }

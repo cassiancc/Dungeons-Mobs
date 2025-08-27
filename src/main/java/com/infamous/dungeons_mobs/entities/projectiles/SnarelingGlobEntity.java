@@ -8,7 +8,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -50,7 +50,7 @@ public class SnarelingGlobEntity extends ThrowableItemProjectile {
             ParticleOptions iparticledata = this.getParticle();
 
             for (int i = 0; i < 8; ++i) {
-                this.level.addParticle(iparticledata, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(iparticledata, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -60,18 +60,18 @@ public class SnarelingGlobEntity extends ThrowableItemProjectile {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
         if (entity instanceof LivingEntity && !(entity instanceof AbstractEnderlingEntity)) {
-            entity.hurt(DamageSource.thrown(this, this.getOwner()), 3);
+            entity.hurt(this.damageSources().thrown(this, this.getOwner()), 3);
         }
 
-        if (entity instanceof LivingEntity && !entity.level.isClientSide) {
+        if (entity instanceof LivingEntity && !entity.level().isClientSide) {
             ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.ENSNARED.get(), 100));
         }
     }
 
     protected void onHit(HitResult p_70227_1_) {
         super.onHit(p_70227_1_);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte) 3);
+        if (!this.level().isClientSide) {
+            this.level().broadcastEntityEvent(this, (byte) 3);
             this.remove(RemovalReason.DISCARDED);
         }
 
@@ -80,7 +80,7 @@ public class SnarelingGlobEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

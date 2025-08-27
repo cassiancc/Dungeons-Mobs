@@ -19,20 +19,20 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class WatchlingEntity extends AbstractEnderlingEntity implements IAnimatable {
+public class WatchlingEntity extends AbstractEnderlingEntity implements GeoAnimatable {
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public WatchlingEntity(EntityType<? extends WatchlingEntity> p_i50210_1_, Level p_i50210_2_) {
         super(p_i50210_1_, p_i50210_2_);
@@ -103,28 +103,32 @@ public class WatchlingEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 5, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.isAttacking() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("watchling_attack", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("watchling_attack", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
             if (this.isRunning() > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("watchling_run", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("watchling_run", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("watchling_walk", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("watchling_walk", LOOP));
             }
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("watchling_idle", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("watchling_idle", LOOP));
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
 }

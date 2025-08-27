@@ -20,17 +20,17 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MageMissileEntity extends StraightMovingProjectileEntity implements IAnimatable {
+public class MageMissileEntity extends StraightMovingProjectileEntity implements GeoAnimatable {
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public MageMissileEntity(EntityType<? extends MageMissileEntity> p_i50147_1_, Level p_i50147_2_) {
         super(p_i50147_1_, p_i50147_2_);
@@ -79,17 +79,22 @@ public class MageMissileEntity extends StraightMovingProjectileEntity implements
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     public boolean isOnFire() {
@@ -124,15 +129,15 @@ public class MageMissileEntity extends StraightMovingProjectileEntity implements
     }
 
     public void onHitEntity(Entity entity) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             super.onHitEntity(entity);
             boolean flag;
-            flag = entity.hurt(DamageSource.indirectMagic(this, this.getOwner()), 2.5F);
+            flag = entity.hurt(entity.damageSources().indirectMagic(this, this.getOwner()), 2.5F);
             if (entity instanceof LivingEntity) {
                 int i = 0;
-                if (this.level.getDifficulty() == Difficulty.NORMAL) {
+                if (this.level().getDifficulty() == Difficulty.NORMAL) {
                     i = 8;
-                } else if (this.level.getDifficulty() == Difficulty.HARD) {
+                } else if (this.level().getDifficulty() == Difficulty.HARD) {
                     i = 16;
                 }
 

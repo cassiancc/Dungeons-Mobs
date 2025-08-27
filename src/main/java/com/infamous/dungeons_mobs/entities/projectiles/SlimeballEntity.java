@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -103,7 +104,7 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
         Entity entity = rayTraceResult.getEntity();
         int attackDamage = 3;
         if (!(entity instanceof Slime)) {
-            entity.hurt(DamageSource.thrown(this, this.getOwner()), (float) attackDamage);
+            entity.hurt(entity.damageSources().thrown(this, this.getOwner()), (float) attackDamage);
         }
     }
 
@@ -115,7 +116,7 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
         if (result instanceof EntityHitResult) {
             EntityHitResult entityRayTraceResult = (EntityHitResult) result;
             if (!(entityRayTraceResult.getEntity() instanceof Slime)) {
-                if (!this.level.isClientSide) {
+                if (!this.level().isClientSide) {
                     this.remove(RemovalReason.DISCARDED);
                 }
             }
@@ -125,7 +126,7 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
     }
 
     private void removeIfWorldNotRemote() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -145,7 +146,7 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

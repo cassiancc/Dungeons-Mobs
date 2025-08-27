@@ -6,6 +6,7 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -18,21 +19,22 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class RedstoneMineEntity extends Entity implements IAnimatable {
+
+public class RedstoneMineEntity extends Entity implements GeoAnimatable {
     public static final EntityDataAccessor<Integer> LIFE_TICKS = SynchedEntityData.defineId(ConstructEntity.class, EntityDataSerializers.INT);
 
     private LivingEntity caster;
@@ -57,24 +59,24 @@ public class RedstoneMineEntity extends Entity implements IAnimatable {
         this.setPos(x, y, z);
     }
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.getLifeTicks() == 6) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_mine.deactive", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_mine.deactive", LOOP));
         }
         if (this.getLifeTicks() == LIFE_TIME) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_mine.activate", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_mine.activate", LOOP));
         }
         if (this.getLifeTicks() < LIFE_TIME - 3 && this.getLifeTicks() > 4) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_mine.idle", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_mine.idle", LOOP));
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     public void setCaster(@Nullable LivingEntity livingEntity) {
@@ -84,8 +86,8 @@ public class RedstoneMineEntity extends Entity implements IAnimatable {
 
     @Nullable
     public LivingEntity getCaster() {
-        if (this.caster == null && this.casterUuid != null && this.level instanceof ServerLevel) {
-            Entity entity = ((ServerLevel) this.level).getEntity(this.casterUuid);
+        if (this.caster == null && this.casterUuid != null && this.level() instanceof ServerLevel) {
+            Entity entity = ((ServerLevel) this.level()).getEntity(this.casterUuid);
             if (entity instanceof LivingEntity) {
                 this.caster = (LivingEntity) entity;
             }
@@ -102,7 +104,7 @@ public class RedstoneMineEntity extends Entity implements IAnimatable {
     public void handleEntityEvent(byte id) {
         if (id == 4) {
             for (int i = 0; i < 2; i++) {
-                this.level.addParticle(ModParticleTypes.REDSTONE_SPARK.get(), this.getRandomX(1.1D), this.getRandomY(), this.getRandomZ(1.1D), -0.05D + this.random.nextDouble() * 0.05D, -0.05D + this.random.nextDouble() * 0.05D, -0.05D + this.random.nextDouble() * 0.05D);
+                this.level().addParticle(ModParticleTypes.REDSTONE_SPARK.get(), this.getRandomX(1.1D), this.getRandomY(), this.getRandomZ(1.1D), -0.05D + this.random.nextDouble() * 0.05D, -0.05D + this.random.nextDouble() * 0.05D, -0.05D + this.random.nextDouble() * 0.05D);
             }
         } else {
             super.handleEntityEvent(id);
@@ -116,17 +118,17 @@ public class RedstoneMineEntity extends Entity implements IAnimatable {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide && this.random.nextInt(20) == 0) {
+        if (!this.level().isClientSide() && this.random.nextInt(20) == 0) {
             this.playSound(ModSoundEvents.REDSTONE_GOLEM_SPARK.get(), 0.1F, this.getRandomPitch());
-            this.level.broadcastEntityEvent(this, (byte) 4);
+            this.level().broadcastEntityEvent(this, (byte) 4);
         }
 
         this.setLifeTicks(this.getLifeTicks() - 1);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide()) {
             if (this.getLifeTicks() <= 0) {
                 this.remove(RemovalReason.DISCARDED);
             } else if (this.getLifeTicks() < LIFE_TIME - 3 && this.getLifeTicks() > 6) {
-                for (LivingEntity livingentity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.3D, 0.3D, 0.3D))) {
+                for (LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.3D, 0.3D, 0.3D))) {
                     this.explode(livingentity);
                 }
             }
@@ -141,11 +143,11 @@ public class RedstoneMineEntity extends Entity implements IAnimatable {
         if (livingentity.isAlive() && !livingentity.isInvulnerable()) {
             if (Caster != null) {
                 if (!Caster.isAlliedTo(livingentity) || livingentity != Caster) {
-                    this.level.explode(Caster, this.getX(), this.getY(0.0625D), this.getZ(), this.explosionRadius, Explosion.BlockInteraction.NONE);
+                    this.level().explode(Caster, this.getX(), this.getY(0.0625D), this.getZ(), this.explosionRadius, Level.ExplosionInteraction.NONE);
                     this.remove(RemovalReason.DISCARDED);
                 }
             } else {
-                this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), this.explosionRadius, Explosion.BlockInteraction.NONE);
+                this.level().explode(this, this.getX(), this.getY(0.0625D), this.getZ(), this.explosionRadius, Level.ExplosionInteraction.NONE);
                 this.remove(RemovalReason.DISCARDED);
             }
 
@@ -183,14 +185,20 @@ public class RedstoneMineEntity extends Entity implements IAnimatable {
         this.entityData.set(LIFE_TICKS, p_189794_1_);
     }
 
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

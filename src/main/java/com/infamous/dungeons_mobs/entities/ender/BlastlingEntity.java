@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -172,12 +173,12 @@ public class BlastlingEntity extends AbstractEnderlingEntity implements IAnimata
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         if (this.getShootTime() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("blastling_shoot", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("blastling_shoot", LOOP));
         } else {
             if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("blastling_walk", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("blastling_walk", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("blastling_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("blastling_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;

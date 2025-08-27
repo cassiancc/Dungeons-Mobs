@@ -4,31 +4,33 @@ import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class WindcallerTornadoEntity extends Entity implements IAnimatable {
+
+public class WindcallerTornadoEntity extends Entity implements GeoAnimatable {
 
     private static final EntityDataAccessor<Boolean> BLAST = SynchedEntityData.defineId(WindcallerTornadoEntity.class,
             EntityDataSerializers.BOOLEAN);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int lifeTime;
 
@@ -56,23 +58,23 @@ public class WindcallerTornadoEntity extends Entity implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1, this::predicate));
+    public void registerControllers(AnimatableManager<WindcallerTornadoEntity> data) {
+        data.addController(new AnimationController<>(this, "controller", 1, this::predicate));
     }
 
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.isBlast()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_tornado_blast", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("windcaller_tornado_blast", LOOP));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_tornado_lift", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("windcaller_tornado_lift", LOOP));
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class WindcallerTornadoEntity extends Entity implements IAnimatable {
         this.refreshDimensions();
 
         if (!this.isBlast()) {
-            List<Entity> list = this.level.getEntities(this, this.getBoundingBox(), Entity::isAlive);
+            List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), Entity::isAlive);
             if (!list.isEmpty()) {
                 for (Entity entity : list) {
                     if (entity instanceof LivingEntity) {
@@ -96,9 +98,9 @@ public class WindcallerTornadoEntity extends Entity implements IAnimatable {
             }
 
             if (this.lifeTime >= 15 && this.lifeTime < 30) {
-                if (this.level.isClientSide) {
+                if (this.level().isClientSide) {
                     for (int i = 0; i < 3; i++) {
-                        this.level.addParticle(ModParticleTypes.WIND.get(), this.getRandomX(0.5D), this.getRandomY() - 2, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 1.0D, 5, (this.random.nextDouble() - 0.5D) * 1.0D);
+                        this.level().addParticle(ModParticleTypes.WIND.get(), this.getRandomX(0.5D), this.getRandomY() - 2, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 1.0D, 5, (this.random.nextDouble() - 0.5D) * 1.0D);
                     }
                 }
             }
@@ -108,7 +110,7 @@ public class WindcallerTornadoEntity extends Entity implements IAnimatable {
 
         int removeTime = this.isBlast() ? 14 : 36;
 
-        if (this.lifeTime >= removeTime && !this.level.isClientSide) {
+        if (this.lifeTime >= removeTime && !this.level().isClientSide) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -137,8 +139,19 @@ public class WindcallerTornadoEntity extends Entity implements IAnimatable {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
 }

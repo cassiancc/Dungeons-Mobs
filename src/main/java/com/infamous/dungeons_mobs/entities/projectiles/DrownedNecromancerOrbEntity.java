@@ -13,19 +13,19 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity implements IAnimatable {
+public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity implements GeoAnimatable {
 
     public int textureChange = 0;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public DrownedNecromancerOrbEntity(Level worldIn) {
         super(ModEntityTypes.DROWNED_NECROMANCER_ORB.get(), worldIn);
@@ -80,24 +80,20 @@ public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity 
             textureChange++;
         }
 
-        if (!this.level.isClientSide && !this.isInWaterRainOrBubble()) {
+        if (!this.level().isClientSide && !this.isInWaterRainOrBubble()) {
             this.playSound(ModSoundEvents.DROWNED_NECROMANCER_STEAM_MISSILE_IMPACT.get(), 1.0F, 1.0F);
             this.remove(RemovalReason.DISCARDED);
         }
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     public boolean isOnFire() {
@@ -111,20 +107,20 @@ public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity 
     public void onHitEntity(Entity entity) {
         if (entity instanceof Mob && ((Mob) entity).getMobType() == MobType.UNDEAD) {
 
-        } else if (!this.level.isClientSide) {
+        } else if (!this.level().isClientSide) {
             super.onHitEntity(entity);
             Entity entity1 = this.getOwner();
             boolean flag;
             if (entity1 instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity) entity1;
-                flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity), 8.0F);
+                flag = entity.hurt(entity.damageSources().indirectMagic(this, livingentity), 8.0F);
                 if (flag) {
                     if (entity.isAlive()) {
                         this.doEnchantDamageEffects(livingentity, entity);
                     }
                 }
             } else {
-                flag = entity.hurt(DamageSource.MAGIC, 6.0F);
+                flag = entity.hurt(entity.damageSources().magic(), 6.0F);
             }
 
             entity.getRootVehicle().ejectPassengers();
@@ -156,5 +152,16 @@ public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity 
     @Override
     public SoundEvent getImpactSound() {
         return ModSoundEvents.DROWNED_NECROMANCER_STEAM_MISSILE_IMPACT.get();
+    }
+
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

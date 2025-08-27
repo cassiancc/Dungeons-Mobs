@@ -257,7 +257,7 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
             crossed = "_crossed";
         }
         if (this.attackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation + ".attack" + handSide, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then(animation + ".attack" + handSide, LOOP));
         } else if (this.isAggressive() && !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
             event.getController().setAnimation(new AnimationBuilder()
                     .addAnimation(animation + ".run" + handSide, LOOP));
@@ -266,9 +266,9 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
                     .addAnimation(animation + ".walk" + crossed, LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation(animation + ".win", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then(animation + ".win", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation(animation + ".idle" + crossed, LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then(animation + ".idle" + crossed, LOOP));
             }
         }
         return PlayState.CONTINUE;

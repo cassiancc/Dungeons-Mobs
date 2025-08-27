@@ -8,6 +8,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -40,7 +41,7 @@ public class AreaDamageEntity extends Entity {
             EntityDataSerializers.INT);
 
     public float damage;
-    public DamageSource damageSource = DamageSource.GENERIC;
+    public DamageSource damageSource = this.damageSources().generic();
     public LivingEntity owner;
 
     public boolean constantDamage;
@@ -109,9 +110,9 @@ public class AreaDamageEntity extends Entity {
                 int j = Mth.floor(this.getY() - (double) 0.2F);
                 int k = Mth.floor(this.getZ());
                 BlockPos pos = new BlockPos(i, j, k);
-                BlockState blockstate = this.level.getBlockState(pos);
+                BlockState blockstate = this.level().getBlockState(pos);
                 if (!blockstate.isAir()) {
-                    this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX(), this.getY() + 0.1D, this.getZ(), 0, 0, 0);
+                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX(), this.getY() + 0.1D, this.getZ(), 0, 0, 0);
                 }
             }
 
@@ -120,7 +121,7 @@ public class AreaDamageEntity extends Entity {
                 double d0 = this.random.nextGaussian() * 15.0D;
                 double d1 = this.random.nextFloat() * 1.75D;
                 double d2 = this.random.nextGaussian() * 15.0D;
-                this.level.addParticle(ModParticleTypes.DUST.get(), vector3d.x, vector3d.y, vector3d.z, d0, d1, d2);
+                this.level().addParticle(ModParticleTypes.DUST.get(), vector3d.x, vector3d.y, vector3d.z, d0, d1, d2);
             }
         } else if (p_70103_1_ == 2) {
             for (int particleAmount = 0; particleAmount < 25; particleAmount++) {
@@ -128,9 +129,9 @@ public class AreaDamageEntity extends Entity {
                 int j = Mth.floor(this.getY() - (double) 0.2F);
                 int k = Mth.floor(this.getZ());
                 BlockPos pos = new BlockPos(i, j, k);
-                BlockState blockstate = this.level.getBlockState(pos);
+                BlockState blockstate = this.level().getBlockState(pos);
                 if (!blockstate.isAir()) {
-                    this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX(), this.getY() + 0.1D, this.getZ(), 0, 0, 0);
+                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX(), this.getY() + 0.1D, this.getZ(), 0, 0, 0);
                 }
             }
 
@@ -139,7 +140,7 @@ public class AreaDamageEntity extends Entity {
                 double d0 = this.random.nextGaussian() * 0.5D;
                 double d1 = this.random.nextFloat() * 2.0D;
                 double d2 = this.random.nextGaussian() * 0.5D;
-                this.level.addParticle(ParticleTypes.BUBBLE, vector3d.x, vector3d.y, vector3d.z, d0, d1, d2);
+                this.level().addParticle(ParticleTypes.BUBBLE, vector3d.x, vector3d.y, vector3d.z, d0, d1, d2);
             }
         } else {
             super.handleEntityEvent(p_70103_1_);
@@ -173,10 +174,10 @@ public class AreaDamageEntity extends Entity {
 
         this.refreshDimensions();
 
-        List<Entity> list = this.level.getEntities(this, this.getBoundingBox(), Entity::isAlive);
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), Entity::isAlive);
         if (!list.isEmpty()) {
             for (Entity entity : list) {
-                if (!this.level.isClientSide && this.canEntityBeDamaged(entity)) {
+                if (!this.level().isClientSide && this.canEntityBeDamaged(entity)) {
                     entity.hurt(this.damageSource, damage);
                     if (this.distanceTo(entity) >= 0.5) {
                         double d0 = entity.getX() - this.getX();
@@ -193,7 +194,7 @@ public class AreaDamageEntity extends Entity {
         }
 
         if (this.getParticleType() > 0) {
-            this.level.broadcastEntityEvent(this, (byte) this.getParticleType());
+            this.level().broadcastEntityEvent(this, (byte) this.getParticleType());
             this.setParticleType(0);
         }
 
@@ -205,7 +206,7 @@ public class AreaDamageEntity extends Entity {
             this.extraTimeTick++;
         }
 
-        if (!this.level.isClientSide && ((this.getExtraTime() > 0 && this.extraTimeTick >= this.getExtraTime()) || (this.getExtraTime() <= 0 && this.getSize() >= this.getSizeToReach()))) {
+        if (!this.level().isClientSide && ((this.getExtraTime() > 0 && this.extraTimeTick >= this.getExtraTime()) || (this.getExtraTime() <= 0 && this.getSize() >= this.getSizeToReach()))) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -215,7 +216,7 @@ public class AreaDamageEntity extends Entity {
             ((Player) livingEntity).getCooldowns()
                     .addCooldown(livingEntity.getItemInHand(livingEntity.getUsedItemHand()).getItem(), ticks);
             livingEntity.stopUsingItem();
-            livingEntity.level.broadcastEntityEvent(livingEntity, (byte) 30);
+            livingEntity.level().broadcastEntityEvent(livingEntity, (byte) 30);
         }
     }
 
@@ -311,7 +312,7 @@ public class AreaDamageEntity extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

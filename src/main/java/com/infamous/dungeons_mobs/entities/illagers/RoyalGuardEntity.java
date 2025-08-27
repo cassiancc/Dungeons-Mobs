@@ -185,20 +185,20 @@ public class RoyalGuardEntity extends AbstractIllager implements IAnimatable, IS
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         if (this.attackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("royal_guard_attack", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("royal_guard_attack", LOOP));
         } else if (this.isBlocking()) {
             if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("royal_guard_new_walk_blocking", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("royal_guard_new_walk_blocking", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("royal_guard_new_blocking", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("royal_guard_new_blocking", LOOP));
             }
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("royal_guard_new_walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("royal_guard_new_walk", LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("royal_guard_celebrate", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("royal_guard_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("royal_guard_new_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("royal_guard_new_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;

@@ -76,9 +76,9 @@ public class MossySkeletonEntity extends AbstractSkeleton {
         double d1 = p_82196_1_.getY(0.3333333333333333D) - abstractarrowentity.getY();
         double d2 = p_82196_1_.getZ() - this.getZ();
         double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
-        abstractarrowentity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level.getDifficulty().getId() * 4));
+        abstractarrowentity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
         this.playSound(ModSoundEvents.MOSSY_SKELETON_SHOOT.get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(abstractarrowentity);
+        this.level().addFreshEntity(abstractarrowentity);
     }
 
 
@@ -87,9 +87,9 @@ public class MossySkeletonEntity extends AbstractSkeleton {
         if (super.doHurtTarget(targetEntity)) {
             if (targetEntity instanceof LivingEntity) {
                 int i = 0;
-                if (this.level.getDifficulty() == Difficulty.NORMAL) {
+                if (this.level().getDifficulty() == Difficulty.NORMAL) {
                     i = 4;
-                } else if (this.level.getDifficulty() == Difficulty.HARD) {
+                } else if (this.level().getDifficulty() == Difficulty.HARD) {
                     i = 8;
                 }
 
@@ -107,9 +107,9 @@ public class MossySkeletonEntity extends AbstractSkeleton {
     protected AbstractArrow getArrow(ItemStack stack, float damageMultiplier) {
         AbstractArrow abstractArrowEntity = super.getArrow(stack, damageMultiplier);
         int i = 0;
-        if (this.level.getDifficulty() == Difficulty.NORMAL) {
+        if (this.level().getDifficulty() == Difficulty.NORMAL) {
             i = 4;
-        } else if (this.level.getDifficulty() == Difficulty.HARD) {
+        } else if (this.level().getDifficulty() == Difficulty.HARD) {
             i = 8;
         }
         if (abstractArrowEntity instanceof Arrow && i > 0) {

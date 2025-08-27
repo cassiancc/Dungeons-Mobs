@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.client.models.jungle;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
@@ -24,17 +25,18 @@ public class PoisonQuillVineModel extends AbstractVineModel {
     }
 
     @Override
-    public void setCustomAnimations(AbstractVineEntity entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(AbstractVineEntity entity, long uniqueID, AnimationState<AbstractVineEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        IBone head = this.getAnimationProcessor().getBone("head");
-        IBone headRotator = this.getAnimationProcessor().getBone("headRotator");
+        var head = this.getAnimationProcessor().getBone("head");
+        var headRotator = this.getAnimationProcessor().getBone("headRotator");
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        // FIXME
+        var extraData = customPredicate.getExtraData().get(0);
         if (extraData.headPitch != 0 || extraData.netHeadYaw != 0) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * ((float) Math.PI / 180F)));
+            head.setRotX(head.getRotX() + (extraData.headPitch * ((float) Math.PI / 180F)));
 
-            headRotator.setRotationY(headRotator.getRotationY() + (extraData.netHeadYaw * ((float) Math.PI / 180F)));
+            headRotator.setRotY(headRotator.getRotY() + (extraData.netHeadYaw * ((float) Math.PI / 180F)));
         }
     }
 }

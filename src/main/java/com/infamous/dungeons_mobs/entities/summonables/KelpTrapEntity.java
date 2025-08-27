@@ -13,25 +13,26 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+
 
 public class KelpTrapEntity extends AbstractTrapEntity {
 
     private static final EntityDataAccessor<Boolean> PULLING = SynchedEntityData.defineId(KelpTrapEntity.class,
             EntityDataSerializers.BOOLEAN);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int ensnareAnimationTick;
     public int ensnareAnimationLength = 5;
@@ -45,31 +46,30 @@ public class KelpTrapEntity extends AbstractTrapEntity {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
-
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.ensnareAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("kelp_trap_ensnare", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("kelp_trap_ensnare", LOOP));
         } else if (this.spawnAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("kelp_trap_spawn", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("kelp_trap_spawn", LOOP));
         } else if (this.decayAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_decay", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("vine_trap_decay", LOOP));
         } else {
             if (this.isPulling()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("kelp_trap_idle_pulling", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("kelp_trap_idle_pulling", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("vine_trap_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class KelpTrapEntity extends AbstractTrapEntity {
 
     @Override
     public void baseTick() {
-        if (!this.level.isClientSide && this.lifeTime == 0) {
+        if (!this.level().isClientSide && this.lifeTime == 0) {
             this.setPulling(true);
         }
 
@@ -120,11 +120,11 @@ public class KelpTrapEntity extends AbstractTrapEntity {
             this.bubbleAudioInterval--;
         }
 
-        if (!this.level.isClientSide && this.isPulling()) {
-            List<Entity> list = this.level.getEntities(this,
+        if (!this.level().isClientSide && this.isPulling()) {
+            List<Entity> list = this.level().getEntities(this,
                     this.getBoundingBox().inflate(0, this.waterBlocksAbove(), 0), Entity::isAlive);
             for (int i = 0; i < this.waterBlocksAbove(); i++) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.CURRENT_DOWN, this.getRandomX(0.25), this.getY() + i + 0.8D, this.getRandomZ(0.25) - 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.CURRENT_DOWN, this.getRandomX(0.25), this.getY() + i + 0.8D, this.getRandomZ(0.25) - 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
             }
             if (!list.isEmpty()) {
                 for (Entity entity : list) {
@@ -155,7 +155,7 @@ public class KelpTrapEntity extends AbstractTrapEntity {
         double waterBlocksAbove = 0;
         for (int i = 0; i < 256; i++) {
             waterBlocksAbove = i;
-            if (!this.level.getFluidState(this.blockPosition().above(i)).is(FluidTags.WATER)) {
+            if (!this.level().getFluidState(this.blockPosition().above(i)).is(FluidTags.WATER)) {
                 return waterBlocksAbove;
             }
         }
@@ -164,7 +164,7 @@ public class KelpTrapEntity extends AbstractTrapEntity {
 
     @Override
     public void increaseLifeTime() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (this.isTrappingMob) {
                 this.trappedMobTime++;
 
@@ -172,7 +172,7 @@ public class KelpTrapEntity extends AbstractTrapEntity {
                     if (this.ensnareAnimationTick <= 0) {
                         this.setPulling(false);
                         this.ensnareAnimationTick = this.ensnareAnimationLength;
-                        this.level.broadcastEntityEvent(this, (byte) 3);
+                        this.level().broadcastEntityEvent(this, (byte) 3);
                     }
                 }
             } else {
@@ -181,23 +181,23 @@ public class KelpTrapEntity extends AbstractTrapEntity {
 
             if (this.trappedMobTime == this.timeToDecay()) {
                 this.decayAnimationTick = this.getDecayAnimationLength();
-                this.level.broadcastEntityEvent(this, (byte) 2);
+                this.level().broadcastEntityEvent(this, (byte) 2);
             }
 
             if (this.isPulling()) {
                 if (this.lifeTime == 200) {
                     this.ensnareAnimationTick = this.ensnareAnimationLength;
-                    this.level.broadcastEntityEvent(this, (byte) 3);
+                    this.level().broadcastEntityEvent(this, (byte) 3);
                 }
 
                 if (this.lifeTime == 200 + this.ensnareAnimationLength) {
                     this.decayAnimationTick = this.getDecayAnimationLength();
-                    this.level.broadcastEntityEvent(this, (byte) 2);
+                    this.level().broadcastEntityEvent(this, (byte) 2);
                 }
             } else {
                 if (this.trappedMobTime == 100) {
                     this.decayAnimationTick = this.getDecayAnimationLength();
-                    this.level.broadcastEntityEvent(this, (byte) 2);
+                    this.level().broadcastEntityEvent(this, (byte) 2);
                 }
             }
 
@@ -218,5 +218,10 @@ public class KelpTrapEntity extends AbstractTrapEntity {
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

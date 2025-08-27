@@ -10,23 +10,23 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+
 
 public class SimpleTrapEntity extends AbstractTrapEntity {
 
     private static final EntityDataAccessor<Integer> TRAP_TYPE = SynchedEntityData.defineId(SimpleTrapEntity.class,
             EntityDataSerializers.INT);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public SimpleTrapEntity(EntityType<? extends SimpleTrapEntity> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -56,27 +56,27 @@ public class SimpleTrapEntity extends AbstractTrapEntity {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
     }
 
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.getTrapType() == 0) {
             if (this.spawnAnimationTick > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("web_trap_spawn", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("web_trap_spawn", LOOP));
             } else if (this.decayAnimationTick > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_decay", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("vine_trap_decay", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("vine_trap_idle", LOOP));
             }
         } else if (this.getTrapType() == 1) {
             if (this.spawnAnimationTick > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_spawn", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("vine_trap_spawn", LOOP));
             } else if (this.decayAnimationTick > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_decay", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("vine_trap_decay", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("vine_trap_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("vine_trap_idle", LOOP));
             }
         } else {
 
@@ -85,8 +85,8 @@ public class SimpleTrapEntity extends AbstractTrapEntity {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
@@ -108,5 +108,10 @@ public class SimpleTrapEntity extends AbstractTrapEntity {
         } else {
             return super.canTrapEntity(entity);
         }
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

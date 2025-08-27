@@ -3,39 +3,38 @@ package com.infamous.dungeons_mobs.client.models.illager;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.EnchanterEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-public class EnchanterModel extends AnimatedGeoModel {
+public class EnchanterModel extends GeoModel<EnchanterEntity> {
 
     @Override
-    public ResourceLocation getAnimationResource(Object entity) {
+    public ResourceLocation getAnimationResource(EnchanterEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/enchanter.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Object entity) {
+    public ResourceLocation getModelResource(EnchanterEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/enchanter.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Object entity) {
+    public ResourceLocation getTextureResource(EnchanterEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/enchanter/enchanter.png");
     }
 
     @Override
-    public void setCustomAnimations(IAnimatable entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(EnchanterEntity entity, int uniqueID, AnimationState<EnchanterEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         EnchanterEntity entityIn = (EnchanterEntity) entity;
 
-        IBone head = this.getAnimationProcessor().getBone("head");
+        var head = this.getAnimationProcessor().getBone("head");
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        EntityModelData extraData = customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
         //if (extraData.headPitch != 0 || extraData.netHeadYaw != 0) {
         //head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
         //head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));

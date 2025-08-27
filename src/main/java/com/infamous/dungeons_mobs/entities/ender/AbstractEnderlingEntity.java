@@ -31,13 +31,13 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
-public abstract class AbstractEnderlingEntity extends Monster implements IAnimatable {
+public abstract class AbstractEnderlingEntity extends Monster implements GeoAnimatable {
 
     public static final EntityDataAccessor<Integer> ATTACKING = SynchedEntityData.defineId(AbstractEnderlingEntity.class,
             EntityDataSerializers.INT);
@@ -53,7 +53,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
 
     protected AbstractEnderlingEntity(EntityType<? extends AbstractEnderlingEntity> p_i48553_1_, Level p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
-        this.maxUpStep = 1.0F;
+        this.setMaxUpStep(1.0F);
         this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
     }
 
@@ -113,7 +113,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
     @SuppressWarnings("unchecked")
     public boolean checkSpawnRules(LevelAccessor p_213380_1_, MobSpawnType p_213380_2_) {
         return (p_213380_2_ != MobSpawnType.NATURAL
-                || !this.level.getBiome(this.blockPosition()).is(Biomes.THE_END)) && checkMobSpawnRules(((EntityType<? extends Mob>) this.getType()), p_213380_1_,
+                || !this.level().getBiome(this.blockPosition()).is(Biomes.THE_END)) && checkMobSpawnRules(((EntityType<? extends Mob>) this.getType()), p_213380_1_,
                 p_213380_2_, this.blockPosition(), this.random);
     }
 
@@ -146,9 +146,9 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
     }
 
     public void aiStep() {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             for (int i = 0; i < 2; ++i) {
-                this.level.addParticle(ParticleTypes.PORTAL, this.getRandomX(0.5D), this.getRandomY() - 0.25D,
+                this.level().addParticle(ParticleTypes.PORTAL, this.getRandomX(0.5D), this.getRandomY() - 0.25D,
                         this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(),
                         (this.random.nextDouble() - 0.5D) * 2.0D);
             }
@@ -164,9 +164,9 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
     }
 
     protected void customServerAiStep() {
-        if (this.shouldTeleportInDay() && this.level.isDay() && this.random.nextInt(600) == 0) {
+        if (this.shouldTeleportInDay() && this.level().isDay() && this.random.nextInt(600) == 0) {
             float f = this.getLightLevelDependentMagicValue();
-            if (f > 0.5F && this.level.canSeeSky(this.blockPosition())
+            if (f > 0.5F && this.level().canSeeSky(this.blockPosition())
                     && this.random.nextFloat() * 30.0F < (f - 0.4F) * 2.0F) {
                 this.setTarget(null);
                 this.teleport();
@@ -181,7 +181,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
     }
 
     protected boolean teleport() {
-        if (!this.level.isClientSide() && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             double d0 = this.getX() + (this.random.nextDouble() - 0.5D) * 64.0D;
             double d1 = this.getY() + (double) (this.random.nextInt(64) - 32);
             double d2 = this.getZ() + (this.random.nextDouble() - 0.5D) * 64.0D;
@@ -206,12 +206,12 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
         BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos(p_70825_1_, p_70825_3_, p_70825_5_);
 
         while (blockpos$mutable.getY() > 0
-                && !this.level.getBlockState(blockpos$mutable).getMaterial().blocksMotion()) {
+                && !this.level().getBlockState(blockpos$mutable).blocksMotion()) {
             blockpos$mutable.move(Direction.DOWN);
         }
 
-        BlockState blockstate = this.level.getBlockState(blockpos$mutable);
-        boolean flag = blockstate.getMaterial().blocksMotion();
+        BlockState blockstate = this.level().getBlockState(blockpos$mutable);
+        boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
             EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory
@@ -220,7 +220,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
                 return false;
             boolean flag2 = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
             if (!this.isSilent()) {
-                this.level.playSound(null, this.xo, this.yo, this.zo, SoundEvents.ENDERMAN_TELEPORT,
+                this.level().playSound(null, this.xo, this.yo, this.zo, SoundEvents.ENDERMAN_TELEPORT,
                         this.getSoundSource(), 1.0F, 1.0F);
                 this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
@@ -247,7 +247,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
             return false;
         } else {
             boolean flag = super.hurt(p_70097_1_, p_70097_2_);
-            if (!this.level.isClientSide() && !(p_70097_1_.getEntity() instanceof LivingEntity)
+            if (!this.level().isClientSide() && !(p_70097_1_.getEntity() instanceof LivingEntity)
                     && this.random.nextInt(2) == 0) {
                 this.teleport();
             }
@@ -337,11 +337,11 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
 
         protected void findTarget() {
             if (this.targetType != Player.class && this.targetType != ServerPlayer.class) {
-                this.target = this.mob.level.getNearestEntity(this.targetType, this.targetConditions, this.mob,
+                this.target = this.mob.level().getNearestEntity(this.targetType, this.targetConditions, this.mob,
                         this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(),
                         this.getTargetSearchArea(this.getFollowDistance()));
             } else {
-                this.target = this.mob.level.getNearestPlayer(this.targetConditions, this.mob, this.mob.getX(),
+                this.target = this.mob.level().getNearestPlayer(this.targetConditions, this.mob, this.mob.getX(),
                         this.mob.getEyeY(), this.mob.getZ());
             }
 
@@ -375,7 +375,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements IAnimat
         }
 
         public boolean canUse() {
-            this.pendingTarget = this.enderman.level.getNearestPlayer(this.startAggroTargetConditions, this.enderman);
+            this.pendingTarget = this.enderman.level().getNearestPlayer(this.startAggroTargetConditions, this.enderman);
             return this.pendingTarget != null;
         }
 

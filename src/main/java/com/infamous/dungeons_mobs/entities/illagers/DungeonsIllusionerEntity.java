@@ -49,23 +49,23 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimatable, SpawnArmoredMob {
+public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
     public int shootAnimationTick;
     public int shootAnimationLength = 35;
@@ -83,7 +83,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
 
     public int appearDelay = 0;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public DungeonsIllusionerEntity(Level world) {
         super(ModEntityTypes.ILLUSIONER.get(), world);
@@ -144,7 +144,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         } else {
             super.handleEntityEvent(p_28844_);
@@ -159,9 +159,9 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
             this.appearDelay--;
         }
 
-        if (!this.level.isClientSide && this.appearDelay == 1) {
+        if (!this.level().isClientSide && this.appearDelay == 1) {
             this.appearAnimationTick = appearAnimationLength;
-            this.level.broadcastEntityEvent(this, (byte) 8);
+            this.level().broadcastEntityEvent(this, (byte) 8);
         }
     }
 
@@ -184,38 +184,33 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         String suffix = "_uncrossed";
         if (IllagerArmsUtil.armorHasCrossedArms(this, this.getItemBySlot(EquipmentSlot.CHEST))) {
             suffix = "";
         }
         if (this.appearAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_appear" + suffix, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_appear" + suffix, LOOP));
         } else if (this.vanishAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_vanish" + suffix, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_vanish" + suffix, LOOP));
         } else if (this.shootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_shoot" + suffix, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_shoot" + suffix, LOOP));
         } else if (this.blindAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_blind" + suffix, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_blind" + suffix, LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_walk" + suffix, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_walk" + suffix, LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_celebrate", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("illusioner_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_idle" + suffix, LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("illusioner_idle" + suffix, LOOP));
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -282,7 +277,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
 
     @Override
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (p_70097_1_.getEntity() != null && this.isAlliedTo(p_70097_1_.getEntity()) && p_70097_1_ != DamageSource.OUT_OF_WORLD) {
+        if (p_70097_1_.getEntity() != null && this.isAlliedTo(p_70097_1_.getEntity()) && p_70097_1_ != damageSources().fellOutOfWorld()) {
             return false;
         } else {
             return super.hurt(p_70097_1_, p_70097_2_);
@@ -291,20 +286,20 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
 
     public void shootRocket(LivingEntity target) {
         {
-            int explosionsByDifficulty = this.level.getCurrentDifficultyAt(this.blockPosition()).getDifficulty().getId();
+            int explosionsByDifficulty = this.level().getCurrentDifficultyAt(this.blockPosition()).getDifficulty().getId();
             ItemStack fireworkRocket = ModProjectileHelper.createRocket(explosionsByDifficulty * 2, DyeColor.PINK, DyeColor.PURPLE);
-            FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(this.level, fireworkRocket, this, this.getX(), this.getEyeY() - (double) 0.15F, this.getZ(), true);
+            FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(this.level(), fireworkRocket, this, this.getX(), this.getEyeY() - (double) 0.15F, this.getZ(), true);
             double xDifference = target.getX() - this.getX();
             double yDifference = target.getY(0.3333333333333333D) - fireworkrocketentity.getY();
             double zDifference = target.getZ() - this.getZ();
-            fireworkrocketentity.shoot(xDifference, yDifference, zDifference, 1.0F, (float) (18 - this.level.getDifficulty().getId() * 7.5));
+            fireworkrocketentity.shoot(xDifference, yDifference, zDifference, 1.0F, (float) (18 - this.level().getDifficulty().getId() * 7.5));
             this.playSound(SoundEvents.FIREWORK_ROCKET_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-            this.level.addFreshEntity(fireworkrocketentity);
+            this.level().addFreshEntity(fireworkrocketentity);
         }
     }
 
     private void spawnBlindingCloud(BlockPos pos) {
-        AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, pos.getX(), pos.getY(), pos.getZ());
+        AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level(), pos.getX(), pos.getY(), pos.getZ());
         areaeffectcloudentity.setRadius(3.0F);
         areaeffectcloudentity.setRadiusOnUse(-0.5F);
         areaeffectcloudentity.setWaitTime(10);
@@ -312,13 +307,25 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
 
         areaeffectcloudentity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100));
 
-        this.level.addFreshEntity(areaeffectcloudentity);
+        this.level().addFreshEntity(areaeffectcloudentity);
 
     }
 
     @Override
     public ArmorSet getArmorSet() {
         return ModItems.ILLUSIONER_ARMOR;
+    }
+
+
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class ShootAttackGoal extends Goal {
@@ -362,7 +369,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
         @Override
         public void start() {
             mob.shootAnimationTick = mob.shootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override
@@ -434,7 +441,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
         public void start() {
             mob.playSound(SoundEvents.ILLUSIONER_PREPARE_BLINDNESS, 1.0F, 1.0F);
             mob.blindAnimationTick = mob.blindAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 11);
+            mob.level().broadcastEntityEvent(mob, (byte) 11);
         }
 
         @Override
@@ -506,7 +513,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
         public boolean canUse() {
             target = mob.getTarget();
 
-            int nearbyClones = mob.level.getEntities(mob, mob.getBoundingBox().inflate(30.0D), ILLUSIONER_CLONE)
+            int nearbyClones = mob.level().getEntities(mob, mob.getBoundingBox().inflate(30.0D), ILLUSIONER_CLONE)
                     .size();
 
             return target != null && mob.tickCount >= this.nextUseTime && mob.random.nextInt(10) == 0 && mob.hasLineOfSight(target) && nearbyClones <= 0 && animationsUseable();
@@ -521,7 +528,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
         public void start() {
             mob.playSound(SoundEvents.ILLUSIONER_PREPARE_MIRROR, 1.0F, 1.0F);
             mob.vanishAnimationTick = mob.vanishAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 9);
+            mob.level().broadcastEntityEvent(mob, (byte) 9);
         }
 
         @Override
@@ -535,17 +542,17 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
             }
 
             if (target != null && mob.vanishAnimationTick == 1) {
-                SummonSpotEntity summonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
-                summonSpot.moveTo(target.blockPosition().offset(-12.5 + mob.random.nextInt(25), 0, -12.5 + mob.random.nextInt(25)), 0.0F, 0.0F);
-                ((ServerLevel) mob.level).addFreshEntityWithPassengers(summonSpot);
+                SummonSpotEntity summonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
+                summonSpot.moveTo(target.getX()-12.5 + mob.random.nextInt(25), target.getY(), target.getZ() -12.5 + mob.random.nextInt(25), 0.0F, 0.0F);
+                ((ServerLevel) mob.level()).addFreshEntityWithPassengers(summonSpot);
                 PositionUtils.moveToCorrectHeight(summonSpot);
 
-                mob.level.broadcastEntityEvent(mob, (byte) 7);
+                mob.level().broadcastEntityEvent(mob, (byte) 7);
                 mob.moveTo(summonSpot.blockPosition(), 0.0F, 0.0F);
                 mob.setYBodyRot(mob.random.nextInt(360));
                 mob.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(mob.getX(), mob.getEyeY(), mob.getZ()));
                 mob.appearDelay = 11;
-                mob.level.broadcastEntityEvent(mob, (byte) 6);
+                mob.level().broadcastEntityEvent(mob, (byte) 6);
                 mob.playSound(SoundEvents.ILLUSIONER_MIRROR_MOVE, 1.0F, 1.0F);
                 PositionUtils.moveToCorrectHeight(mob);
 
@@ -560,17 +567,17 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements IAnimat
                     }
                 }
 
-                int clonesByDifficulty = mob.level.getCurrentDifficultyAt(mob.blockPosition()).getDifficulty().getId();
+                int clonesByDifficulty = mob.level().getCurrentDifficultyAt(mob.blockPosition()).getDifficulty().getId();
 
                 for (int i = 0; i < clonesByDifficulty * 4; i++) {
-                    SummonSpotEntity cloneSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
-                    cloneSummonSpot.moveTo(target.blockPosition().offset(-12.5 + mob.random.nextInt(25), 0, -12.5 + mob.random.nextInt(25)), 0.0F, 0.0F);
+                    SummonSpotEntity cloneSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
+                    cloneSummonSpot.moveTo(target.getX() -12.5 + mob.random.nextInt(25), target.getY(),target.getZ() -12.5 + mob.random.nextInt(25), 0.0F, 0.0F);
                     cloneSummonSpot.mobSpawnRotation = mob.random.nextInt(360);
-                    ((ServerLevel) mob.level).addFreshEntityWithPassengers(cloneSummonSpot);
+                    ((ServerLevel) mob.level()).addFreshEntityWithPassengers(cloneSummonSpot);
                     PositionUtils.moveToCorrectHeight(cloneSummonSpot);
 
-                    IllusionerCloneEntity clone = ModEntityTypes.ILLUSIONER_CLONE.get().create(mob.level);
-                    clone.finalizeSpawn(((ServerLevel) mob.level), mob.level.getCurrentDifficultyAt(cloneSummonSpot.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                    IllusionerCloneEntity clone = ModEntityTypes.ILLUSIONER_CLONE.get().create(mob.level());
+                    clone.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(cloneSummonSpot.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
                     clone.setOwner(mob);
                     clone.setHealth(mob.getHealth());
                     for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {

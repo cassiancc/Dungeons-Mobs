@@ -5,6 +5,7 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -22,20 +23,15 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+public class CobwebProjectileEntity extends Projectile implements GeoAnimatable {
 
-public class CobwebProjectileEntity extends Projectile implements IAnimatable {
-
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public boolean delayedSpawnParticles;
 
@@ -82,7 +78,7 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
         this.updateRotation();
         float f = 0.99F;
         float f1 = 0.06F;
-        if (this.level.getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
+        if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
             this.remove(RemovalReason.DISCARDED);
         } else if (this.isInWaterOrBubble()) {
             this.remove(RemovalReason.DISCARDED);
@@ -106,7 +102,7 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
                 p_213868_1_.getEntity().hurt(DamageSource.indirectMobAttack(this, (LivingEntity) entity).setProjectile(), 1.0F);
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.spawnTrap(p_213868_1_.getEntity().getX(), p_213868_1_.getEntity().getY(), p_213868_1_.getEntity().getZ());
 
                 this.remove(RemovalReason.DISCARDED);
@@ -115,11 +111,11 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
     }
 
     public void createSpawnParticles() {
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte) 1);
+        if (!this.level().isClientSide()) {
+            this.level().broadcastEntityEvent(this, (byte) 1);
         } else {
             for (int i = 0; i < 5; i++) {
-                this.level.addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -128,7 +124,7 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
     public void handleEntityEvent(byte p_70103_1_) {
         if (p_70103_1_ == 1) {
             for (int i = 0; i < 5; i++) {
-                this.level.addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         } else {
             super.handleEntityEvent(p_70103_1_);
@@ -137,7 +133,7 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
 
     protected void onHitBlock(BlockHitResult p_230299_1_) {
         super.onHitBlock(p_230299_1_);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.spawnTrap(this.getX(), this.getY(), this.getZ());
 
             this.remove(RemovalReason.DISCARDED);
@@ -146,11 +142,11 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
     }
 
     public void spawnTrap(double x, double y, double z) {
-        SimpleTrapEntity trap = ModEntityTypes.SIMPLE_TRAP.get().create(this.level);
+        SimpleTrapEntity trap = ModEntityTypes.SIMPLE_TRAP.get().create(this.level());
         trap.moveTo(x, y, z);
         trap.owner = this.getOwner();
 
-        this.level.addFreshEntity(trap);
+        this.level().addFreshEntity(trap);
 
         this.playSound(ModSoundEvents.SPIDER_WEB_IMPACT.get(), 1.0F, 1.0F);
     }
@@ -159,22 +155,28 @@ public class CobwebProjectileEntity extends Projectile implements IAnimatable {
 
     }
 
+
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("web_projectile_idle", LOOP));
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
+        event.getController().setAnimation(RawAnimation.begin().then("web_projectile_idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

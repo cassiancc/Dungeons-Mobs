@@ -39,8 +39,8 @@ public abstract class ConstructEntity extends PathfinderMob {
 
     @Nullable
     public LivingEntity getCaster() {
-        if (this.caster == null && this.casterUuid != null && this.level instanceof ServerLevel) {
-            Entity entity = ((ServerLevel) this.level).getEntity(this.casterUuid);
+        if (this.caster == null && this.casterUuid != null && this.level() instanceof ServerLevel) {
+            Entity entity = ((ServerLevel) this.level()).getEntity(this.casterUuid);
             if (entity instanceof LivingEntity) {
                 this.caster = (LivingEntity) entity;
             }
@@ -77,7 +77,7 @@ public abstract class ConstructEntity extends PathfinderMob {
     }
 
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (p_70097_1_ == DamageSource.OUT_OF_WORLD) {
+        if (p_70097_1_ == this.damageSources().fellOutOfWorld()) {
             return super.hurt(p_70097_1_, p_70097_2_);
         } else {
             return false;
@@ -170,7 +170,7 @@ public abstract class ConstructEntity extends PathfinderMob {
         //this.faceDirection(this.directionToFace);
 
         if (this.getLifeTicks() > 100) {
-            List<Entity> v = this.level.getEntities(this, this.getBoundingBox());
+            List<Entity> v = this.level().getEntities(this, this.getBoundingBox());
             for (Entity entity : v) {
                 if (entity != this && entity instanceof ConstructEntity) {
                     this.remove(RemovalReason.DISCARDED);
@@ -180,7 +180,7 @@ public abstract class ConstructEntity extends PathfinderMob {
         }
 
         this.setLifeTicks(this.getLifeTicks() - 1);
-        if (!this.level.isClientSide() && this.getLifeTicks() <= 0) {
+        if (!this.level().isClientSide() && this.getLifeTicks() <= 0) {
             this.handleExpiration();
         } else {
             this.handleExistence();
@@ -188,7 +188,7 @@ public abstract class ConstructEntity extends PathfinderMob {
     }
 
     public void spawnAreaDamage() {
-        AreaDamageEntity areaDamage = AreaDamageEntity.spawnAreaDamage(this.level, this.position(), this, 2.5F, DamageSource.mobAttack(this), 0.0F, 1.25F, 0.25F, 0.25F, 5, false, false, 0.75, 0.25, false, 0, 1);
-        this.level.addFreshEntity(areaDamage);
+        AreaDamageEntity areaDamage = AreaDamageEntity.spawnAreaDamage(this.level(), this.position(), this, 2.5F, this.damageSources().mobAttack(this), 0.0F, 1.25F, 0.25F, 0.25F, 5, false, false, 0.75, 0.25, false, 0, 1);
+        this.level().addFreshEntity(areaDamage);
     }
 }

@@ -4,15 +4,15 @@ import com.infamous.dungeons_mobs.client.models.summonables.TridentStormModel;
 import com.infamous.dungeons_mobs.entities.summonables.TridentStormEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class TridentStormRenderer extends GeoProjectilesRenderer<TridentStormEntity> {
+public class TridentStormRenderer extends GeoEntityRenderer<TridentStormEntity> {
     public TridentStormRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new TridentStormModel());
     }
@@ -22,7 +22,7 @@ public class TridentStormRenderer extends GeoProjectilesRenderer<TridentStormEnt
                             MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
                             float red, float green, float blue, float alpha) {
 
-        stackIn.mulPose(Vector3f.YP.rotationDegrees(animatable.getYRot() * ((float) Math.PI / 180F)));
+        stackIn.mulPose(Axis.YP.rotationDegrees(animatable.getYRot() * ((float) Math.PI / 180F)));
 
         if (animatable.lifeTime <= 1) {
             float scaleFactor = 0.0F;

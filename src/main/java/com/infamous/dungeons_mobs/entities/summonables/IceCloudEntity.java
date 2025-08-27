@@ -8,13 +8,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -27,20 +25,21 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Predicate;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class IceCloudEntity extends Entity implements IAnimatable {
+
+public class IceCloudEntity extends Entity implements GeoAnimatable {
 
     private static final Predicate<Entity> ALIVE = (p_213685_0_) -> {
         return p_213685_0_.isAlive();
@@ -58,7 +57,7 @@ public class IceCloudEntity extends Entity implements IAnimatable {
     public boolean falling;
     public boolean hasFormed;
     public int soundLoopTick;
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public IceCloudEntity(Level world) {
         super(ModEntityTypes.ICE_CLOUD.get(), world);
@@ -71,12 +70,12 @@ public class IceCloudEntity extends Entity implements IAnimatable {
     }
 
     public static void spawn(Entity summoningEntity, LivingEntity target) {
-        IceCloudEntity iceChunk = ModEntityTypes.ICE_CLOUD.get().create(summoningEntity.level);
+        IceCloudEntity iceChunk = ModEntityTypes.ICE_CLOUD.get().create(summoningEntity.level());
         iceChunk.moveTo(target.getX(), target.getY() + target.getBbHeight() + 3, target.getZ());
         iceChunk.target = target;
         iceChunk.owner = summoningEntity;
         iceChunk.playSound(ModSoundEvents.ICE_CHUNK_SUMMONED.get(), 1.0F, iceChunk.getRandomPitch());
-        summoningEntity.level.addFreshEntity(iceChunk);
+        summoningEntity.level().addFreshEntity(iceChunk);
     }
 
     public boolean isAttackable() {
@@ -155,12 +154,12 @@ public class IceCloudEntity extends Entity implements IAnimatable {
         this.yOld = this.getY();
         this.zOld = this.getZ();
 
-        if (this.level.isClientSide && this.landAnimationTick <= 0) {
+        if (this.level().isClientSide() && this.landAnimationTick <= 0) {
             if (this.hasFormed) {
-                this.level.addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(), (this.random.nextDouble() - 0.5D) * 2.0D);
+                this.level().addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), (this.random.nextDouble() - 0.5D) * 2.0D, -this.random.nextDouble(), (this.random.nextDouble() - 0.5D) * 2.0D);
             } else {
                 for (int i = 0; i < 2; i++) {
-                    this.level.addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), -(this.random.nextDouble() - 0.5D) * 2.0D, this.random.nextDouble(), -(this.random.nextDouble() - 0.5D) * 2.0D);
+                    this.level().addParticle(ModParticleTypes.SNOWFLAKE.get(), this.getRandomX(0.5D), this.getRandomY() - 0.25D, this.getRandomZ(0.5D), -(this.random.nextDouble() - 0.5D) * 2.0D, this.random.nextDouble(), -(this.random.nextDouble() - 0.5D) * 2.0D);
                 }
             }
         }
@@ -169,14 +168,14 @@ public class IceCloudEntity extends Entity implements IAnimatable {
         boolean flag = false;
         if (raytraceresult.getType() == HitResult.Type.BLOCK) {
             BlockPos blockpos = ((BlockHitResult) raytraceresult).getBlockPos();
-            BlockState blockstate = this.level.getBlockState(blockpos);
+            BlockState blockstate = this.level().getBlockState(blockpos);
             if (blockstate.is(Blocks.NETHER_PORTAL)) {
                 this.handleInsidePortal(blockpos);
                 flag = true;
             } else if (blockstate.is(Blocks.END_GATEWAY)) {
-                BlockEntity blockEntity = this.level.getBlockEntity(blockpos);
+                BlockEntity blockEntity = this.level().getBlockEntity(blockpos);
                 if (blockEntity instanceof TheEndGatewayBlockEntity && TheEndGatewayBlockEntity.canEntityTeleport(this)) {
-                    TheEndGatewayBlockEntity.teleportEntity(this.level, blockpos, blockstate, this, (TheEndGatewayBlockEntity) blockEntity);
+                    TheEndGatewayBlockEntity.teleportEntity(this.level(), blockpos, blockstate, this, (TheEndGatewayBlockEntity) blockEntity);
                 }
 
                 flag = true;
@@ -200,33 +199,33 @@ public class IceCloudEntity extends Entity implements IAnimatable {
             this.playSound(ModSoundEvents.ICE_CHUNK_IDLE_LOOP.get(), 0.5F, 1.0F);
         }
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
 
             if (this.target != null && !this.canHitEntity(this.target)) {
                 this.target = null;
-                this.level.broadcastEntityEvent(this, (byte) 7);
+                this.level().broadcastEntityEvent(this, (byte) 7);
             }
 
             if (!this.hasFormed && this.formAnimationTick <= 0) {
                 this.formAnimationTick = formAnimationLength;
-                this.level.broadcastEntityEvent(this, (byte) 1);
+                this.level().broadcastEntityEvent(this, (byte) 1);
             }
 
             if (this.formAnimationTick == 1) {
                 this.playSound(ModSoundEvents.ICE_CHUNK_IDLE_LOOP.get(), 0.5F, 1.0F);
                 this.hasFormed = true;
-                this.level.broadcastEntityEvent(this, (byte) 6);
+                this.level().broadcastEntityEvent(this, (byte) 6);
             }
 
             if ((this.target != null && this.lifeTime > 100 && this.fallAnimationTick <= 0 && this.falling == false) || this.target == null || this.target.isDeadOrDying()) {
                 this.playSound(ModSoundEvents.ICE_CHUNK_FALL.get(), 1.0F, this.getRandomPitch());
                 this.fallAnimationTick = this.fallAnimationLength;
-                this.level.broadcastEntityEvent(this, (byte) 2);
+                this.level().broadcastEntityEvent(this, (byte) 2);
             }
 
             if (this.fallAnimationTick == 1) {
                 this.falling = true;
-                this.level.broadcastEntityEvent(this, (byte) 4);
+                this.level().broadcastEntityEvent(this, (byte) 4);
             }
 
             if (this.landAnimationTick == 1 || this.lifeTime > 150) {
@@ -250,10 +249,10 @@ public class IceCloudEntity extends Entity implements IAnimatable {
 
     protected void onHit(HitResult p_70227_1_) {
         HitResult.Type raytraceresult$type = p_70227_1_.getType();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide()) {
             if (this.landAnimationTick <= 0) {
                 this.landAnimationTick = landAnimationLength;
-                this.level.broadcastEntityEvent(this, (byte) 3);
+                this.level().broadcastEntityEvent(this, (byte) 3);
                 this.land();
                 this.moveTo(this.getX(), this.getY() - 1, this.getZ());
                 this.playSound(ModSoundEvents.ICE_CHUNK_LAND.get(), 1.5F, this.getRandomPitch());
@@ -281,7 +280,7 @@ public class IceCloudEntity extends Entity implements IAnimatable {
                 this.strongKnockback(entity);
             }
 
-            this.level.broadcastEntityEvent(this, (byte) 5);
+            this.level().broadcastEntityEvent(this, (byte) 5);
         }
 
     }
@@ -310,31 +309,34 @@ public class IceCloudEntity extends Entity implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.formAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("ice_chunk_form", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("ice_chunk_form", LOOP));
         } else if (this.landAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("ice_chunk_land", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("ice_chunk_land", LOOP));
         } else if (this.fallAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("ice_chunk_fall", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("ice_chunk_fall", LOOP));
         } else {
             if (this.hasFormed) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("ice_chunk_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("ice_chunk_idle", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("ice_chunk_idle_unformed", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("ice_chunk_idle_unformed", LOOP));
             }
         }
         return PlayState.CONTINUE;
     }
-
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
@@ -353,7 +355,7 @@ public class IceCloudEntity extends Entity implements IAnimatable {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

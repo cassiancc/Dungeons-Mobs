@@ -9,9 +9,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class MageMissileRenderer extends GeoProjectilesRenderer<MageMissileEntity> {
+public class MageMissileRenderer extends GeoEntityRenderer<MageMissileEntity> {
 
     public MageMissileRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new MageMissileModel());

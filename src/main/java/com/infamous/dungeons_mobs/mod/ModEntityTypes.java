@@ -583,7 +583,8 @@ public class ModEntityTypes {
         ENTITY_IDS.add(key);
         RegistryObject<EntityType<T>> entityType = ENTITY_TYPES.register(key, sup);
 
-        SPAWN_EGGS.register(key + "_spawn_egg", () -> new ForgeSpawnEggItem(entityType, primaryColor, secondaryColor, new Item.Properties().tab(DUNGEONS_MOBS)));
+        // TODO add to main creative tab
+        SPAWN_EGGS.register(key + "_spawn_egg", () -> new ForgeSpawnEggItem(entityType, primaryColor, secondaryColor, new Item.Properties()));
 
         return entityType;
     }

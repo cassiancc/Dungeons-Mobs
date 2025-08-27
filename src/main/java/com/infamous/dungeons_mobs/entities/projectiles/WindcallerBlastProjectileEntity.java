@@ -4,6 +4,7 @@ import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -43,7 +44,7 @@ public class WindcallerBlastProjectileEntity extends AbstractHurtingProjectile {
 
         this.lifeTime++;
 
-        if (!this.level.isClientSide && this.lifeTime > 10) {
+        if (!this.level().isClientSide && this.lifeTime > 10) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -52,7 +53,7 @@ public class WindcallerBlastProjectileEntity extends AbstractHurtingProjectile {
     public void tick() {
         super.tick();
         for (int i = 0; i < 3; i++) {
-            this.level.addParticle(this.getTrailParticle(), this.getRandomX(1), this.getRandomY(), this.getRandomZ(1), 0.0D, 0.0D, 0.0D);
+            this.level().addParticle(this.getTrailParticle(), this.getRandomX(1), this.getRandomY(), this.getRandomZ(1), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -85,7 +86,7 @@ public class WindcallerBlastProjectileEntity extends AbstractHurtingProjectile {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             entity.getRootVehicle().ejectPassengers();
             if (entity instanceof LivingEntity) {
                 double d1 = this.getX() - entity.getX();
@@ -120,7 +121,7 @@ public class WindcallerBlastProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

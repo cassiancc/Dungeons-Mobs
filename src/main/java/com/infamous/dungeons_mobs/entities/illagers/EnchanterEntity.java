@@ -24,14 +24,14 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -42,15 +42,15 @@ import java.util.stream.Collectors;
 import static baguchan.enchantwithmob.registry.MobEnchants.PROTECTION;
 import static baguchan.enchantwithmob.registry.MobEnchants.STRONG;
 import static com.infamous.dungeons_mobs.network.datasync.ModDataSerializers.UUID_LIST;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class EnchanterEntity extends SpellcasterIllager implements IAnimatable {
+public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable {
 
     public static final EntityDataAccessor<Integer> ATTACK_TICKS = SynchedEntityData.defineId(EnchanterEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> ENCHANT_TICKS = SynchedEntityData.defineId(EnchanterEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<List<UUID>> ENCHANTMENT_TARGETS = SynchedEntityData.defineId(EnchanterEntity.class, UUID_LIST.get());
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private Monster enchantmentTarget;
     private List<Monster> enchantmentTargets = new ObjectArrayList<>();
@@ -132,12 +132,12 @@ public class EnchanterEntity extends SpellcasterIllager implements IAnimatable {
 
     public void baseTick() {
         super.baseTick();
-        if (this.level.getNearestPlayer(this, 2) != null && this.getTarget() != null && this.level.getNearestPlayer(this, 2) == this.getTarget()) {
+        if (this.level().getNearestPlayer(this, 2) != null && this.getTarget() != null && this.level().getNearestPlayer(this, 2) == this.getTarget()) {
             if (this.getAttackTicks() == 0 && this.random.nextInt(10) == 0) {
                 this.setAttackTicks(40);
                 this.playSound(ModSoundEvents.ENCHANTER_PRE_ATTACK.get(), this.getSoundVolume(), this.getVoicePitch());
             } else if (this.getAttackTicks() == 12) {
-                this.doHurtTarget(this.level.getNearestPlayer(this, 2));
+                this.doHurtTarget(this.level().getNearestPlayer(this, 2));
                 this.playSound(ModSoundEvents.ENCHANTER_ATTACK.get(), this.getSoundVolume(), this.getVoicePitch());
             }
         }
@@ -174,26 +174,22 @@ public class EnchanterEntity extends SpellcasterIllager implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 5, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.getEnchantTicks() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("enchanter_enchant", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("enchanter_enchant", LOOP));
         } else if (this.getAttackTicks() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("enchanter_attack", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("enchanter_attack", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("enchanter_walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("enchanter_walk", LOOP));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("enchanter_idle", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("enchanter_idle", LOOP));
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     /**
@@ -248,6 +244,16 @@ public class EnchanterEntity extends SpellcasterIllager implements IAnimatable {
         return illagerArmPose;
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     class CastingSpellGoal extends SpellcasterIllager.SpellcasterCastingSpellGoal {
         private CastingSpellGoal() {
         }
@@ -273,7 +279,7 @@ public class EnchanterEntity extends SpellcasterIllager implements IAnimatable {
             } else if (EnchanterEntity.this.enchantmentTargets.size() > 1) {
                 return false;
             } else {
-                List<LivingEntity> list = AreaOfEffectHelper.getNearbyEnemies(EnchanterEntity.this, 16, EnchanterEntity.this.level, livingEntity -> {
+                List<LivingEntity> list = AreaOfEffectHelper.getNearbyEnemies(EnchanterEntity.this, 16, EnchanterEntity.this.level(), livingEntity -> {
                     if (livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).isPresent()) {
                         MobEnchantCapability mobEnchantCapability = livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).resolve().get();
                         return !mobEnchantCapability.hasEnchant() && livingEntity instanceof Monster;

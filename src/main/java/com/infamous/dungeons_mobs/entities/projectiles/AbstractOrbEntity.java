@@ -28,7 +28,7 @@ public abstract class AbstractOrbEntity extends Fireball {
      */
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.remove(RemovalReason.DISCARDED);
         }
 

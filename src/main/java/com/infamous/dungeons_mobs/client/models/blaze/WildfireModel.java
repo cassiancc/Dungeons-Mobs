@@ -6,43 +6,39 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
 
-public class WildfireModel extends AnimatedGeoModel {
+public class WildfireModel extends GeoModel<WildfireEntity> {
 
     @Override
-    public ResourceLocation getAnimationResource(Object entity) {
+    public ResourceLocation getAnimationResource(WildfireEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/wildfire.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Object entity) {
+    public ResourceLocation getModelResource(WildfireEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/wildfire.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Object entity) {
+    public ResourceLocation getTextureResource(WildfireEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/blaze/wildfire.png");
     }
 
     @Override
-    public void setCustomAnimations(IAnimatable entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(WildfireEntity entity, int uniqueID, AnimationState<WildfireEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         LivingEntity entityIn = (LivingEntity) entity;
 
-        IBone head = this.getAnimationProcessor().getBone("head");
+        var head = this.getAnimationProcessor().getBone("head");
 
-        IBone shield1 = this.getAnimationProcessor().getBone("shield1");
-        IBone shield2 = this.getAnimationProcessor().getBone("shield2");
-        IBone shield3 = this.getAnimationProcessor().getBone("shield3");
-        IBone shield4 = this.getAnimationProcessor().getBone("shield4");
+        var shield1 = this.getAnimationProcessor().getBone("shield1");
+        var shield2 = this.getAnimationProcessor().getBone("shield2");
+        var shield3 = this.getAnimationProcessor().getBone("shield3");
+        var shield4 = this.getAnimationProcessor().getBone("shield4");
 
         WildfireEntity wildfire = ((WildfireEntity) entity);
 
@@ -81,7 +77,7 @@ public class WildfireModel extends AnimatedGeoModel {
     }
 
     @Override
-    public void setMolangQueries(IAnimatable animatable, double currentTick) {
+    public void setMolangQueries(WildfireEntity animatable, double currentTick) {
         super.setMolangQueries(animatable, currentTick);
 
         MolangParser parser = GeckoLibCache.getInstance().parser;

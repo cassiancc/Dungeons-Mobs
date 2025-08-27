@@ -38,14 +38,14 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -53,9 +53,9 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArmoredMob {
+public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnArmoredMob {
 
     public int shootAnimationTick;
     public int shootAnimationLength = 20;
@@ -69,7 +69,7 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
     public int summonAnimationActionPoint5 = summonAnimationLength - 38;
     public int specialAnimationTick;
     public int specialAnimationLength = 48;
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public NecromancerEntity(Level worldIn) {
         super(ModEntityTypes.NECROMANCER.get(), worldIn);
@@ -78,7 +78,7 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
     public NecromancerEntity(EntityType<? extends NecromancerEntity> p_i48555_1_, Level p_i48555_2_) {
         super(p_i48555_1_, p_i48555_2_);
         this.xpReward = 20;
-        this.maxUpStep = 1.0F;
+        this.setMaxUpStep(1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -186,13 +186,13 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
         super.baseTick();
         this.tickDownAnimTimers();
 
-        if (!this.level.isClientSide && this.getTarget() == null && this.random.nextInt(300) == 0) {
+        if (!this.level().isClientSide && this.getTarget() == null && this.random.nextInt(300) == 0) {
             this.specialAnimationTick = this.specialAnimationLength;
-            this.level.broadcastEntityEvent(this, (byte) 4);
+            this.level().broadcastEntityEvent(this, (byte) 4);
             this.playSound(ModSoundEvents.NECROMANCER_LAUGH.get(), this.getSoundVolume(), this.getVoicePitch());
         }
 
-        if (!this.level.isClientSide && this.getTarget() != null && (this.random.nextInt(100) == 0 || this.getTarget().deathTime > 0)) {
+        if (!this.level().isClientSide && this.getTarget() != null && (this.random.nextInt(100) == 0 || this.getTarget().deathTime > 0)) {
             this.playSound(ModSoundEvents.NECROMANCER_LAUGH.get(), this.getSoundVolume(), this.getVoicePitch());
             this.ambientSoundTime = -this.getAmbientSoundInterval() / 2;
         }
@@ -211,37 +211,42 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
             this.summonAnimationTick--;
         }
     }
-
+    
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.summonAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("necromancer_summon", LOOP));
         } else if (this.shootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_shoot", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("necromancer_shoot", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("necromancer_walk", LOOP));
         } else {
             if (this.specialAnimationTick > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_rare_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("necromancer_rare_idle", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("necromancer_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("necromancer_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public ArmorSet getArmorSet() {
+        return ModItems.NECROMANCER_ARMOR;
     }
 
     @Override
-    public ArmorSet getArmorSet() {
-        return ModItems.NECROMANCER_ARMOR;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class SummonGoal extends Goal {
@@ -287,7 +292,7 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
         public void start() {
             mob.playSound(ModSoundEvents.NECROMANCER_PREPARE_SUMMON.get(), 1.0F, 1.0F);
             mob.summonAnimationTick = mob.summonAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 9);
+            mob.level().broadcastEntityEvent(mob, (byte) 9);
         }
 
         @Override
@@ -302,7 +307,7 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
                             mob.summonAnimationTick == mob.summonAnimationActionPoint3 ||
                             (mob.summonAnimationTick == mob.summonAnimationActionPoint4 && mob.random.nextBoolean()) ||
                             (mob.summonAnimationTick == mob.summonAnimationActionPoint5 && mob.random.nextBoolean()))) {
-                SummonSpotEntity mobSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level);
+                SummonSpotEntity mobSummonSpot = ModEntityTypes.SUMMON_SPOT.get().create(mob.level());
                 mobSummonSpot.mobSpawnRotation = mob.random.nextInt(360);
                 mobSummonSpot.setSummonType(2);
                 BlockPos summonPos = mob.blockPosition().offset(-mobSummonRange + mob.random.nextInt((mobSummonRange * 2) + 1), 0, -mobSummonRange + mob.random.nextInt((mobSummonRange * 2) + 1));
@@ -317,7 +322,7 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
                 if (mobSummonSpot.isInWall() || !canSee(mobSummonSpot, target)) {
                     summonPos = mob.blockPosition();
                 }
-                ((ServerLevel) mob.level).addFreshEntityWithPassengers(mobSummonSpot);
+                ((ServerLevel) mob.level()).addFreshEntityWithPassengers(mobSummonSpot);
                 PositionUtils.moveToCorrectHeight(mobSummonSpot);
 
                 EntityType<?> entityType = getEntityType();
@@ -336,10 +341,10 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
                 }
 
                 summonedMob.setTarget(target);
-                summonedMob.finalizeSpawn(((ServerLevel) mob.level), mob.level.getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
                 mobSummonSpot.playSound(ModSoundEvents.NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                 if (mob.getTeam() != null) {
-                    Scoreboard scoreboard = mob.level.getScoreboard();
+                    Scoreboard scoreboard = mob.level().getScoreboard();
                     scoreboard.addPlayerToTeam(summonedMob.getScoreboardName(), scoreboard.getPlayerTeam(mob.getTeam().getName()));
                 }
                 mobSummonSpot.summonedEntity = summonedMob;
@@ -374,9 +379,9 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
         public boolean canSee(Entity entitySeeing, Entity p_70685_1_) {
             Vec3 vector3d = new Vec3(entitySeeing.getX(), entitySeeing.getEyeY(), entitySeeing.getZ());
             Vec3 vector3d1 = new Vec3(p_70685_1_.getX(), p_70685_1_.getEyeY(), p_70685_1_.getZ());
-            if (p_70685_1_.level != entitySeeing.level || vector3d1.distanceToSqr(vector3d) > 128.0D * 128.0D)
+            if (p_70685_1_.level() != entitySeeing.level() || vector3d1.distanceToSqr(vector3d) > 128.0D * 128.0D)
                 return false; //Forge Backport MC-209819
-            return entitySeeing.level.clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entitySeeing)).getType() == HitResult.Type.MISS;
+            return entitySeeing.level().clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entitySeeing)).getType() == HitResult.Type.MISS;
         }
 
     }
@@ -415,7 +420,7 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
         @Override
         public void start() {
             mob.shootAnimationTick = mob.shootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 11);
+            mob.level().broadcastEntityEvent(mob, (byte) 11);
         }
 
         @Override
@@ -429,11 +434,11 @@ public class NecromancerEntity extends Skeleton implements IAnimatable, SpawnArm
                 double d1 = target.getX() - pos.x;
                 double d2 = target.getY(0.6D) - pos.y;
                 double d3 = target.getZ() - pos.z;
-                NecromancerOrbEntity necromancerOrb = new NecromancerOrbEntity(mob.level, mob, d1, d2, d3);
+                NecromancerOrbEntity necromancerOrb = new NecromancerOrbEntity(mob.level(), mob, d1, d2, d3);
                 necromancerOrb.setDelayedForm(true);
                 necromancerOrb.rotateToMatchMovement();
                 necromancerOrb.moveTo(pos.x, pos.y, pos.z);
-                mob.level.addFreshEntity(necromancerOrb);
+                mob.level().addFreshEntity(necromancerOrb);
                 mob.playSound(ModSoundEvents.NECROMANCER_SHOOT.get(), 1.0F, 1.0F);
             }
         }

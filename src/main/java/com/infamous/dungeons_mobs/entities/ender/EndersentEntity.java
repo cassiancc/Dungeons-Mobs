@@ -29,23 +29,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-public class EndersentEntity extends AbstractEnderlingEntity implements IAnimatable {
+public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnimatable {
 
     public static final EntityDataAccessor<Integer> TELEPORTING = SynchedEntityData.defineId(EndersentEntity.class, EntityDataSerializers.INT);
     private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setCreateWorldFog(true).setPlayBossMusic(true);
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public EndersentEntity(EntityType<? extends EndersentEntity> p_i50210_1_, Level p_i50210_2_) {
         super(p_i50210_1_, p_i50210_2_);
@@ -213,15 +207,15 @@ public class EndersentEntity extends AbstractEnderlingEntity implements IAnimata
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         if (this.deathTime > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("endersent_death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
         } else if (this.isTeleporting() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("endersent_teleport", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_teleport", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         } else if (this.isAttacking() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("endersent_attack", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_attack", ILoopType.EDefaultLoopTypes.LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("endersent_walk", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_walk", ILoopType.EDefaultLoopTypes.LOOP));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("endersent_idle", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -232,7 +226,7 @@ public class EndersentEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     protected boolean teleport() {
-        if (!this.level.isClientSide() && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             double d0 = this.getX() + (this.random.nextDouble() - 0.5D) * 32.0D;
             double d1 = this.getY() + (double) (this.random.nextInt(8) - 4);
             double d2 = this.getZ() + (this.random.nextDouble() - 0.5D) * 32.0D;

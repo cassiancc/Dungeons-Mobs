@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.entities.summonables;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -12,18 +13,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class SummonSpotEntity extends Entity implements IAnimatable {
+public class SummonSpotEntity extends Entity implements GeoAnimatable {
 
     private static final EntityDataAccessor<Integer> SUMMON_TYPE = SynchedEntityData.defineId(SummonSpotEntity.class,
             EntityDataSerializers.INT);
@@ -32,7 +32,7 @@ public class SummonSpotEntity extends Entity implements IAnimatable {
 
     public Entity summonedEntity = null;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int mobSpawnRotation;
 
@@ -50,13 +50,13 @@ public class SummonSpotEntity extends Entity implements IAnimatable {
 
         this.lifeTime++;
 
-        if (!this.level.isClientSide && this.lifeTime == this.getSummonTime() && this.summonedEntity != null) {
+        if (!this.level().isClientSide() && this.lifeTime == this.getSummonTime() && this.summonedEntity != null) {
             summonedEntity.moveTo(this.blockPosition(), 0.0F, 0.0F);
             summonedEntity.setYBodyRot(this.random.nextInt(360));
-            ((ServerLevel) this.level).addFreshEntityWithPassengers(summonedEntity);
+            ((ServerLevel) this.level()).addFreshEntityWithPassengers(summonedEntity);
         }
 
-        if (!this.level.isClientSide && this.lifeTime >= this.getDespawnTime()) {
+        if (!this.level().isClientSide() && this.lifeTime >= this.getDespawnTime()) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -113,34 +113,36 @@ public class SummonSpotEntity extends Entity implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 1, this::predicate));
     }
 
-
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(RawAnimation event) {
         if (this.getSummonType() == 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_summon_spot_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_summon_spot_summon", LOOP));
         } else if (this.getSummonType() == 1) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("wildfire_summon_spot_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("wildfire_summon_spot_summon", LOOP));
         } else if (this.getSummonType() == 2) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_summon_spot_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_summon_spot_summon", LOOP));
         } else if (this.getSummonType() == 3) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("illusioner_summon_spot_summon", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("illusioner_summon_spot_summon", LOOP));
         } else {
 
         }
         return PlayState.CONTINUE;
     }
-
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
 }

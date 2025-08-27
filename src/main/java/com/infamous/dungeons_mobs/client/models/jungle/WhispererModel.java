@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.molang.MolangParser;
@@ -16,7 +17,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
-public class WhispererModel<T extends WhispererEntity> extends AnimatedGeoModel<T> {
+public class WhispererModel<T extends WhispererEntity> extends GeoModel<T> {
 
     @Override
     public ResourceLocation getAnimationResource(T entity) {

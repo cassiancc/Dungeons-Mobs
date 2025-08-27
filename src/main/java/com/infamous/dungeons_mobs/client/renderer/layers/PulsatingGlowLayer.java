@@ -8,13 +8,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.model.provider.GeoModelProvider;
-import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoRenderer;
+import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 @OnlyIn(Dist.CLIENT)
-public class PulsatingGlowLayer<T extends LivingEntity & IAnimatable> extends GeoLayerRenderer<T> {
+public class PulsatingGlowLayer<T extends LivingEntity & GeoAnimatable> extends GeoRenderLayer<T> {
 
     public ResourceLocation textureLocation;
 
@@ -22,7 +22,7 @@ public class PulsatingGlowLayer<T extends LivingEntity & IAnimatable> extends Ge
     public float pulseAmount;
     public float minimumPulseAmount;
 
-    public PulsatingGlowLayer(IGeoRenderer<T> endermanReplacementRenderer, ResourceLocation textureLocation, float pulseSpeed, float pulseAmount, float minimumPulseAmount) {
+    public PulsatingGlowLayer(GeoRenderer<T> endermanReplacementRenderer, ResourceLocation textureLocation, float pulseSpeed, float pulseAmount, float minimumPulseAmount) {
         super(endermanReplacementRenderer);
         this.textureLocation = textureLocation;
         this.pulseSpeed = pulseSpeed;
@@ -35,13 +35,13 @@ public class PulsatingGlowLayer<T extends LivingEntity & IAnimatable> extends Ge
                        T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
 
-        GeoModelProvider<T> geomodel = this.getEntityModel();
+        GeoModel<T> geomodel = this.getGeoModel();
 
         // original speed: 0.045F
         // original amount: 0.25F
 
         float glow = Math.max(minimumPulseAmount, Mth.cos(ageInTicks * pulseSpeed) * pulseAmount);
-        renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
+        render(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
     }
 
     @Override

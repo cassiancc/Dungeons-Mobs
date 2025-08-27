@@ -151,13 +151,13 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimata
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         if (this.getShootTime() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("snareling_shoot", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("snareling_shoot", LOOP));
         } else if (this.isAttacking() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("snareling_attack", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("snareling_attack", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("snareling_walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("snareling_walk", LOOP));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("snareling_idle", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("snareling_idle", LOOP));
         }
         return PlayState.CONTINUE;
     }

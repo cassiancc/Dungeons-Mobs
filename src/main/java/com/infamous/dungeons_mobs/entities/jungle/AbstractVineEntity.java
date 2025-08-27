@@ -15,11 +15,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.function.Predicate;
 
-public abstract class AbstractVineEntity extends PathfinderMob implements Enemy, IAnimatable {
+public abstract class AbstractVineEntity extends PathfinderMob implements Enemy, GeoAnimatable {
 
     public static final EntityDataAccessor<Integer> LENGTH = SynchedEntityData.defineId(AbstractVineEntity.class, EntityDataSerializers.INT);
 
@@ -262,10 +262,10 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
     public void playSound(SoundEvent vocalSound, SoundEvent foleySound, float vocalVolume, float vocalPitch, float foleyVolume, float foleyPitch) {
         if (!this.isSilent()) {
             if (vocalSound != null) {
-                this.level.playSound(null, this.getX(), this.getY(), this.getZ(), vocalSound, this.getSoundSource(), vocalVolume, vocalPitch);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), vocalSound, this.getSoundSource(), vocalVolume, vocalPitch);
             }
             if (foleySound != null) {
-                this.level.playSound(null, this.getX(), this.getY(), this.getZ(), foleySound, this.getSoundSource(), foleyVolume, foleyPitch);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), foleySound, this.getSoundSource(), foleyVolume, foleyPitch);
             }
         }
     }
@@ -330,7 +330,7 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
     }
 
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (p_70097_1_ == DamageSource.OUT_OF_WORLD || (this.isOut() && p_70097_1_ != DamageSource.IN_WALL)) {
+        if (p_70097_1_ == level().damageSources().outOfBorder() || (this.isOut() && p_70097_1_ != level().damageSources().inWall())) {
             return super.hurt(p_70097_1_, p_70097_2_);
         } else {
             return false;
@@ -410,9 +410,9 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
 
         this.lifeTime++;
 
-        int nearbyEntities = this.level.getEntities(this, this.getBoundingBox().inflate(this.getDetectionDistance()), SHOULD_BURST_FOR).size();
+        int nearbyEntities = this.level().getEntities(this, this.getBoundingBox().inflate(this.getDetectionDistance()), SHOULD_BURST_FOR).size();
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide()) {
 
             if (this.isInWrongHabitat() && this.random.nextInt(this.wrongHabitatDieChance()) == 0 && this.shouldDieInWrongHabitat() && this.isOut()) {
                 this.kill();
@@ -453,14 +453,14 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
         this.spawnAreaDamage();
         this.playBurstSound();
         this.burstAnimationTick = this.getBurstAnimationLength();
-        this.level.broadcastEntityEvent(this, (byte) 4);
+        this.level().broadcastEntityEvent(this, (byte) 4);
     }
 
     public void retract() {
         this.spawnAreaDamage();
         this.playRetractSound();
         this.retractAnimationTick = this.getRetractAnimationLength();
-        this.level.broadcastEntityEvent(this, (byte) 11);
+        this.level().broadcastEntityEvent(this, (byte) 11);
     }
 
     public void tickDownAnimTimers() {

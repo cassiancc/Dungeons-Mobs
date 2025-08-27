@@ -1,7 +1,8 @@
 package com.infamous.dungeons_mobs.datagen;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
@@ -9,10 +10,11 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 public class ModBlockTagsProvider extends BlockTagsProvider {
 
     public ModBlockTagsProvider(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
-        super(generatorIn, MODID, existingFileHelper);
+        super(generatorIn.getPackOutput(), null, MODID, existingFileHelper);
     }
 
     @Override
-    protected void addTags() {
+    protected void addTags(HolderLookup.Provider provider) {
+
     }
 }

@@ -6,7 +6,7 @@ import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
 import com.infamous.dungeons_mobs.entities.jungle.WhispererEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,20 +20,20 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.example.client.DefaultBipedBoneIdents;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.renderers.geo.ExtendedGeoEntityRenderer;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
+import static net.minecraft.client.renderer.entity.ShulkerRenderer.getTextureLocation;
+
 @OnlyIn(Dist.CLIENT)
-public class WhispererRenderer extends ExtendedGeoEntityRenderer<WhispererEntity> {
+public class WhispererRenderer extends DynamicGeoEntityRenderer<WhispererEntity> {
 
     @SuppressWarnings("unchecked")
     public WhispererRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WhispererModel());
-        this.addLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/whisperer_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/whisperer_glow.png")));
     }
 
     @Override
@@ -53,11 +53,11 @@ public class WhispererRenderer extends ExtendedGeoEntityRenderer<WhispererEntity
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, WhispererEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (this.isArmorBone(bone)) {
-            bone.setCubesHidden(true);
+            bone.setChildrenHidden(true);
         }
-        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
@@ -97,19 +97,19 @@ public class WhispererRenderer extends ExtendedGeoEntityRenderer<WhispererEntity
     }
 
     @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WhispererEntity currentEntity, IBone bone) {
+    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WhispererEntity currentEntity, GeoBone bone) {
         if (item == this.mainHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem)
                 stack.translate(0, 0.125, -0.25);
         }
         else if (item == this.offHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem) {
                 stack.translate(0, 0.125, 0.25);
-                stack.mulPose(Vector3f.YP.rotationDegrees(180));
+                stack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
     }

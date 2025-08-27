@@ -38,7 +38,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
@@ -181,18 +181,18 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
     }
 
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends IAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.liftAttackAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_lift", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("windcaller_lift", LOOP));
         } else if (this.blastAttackAnimationTick > 10) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_blast", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("windcaller_blast", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_fly", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("windcaller_fly", LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_celebrate", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("windcaller_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("windcaller_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("windcaller_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;

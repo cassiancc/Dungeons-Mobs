@@ -125,9 +125,10 @@ repositories {
         url = "https://maven.theillusivec4.top/" 
     }
     maven {
-		name = "Progwml6 maven" //JEI
-		url = "https://dvs1.progwml6.com/files/maven/"
-	}
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
     flatDir {
         dirs 'mods'
     }
@@ -140,7 +141,7 @@ dependencies {
 
     //Libraries
     implementation fg.deobf("dungeons_libraries:dungeons_libraries:${mc_version}-${libraries_version}")
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.19:${geckolib_version}")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
     runtimeOnly    fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     compileOnly    fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 

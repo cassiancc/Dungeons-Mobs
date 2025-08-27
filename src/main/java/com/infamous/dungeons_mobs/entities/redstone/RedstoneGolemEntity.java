@@ -46,22 +46,23 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.PLAY_ONCE;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.PLAY_ONCE;
 
-public class RedstoneGolemEntity extends Raider implements IAnimatable {
+
+public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
     private int attackTimer;
     private int mineAttackCooldown;
     private int attackID;
@@ -74,13 +75,13 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
         super(ModEntityTypes.REDSTONE_GOLEM.get(), worldIn);
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    
     public int soundLoopTick;
 
     public RedstoneGolemEntity(EntityType<? extends RedstoneGolemEntity> type, Level worldIn) {
         super(type, worldIn);
-        this.maxUpStep = 1.25F;
+        this.setMaxUpStep(1.25F);
         this.xpReward = 40;
         this.mineAttackCooldown = 10 * 20;
     }
@@ -107,27 +108,27 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
     public void setMeleeAttacking(boolean attacking) {
         this.entityData.set(MELEEATTACKING, attacking);
     }
-
+    
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         Vec3 velocity = this.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
         if (this.isSummoningMines()) {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_golem.summon", PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_golem.summon", PLAY_ONCE));
         } else if (isMeleeAttacking()) {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_golem.attack", PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_golem.attack", PLAY_ONCE));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
             event.getController().setAnimationSpeed(groundSpeed * 10);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_golem.walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_golem.walk", LOOP));
         } else {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.redstone_golem.general", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.redstone_golem.general", LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -175,9 +176,9 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
             this.playSound(ModSoundEvents.REDSTONE_GOLEM_IDLE_PULSE_LOOP.get(), 0.75F, 1.0F);
         }
 
-        if (!this.level.isClientSide && this.random.nextInt(100) == 0) {
+        if (!this.level().isClientSide() && this.random.nextInt(100) == 0) {
             this.playSound(ModSoundEvents.REDSTONE_GOLEM_SPARK.get(), 0.25F, this.getVoicePitch());
-            this.level.broadcastEntityEvent(this, (byte) 4);
+            this.level().broadcastEntityEvent(this, (byte) 4);
         }
     }
 
@@ -186,7 +187,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
         if (this.attackID != 0) {
             ++this.attackTimer;
         }
-        if (!this.level.isClientSide && this.mineAttackCooldown > 0) {
+        if (!this.level().isClientSide && this.mineAttackCooldown > 0) {
             --this.mineAttackCooldown;
         }
         this.handleLeafCollision();
@@ -199,9 +200,9 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
             int j = Mth.floor(this.getY() - (double) 0.2F);
             int k = Mth.floor(this.getZ());
             BlockPos pos = new BlockPos(i, j, k);
-            BlockState blockstate = this.level.getBlockState(pos);
+            BlockState blockstate = this.level().getBlockState(pos);
             if (!blockstate.isAir()) {
-                this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), this.getY() + 0.1D, this.getZ() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), 4.0D * ((double) this.random.nextFloat() - 0.5D), 0.5D, ((double) this.random.nextFloat() - 0.5D) * 4.0D);
+                this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), this.getY() + 0.1D, this.getZ() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), 4.0D * ((double) this.random.nextFloat() - 0.5D), 0.5D, ((double) this.random.nextFloat() - 0.5D) * 4.0D);
             }
         }
     }
@@ -209,28 +210,23 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
     private void handleLeafCollision() {
         if (this.isAlive()) {
 
-            if (this.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+            if (this.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
                 boolean destroyedLeafBlock = false;
                 AABB axisalignedbb = this.getBoundingBox().inflate(0.2D);
 
                 for (BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(axisalignedbb.minX), Mth.floor(axisalignedbb.minY), Mth.floor(axisalignedbb.minZ), Mth.floor(axisalignedbb.maxX), Mth.floor(axisalignedbb.maxY), Mth.floor(axisalignedbb.maxZ))) {
-                    BlockState blockstate = this.level.getBlockState(blockpos);
+                    BlockState blockstate = this.level().getBlockState(blockpos);
                     Block block = blockstate.getBlock();
                     if (block instanceof LeavesBlock) {
-                        destroyedLeafBlock = this.level.destroyBlock(blockpos, true, this) || destroyedLeafBlock;
+                        destroyedLeafBlock = this.level().destroyBlock(blockpos, true, this) || destroyedLeafBlock;
                     }
                 }
 
-                if (!destroyedLeafBlock && this.onGround) {
+                if (!destroyedLeafBlock && this.onGround()) {
                     this.jumpFromGround();
                 }
             }
         }
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -256,7 +252,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
     }
 
     public boolean doHurtTarget(Entity entityIn) {
-        if (!this.level.isClientSide && this.attackID == 0) {
+        if (!this.level().isClientSide && this.attackID == 0) {
             this.attackID = MELEE_ATTACK;
         }
         return true;
@@ -298,7 +294,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
     private void setAttackID(int id) {
         this.attackID = id;
         this.attackTimer = 0;
-        this.level.broadcastEntityEvent(this, (byte) -id);
+        this.level().broadcastEntityEvent(this, (byte) -id);
     }
 
 
@@ -309,7 +305,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
             this.attackTimer = 0;
         } else if (id == 4) {
             for (int i = 0; i < 5; i++) {
-                this.level.addParticle(ModParticleTypes.REDSTONE_SPARK.get(), this.getRandomX(1.1D), this.getRandomY(), this.getRandomZ(1.1D), -0.15D + this.random.nextDouble() * 0.15D, -0.15D + this.random.nextDouble() * 0.15D, -0.15D + this.random.nextDouble() * 0.15D);
+                this.level().addParticle(ModParticleTypes.REDSTONE_SPARK.get(), this.getRandomX(1.1D), this.getRandomY(), this.getRandomZ(1.1D), -0.15D + this.random.nextDouble() * 0.15D, -0.15D + this.random.nextDouble() * 0.15D, -0.15D + this.random.nextDouble() * 0.15D);
             }
         } else {
             super.handleEntityEvent(id);
@@ -332,6 +328,18 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
         return new RedstoneGolemEntity.Navigator(this, worldIn);
     }
 
+
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     static class Navigator extends GroundPathNavigation {
         public Navigator(Mob mobEntity, Level world) {
             super(mobEntity, world);
@@ -347,8 +355,8 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
         private Processor() {
         }
 
-        protected BlockPathTypes evaluateBlockPathType(BlockGetter blockReader, boolean canBreakDoors, boolean canWalkThroughDoorways, BlockPos blockPos, BlockPathTypes pathNodeType) {
-            return pathNodeType == BlockPathTypes.LEAVES ? BlockPathTypes.OPEN : super.evaluateBlockPathType(blockReader, canBreakDoors, canWalkThroughDoorways, blockPos, pathNodeType);
+        protected BlockPathTypes evaluateBlockPathType(BlockGetter blockReader, BlockPos blockPos, BlockPathTypes pathNodeType) {
+            return pathNodeType == BlockPathTypes.LEAVES ? BlockPathTypes.OPEN : super.evaluateBlockPathType(blockReader, blockPos, pathNodeType);
         }
     }
 
@@ -476,7 +484,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
                     double ratioX = Mth.sin(RedstoneGolemEntity.this.getYRot() * ((float) Math.PI / 180F));
                     double ratioZ = -Mth.cos(RedstoneGolemEntity.this.getYRot() * ((float) Math.PI / 180F));
                     double knockbackReduction = 0.5D;
-                    attackTarget.hurt(DamageSource.mobAttack(RedstoneGolemEntity.this), (float) RedstoneGolemEntity.this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                    attackTarget.hurt(damageSources().mobAttack(RedstoneGolemEntity.this), (float) RedstoneGolemEntity.this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                     this.forceKnockback(attackTarget, attackKnockback * 0.5F, ratioX, ratioZ, knockbackReduction);
                     RedstoneGolemEntity.this.setDeltaMovement(RedstoneGolemEntity.this.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
                 }
@@ -495,7 +503,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
                 attackTarget.hasImpulse = true;
                 Vec3 vector3d = attackTarget.getDeltaMovement();
                 Vec3 vector3d1 = (new Vec3(ratioX, 0.0D, ratioZ)).normalize().scale(strength);
-                attackTarget.setDeltaMovement(vector3d.x / 2.0D - vector3d1.x, attackTarget.isOnGround() ? Math.min(0.4D, vector3d.y / 2.0D + (double) strength) : vector3d.y, vector3d.z / 2.0D - vector3d1.z);
+                attackTarget.setDeltaMovement(vector3d.x / 2.0D - vector3d1.x, attackTarget.onGround() ? Math.min(0.4D, vector3d.y / 2.0D + (double) strength) : vector3d.y, vector3d.z / 2.0D - vector3d1.z);
             }
         }
 
@@ -550,7 +558,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
                     //double randomNearbyY = RedstoneGolemEntity.this.getPosY() + (double)(RedstoneGolemEntity.this.rand.nextInt(4) - 2);
                     double randomNearbyZ = centerPos.getZ() + (RedstoneGolemEntity.this.random.nextGaussian() * 10.0D);
                     int j = RedstoneMineEntity.LIFE_TIME + 4 * i;
-                    BlockPos randomBlockPos = new BlockPos(randomNearbyX, centerPos.getY(), randomNearbyZ);
+                    BlockPos randomBlockPos = new BlockPos.MutableBlockPos(randomNearbyX, centerPos.getY(), randomNearbyZ);
                     RedstoneGolemEntity.this.createSpellEntity(randomBlockPos.getX(), randomBlockPos.getZ(), randomBlockPos.getY(), randomBlockPos.getY() + 1, j);
 
                 }
@@ -569,22 +577,22 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
         return RedstoneGolemEntity.this.mineAttackCooldown <= 0
                 && RedstoneGolemEntity.this.getTarget() != null
                 && RedstoneGolemEntity.this.getTarget().isAlive()
-                && RedstoneGolemEntity.this.isOnGround()
+                && RedstoneGolemEntity.this.onGround()
                 && RedstoneGolemEntity.this.attackID == 0;
     }
 
     private void createSpellEntity(double x, double z, double minY, double maxY, int delay) {
-        BlockPos blockpos = new BlockPos(x, maxY, z);
+        BlockPos blockpos = new BlockPos.MutableBlockPos(x, maxY, z);
         boolean flag = false;
         double d0 = 0.0D;
 
         do {
             BlockPos blockpos1 = blockpos.below();
-            BlockState blockstate = RedstoneGolemEntity.this.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(RedstoneGolemEntity.this.level, blockpos1, Direction.UP)) {
-                if (!RedstoneGolemEntity.this.level.isEmptyBlock(blockpos)) {
-                    BlockState blockstate1 = RedstoneGolemEntity.this.level.getBlockState(blockpos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(RedstoneGolemEntity.this.level, blockpos);
+            BlockState blockstate = RedstoneGolemEntity.this.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(RedstoneGolemEntity.this.level(), blockpos1, Direction.UP)) {
+                if (!RedstoneGolemEntity.this.level().isEmptyBlock(blockpos)) {
+                    BlockState blockstate1 = RedstoneGolemEntity.this.level().getBlockState(blockpos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(RedstoneGolemEntity.this.level(), blockpos);
                     if (!voxelshape.isEmpty()) {
                         d0 = voxelshape.max(Direction.Axis.Y);
                     }
@@ -598,7 +606,7 @@ public class RedstoneGolemEntity extends Raider implements IAnimatable {
         } while (blockpos.getY() >= Mth.floor(minY) - 1);
 
         if (flag) {
-            RedstoneGolemEntity.this.level.addFreshEntity(new RedstoneMineEntity(RedstoneGolemEntity.this.level, x, (double) blockpos.getY() + d0, z, delay, RedstoneGolemEntity.this));
+            RedstoneGolemEntity.this.level().addFreshEntity(new RedstoneMineEntity(RedstoneGolemEntity.this.level(), x, (double) blockpos.getY() + d0, z, delay, RedstoneGolemEntity.this));
         }
 
     }

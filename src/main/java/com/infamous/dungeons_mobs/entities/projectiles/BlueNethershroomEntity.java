@@ -5,6 +5,7 @@ import com.infamous.dungeons_mobs.mod.ModItems;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -60,7 +61,7 @@ public class BlueNethershroomEntity extends ThrowableItemProjectile implements I
         ItemStack itemstack = this.getItem();
         List<MobEffectInstance> list = PotionUtils.getMobEffects(itemstack);
         if (!list.isEmpty()) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 Entity target = null;
                 if (rtr instanceof EntityHitResult entityHitResult) {
                     target = entityHitResult.getEntity();
@@ -69,13 +70,13 @@ public class BlueNethershroomEntity extends ThrowableItemProjectile implements I
                 this.discard();
                 BlockPos blockPos = this.blockPosition();
                 Vec3 vec3 = Vec3.atBottomCenterOf(blockPos);
-                this.level.playSound(null, vec3.x + 0.5D, vec3.y() + 0.5D, vec3.z() + 0.5D, ModSoundEvents.FUNGUS_THROWER_FUNGUS_LAND.get(), SoundSource.NEUTRAL, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
+                this.level().playSound(null, vec3.x + 0.5D, vec3.y() + 0.5D, vec3.z() + 0.5D, ModSoundEvents.FUNGUS_THROWER_FUNGUS_LAND.get(), SoundSource.NEUTRAL, 1.0F, level().random.nextFloat() * 0.1F + 0.9F);
             }
         }
     }
 
     private void makeAreaOfEffectCloud(@Nullable Entity target, ItemStack itemStack) {
-        AreaEffectCloud aoeCloud = new AreaEffectCloud(this.level,
+        AreaEffectCloud aoeCloud = new AreaEffectCloud(this.level(),
                 target != null ? target.getX() : this.getX(),
                 target != null ? target.getY() : this.getY(),
                 target != null ? target.getZ() : this.getZ());
@@ -93,11 +94,11 @@ public class BlueNethershroomEntity extends ThrowableItemProjectile implements I
             aoeCloud.addEffect(new MobEffectInstance(customEffects));
         }
 
-        this.level.addFreshEntity(aoeCloud);
+        this.level().addFreshEntity(aoeCloud);
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.infamous.dungeons_mobs.interfaces.ITrapsTarget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -12,11 +13,11 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 
-public abstract class AbstractTrapEntity extends Entity implements IAnimatable {
+public abstract class AbstractTrapEntity extends Entity implements GeoAnimatable {
 
     public int spawnAnimationTick = this.getSpawnAnimationLength();
     public int decayAnimationTick;
@@ -58,10 +59,10 @@ public abstract class AbstractTrapEntity extends Entity implements IAnimatable {
     }
 
     public void performBasicTrapFunctions() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             boolean isTrapping = false;
             if (this.canTrap()) {
-                List<Entity> list = this.level.getEntities(this, this.getBoundingBox(), Entity::isAlive);
+                List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), Entity::isAlive);
                 if (!list.isEmpty()) {
                     for (Entity entity : list) {
                         if (entity instanceof LivingEntity && this.canTrapEntity(((LivingEntity) entity))) {
@@ -153,7 +154,7 @@ public abstract class AbstractTrapEntity extends Entity implements IAnimatable {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

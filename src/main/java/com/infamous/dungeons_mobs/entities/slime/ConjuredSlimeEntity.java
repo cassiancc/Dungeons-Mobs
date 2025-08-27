@@ -127,7 +127,7 @@ public class ConjuredSlimeEntity extends Slime implements RangedAttackMob {
         double zDifference = target.getZ() - this.getZ();
         float euclidDist = Mth.sqrt((float) (xDifference * xDifference + yDifference * yDifference + zDifference * zDifference));
 
-        SlimeballEntity slimeballEntity = new SlimeballEntity(this.level,
+        SlimeballEntity slimeballEntity = new SlimeballEntity(this.level(),
                 this,
                 0,
                 0,
@@ -136,7 +136,7 @@ public class ConjuredSlimeEntity extends Slime implements RangedAttackMob {
                 this.getY(0.5D),
                 slimeballEntity.getZ());
         slimeballEntity.shoot(xDifference, yDifference, zDifference, euclidDist, 0.0F);
-        this.level.addFreshEntity(slimeballEntity);
+        this.level().addFreshEntity(slimeballEntity);
     }
 
 
@@ -260,7 +260,7 @@ public class ConjuredSlimeEntity extends Slime implements RangedAttackMob {
          */
         public boolean canUse() {
             return this.slime.getTarget() == null
-                    && (this.slime.onGround
+                    && (this.slime.onGround()
                     || this.slime.isInWater()
                     || this.slime.isInLava()
                     || this.slime.hasEffect(MobEffects.LEVITATION))

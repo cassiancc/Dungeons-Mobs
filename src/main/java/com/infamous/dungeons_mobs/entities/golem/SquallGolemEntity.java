@@ -14,10 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -49,22 +46,23 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.PLAY_ONCE;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.PLAY_ONCE;
 
-public class SquallGolemEntity extends Raider implements IAnimatable {
+
+public class SquallGolemEntity extends Raider implements GeoAnimatable {
     private int attackTimer;
     private int attackID;
     public int cd;
@@ -98,52 +96,48 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
         return false;
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 10, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 10, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         Vec3 velocity = this.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
         if (this.attackID == GOLEM_ACTIVATE) {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.squall_golem.activate", PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.squall_golem.activate", PLAY_ONCE));
             return PlayState.CONTINUE;
 
         } else if (this.attackID == GOLEM_DEACTIVATE) {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.squall_golem.deactivate", PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.squall_golem.deactivate", PLAY_ONCE));
             return PlayState.CONTINUE;
 
         } else if (!this.getActivate()) {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.squall_golem.deactivated", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.squall_golem.deactivated", LOOP));
             return PlayState.CONTINUE;
 
         } else if (this.isMeleeAttacking() && this.isAlive()) {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.squall_golem.attack", PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.squall_golem.attack", PLAY_ONCE));
             return PlayState.CONTINUE;
 
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
             event.getController().setAnimationSpeed(groundSpeed * 25);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.squall_golem.walk", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.squall_golem.walk", LOOP));
             return PlayState.CONTINUE;
 
         } else {
             event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.squall_golem.idle", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("animation.squall_golem.idle", LOOP));
             return PlayState.CONTINUE;
         }
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
 
     protected void registerGoals() {
         super.registerGoals();
@@ -214,7 +208,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
             }
         }
         LivingEntity target = this.getTarget();
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             timeWithoutTarget++;
             if (target != null) {
                 timeWithoutTarget = 0;
@@ -246,7 +240,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
     }
 
     private void Attackparticle(int paticle, float circle, float vec, float math) {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             for (int i1 = 0; i1 < paticle; i1++) {
                 double DeltaMovementX = getRandom().nextGaussian() * 0.07D;
                 double DeltaMovementY = getRandom().nextGaussian() * 0.07D;
@@ -265,8 +259,8 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
                 int hitY = Mth.floor(getY());
                 int hitZ = Mth.floor(getZ() + vec * vecZ + extraZ);
                 BlockPos hit = new BlockPos(hitX, hitY, hitZ);
-                BlockState block = level.getBlockState(hit.below());
-                this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, block), getX() + vec * vecX + extraX + f * math, this.getY() + extraY, getZ() + vec * vecZ + extraZ + f1 * math, DeltaMovementX, DeltaMovementY, DeltaMovementZ);
+                BlockState block = level().getBlockState(hit.below());
+                this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, block), getX() + vec * vecX + extraX + f * math, this.getY() + extraY, getZ() + vec * vecZ + extraZ + f1 * math, DeltaMovementX, DeltaMovementY, DeltaMovementZ);
 
             }
         }
@@ -279,9 +273,9 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
             int j = Mth.floor(this.getY() - (double) 0.2F);
             int k = Mth.floor(this.getZ());
             BlockPos pos = new BlockPos(i, j, k);
-            BlockState blockstate = this.level.getBlockState(pos);
+            BlockState blockstate = this.level().getBlockState(pos);
             if (!blockstate.isAir()) {
-                this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), this.getY() + 0.1D, this.getZ() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), 4.0D * ((double) this.random.nextFloat() - 0.5D), 0.5D, ((double) this.random.nextFloat() - 0.5D) * 4.0D);
+                this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos), this.getX() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), this.getY() + 0.1D, this.getZ() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getBbWidth(), 4.0D * ((double) this.random.nextFloat() - 0.5D), 0.5D, ((double) this.random.nextFloat() - 0.5D) * 4.0D);
             }
         }
     }
@@ -289,19 +283,19 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
     private void handleLeafCollision() {
         if (this.isAlive()) {
 
-            if (this.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+            if (this.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
                 boolean destroyedLeafBlock = false;
                 AABB axisalignedbb = this.getBoundingBox().inflate(0.2D);
 
                 for (BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(axisalignedbb.minX), Mth.floor(axisalignedbb.minY), Mth.floor(axisalignedbb.minZ), Mth.floor(axisalignedbb.maxX), Mth.floor(axisalignedbb.maxY), Mth.floor(axisalignedbb.maxZ))) {
-                    BlockState blockstate = this.level.getBlockState(blockpos);
+                    BlockState blockstate = this.level().getBlockState(blockpos);
                     Block block = blockstate.getBlock();
                     if (block instanceof LeavesBlock) {
-                        destroyedLeafBlock = this.level.destroyBlock(blockpos, true, this) || destroyedLeafBlock;
+                        destroyedLeafBlock = this.level().destroyBlock(blockpos, true, this) || destroyedLeafBlock;
                     }
                 }
 
-                if (!destroyedLeafBlock && this.onGround) {
+                if (!destroyedLeafBlock && this.onGround()) {
                     this.jumpFromGround();
                 }
             }
@@ -324,7 +318,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
     }
 
     public boolean doHurtTarget(Entity entityIn) {
-        if (!this.level.isClientSide && this.attackID == 0) {
+        if (!this.level().isClientSide && this.attackID == 0) {
             this.attackID = STOMP_ATTACK;
         }
         return true;
@@ -336,7 +330,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         boolean flag = false;
-        if (!this.getActivate() && source != DamageSource.OUT_OF_WORLD) {
+        if (!this.getActivate() && source != this.damageSources().fellOutOfWorld()) {
             this.playSound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, 1.0F, 0.4F);
             if (source.getEntity() instanceof LivingEntity && source.getEntity().isInvulnerable()) {
                 this.setTarget((LivingEntity) source.getEntity());
@@ -384,7 +378,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
     private void setAttackID(int id) {
         this.attackID = id;
         this.attackTimer = 0;
-        this.level.broadcastEntityEvent(this, (byte) -id);
+        this.level().broadcastEntityEvent(this, (byte) -id);
     }
 
 
@@ -433,6 +427,16 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
         return new Navigator(this, worldIn);
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     static class Navigator extends GroundPathNavigation {
         public Navigator(Mob mobEntity, Level world) {
             super(mobEntity, world);
@@ -448,8 +452,8 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
         private Processor() {
         }
 
-        protected BlockPathTypes evaluateBlockPathType(BlockGetter blockReader, boolean canBreakDoors, boolean canWalkThroughDoorways, BlockPos blockPos, BlockPathTypes pathNodeType) {
-            return pathNodeType == BlockPathTypes.LEAVES ? BlockPathTypes.OPEN : super.evaluateBlockPathType(blockReader, canBreakDoors, canWalkThroughDoorways, blockPos, pathNodeType);
+        protected BlockPathTypes evaluateBlockPathType(BlockGetter blockReader, BlockPos blockPos, BlockPathTypes pathNodeType) {
+            return pathNodeType == BlockPathTypes.LEAVES ? BlockPathTypes.OPEN : super.evaluateBlockPathType(blockReader, blockPos, pathNodeType);
         }
     }
 
@@ -600,7 +604,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
         }
 
         private void AreaAttack(float range, float X, float Y, float Z, float arc, float damage) {
-            for (LivingEntity entityHit : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(X, Y, Z))) {
+            for (LivingEntity entityHit : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(X, Y, Z))) {
                 float entityHitAngle = (float) ((Math.atan2(entityHit.getZ() - SquallGolemEntity.this.getZ(), entityHit.getX() - SquallGolemEntity.this.getX()) * (180 / Math.PI) - 90) % 360);
                 float entityAttackingAngle = SquallGolemEntity.this.yBodyRot % 360;
                 if (entityHitAngle < 0) {
@@ -613,14 +617,14 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
                 float entityHitDistance = (float) Math.sqrt((entityHit.getZ() - SquallGolemEntity.this.getZ()) * (entityHit.getZ() - SquallGolemEntity.this.getZ()) + (entityHit.getX() - SquallGolemEntity.this.getX()) * (entityHit.getX() - SquallGolemEntity.this.getX()));
                 if (entityHitDistance <= range && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2)) {
                     if (!isAlliedTo(entityHit) && !(entityHit == SquallGolemEntity.this)) {
-                        entityHit.hurt(DamageSource.mobAttack(SquallGolemEntity.this), (float) SquallGolemEntity.this.getAttributeValue(Attributes.ATTACK_DAMAGE) * damage);
+                        entityHit.hurt(damageSources().mobAttack(SquallGolemEntity.this), (float) SquallGolemEntity.this.getAttributeValue(Attributes.ATTACK_DAMAGE) * damage);
 
                         SquallGolemEntity v = SquallGolemEntity.this;
                         float attackKnockback = (float) SquallGolemEntity.this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
                         double ratioX = Mth.sin(v.getYRot() * ((float) Math.PI / 180F));
                         double ratioZ = -Mth.cos(v.getYRot() * ((float) Math.PI / 180F));
                         double knockbackReduction = 0.35D;
-                        entityHit.hurt(DamageSource.mobAttack(v), damage);
+                        entityHit.hurt(damageSources().mobAttack(v), damage);
                         this.forceKnockback(entityHit, attackKnockback * 0.8F, ratioX, ratioZ, knockbackReduction);
                         entityHit.setDeltaMovement(entityHit.getDeltaMovement().add(0, 0.3333333, 0));
                     }
@@ -646,7 +650,7 @@ public class SquallGolemEntity extends Raider implements IAnimatable {
                 attackTarget.hasImpulse = true;
                 Vec3 vector3d = attackTarget.getDeltaMovement();
                 Vec3 vector3d1 = (new Vec3(ratioX, 0.0D, ratioZ)).normalize().scale(strength);
-                attackTarget.setDeltaMovement(vector3d.x / 2.0D - vector3d1.x, attackTarget.isOnGround() ? Math.min(0.4D, vector3d.y / 2.0D + (double) strength) : vector3d.y, vector3d.z / 2.0D - vector3d1.z);
+                attackTarget.setDeltaMovement(vector3d.x / 2.0D - vector3d1.x, attackTarget.onGround() ? Math.min(0.4D, vector3d.y / 2.0D + (double) strength) : vector3d.y, vector3d.z / 2.0D - vector3d1.z);
             }
         }
 

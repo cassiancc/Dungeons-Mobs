@@ -4,14 +4,14 @@ import com.infamous.dungeons_mobs.client.models.summonables.WindcallerTornadoMod
 import com.infamous.dungeons_mobs.entities.summonables.WindcallerTornadoEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class WindcallerTornadoRenderer extends GeoProjectilesRenderer<WindcallerTornadoEntity> {
+public class WindcallerTornadoRenderer extends GeoEntityRenderer<WindcallerTornadoEntity> {
     public WindcallerTornadoRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WindcallerTornadoModel());
     }
@@ -24,7 +24,7 @@ public class WindcallerTornadoRenderer extends GeoProjectilesRenderer<Windcaller
             float scaleFactor = 1.25F;
             stackIn.scale(scaleFactor, scaleFactor, scaleFactor);
         } else {
-            stackIn.mulPose(Vector3f.YP.rotationDegrees(animatable.getYRot() * ((float) Math.PI / 180F)));
+            stackIn.mulPose(Axis.YP.rotationDegrees(animatable.getYRot() * ((float) Math.PI / 180F)));
         }
 
         if (animatable.lifeTime <= 1) {
