@@ -34,18 +34,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
 public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable, SpawnArmoredMob {
 
-    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int summonBombsAttackAnimationTick;
     public int summonBombsAttackAnimationLength = 35;
@@ -120,30 +124,26 @@ public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
+
 
     private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.summonBombsAttackAnimationTick > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("geomancer_attack", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("geomancer_attack", LOOP));
         } else if (this.summonWallsAnimationTick > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("geomancer_summon", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("geomancer_summon", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(RawAnimation.begin().then("geomancer_walk", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("geomancer_walk", LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(RawAnimation.begin().then("geomancer_celebrate", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("geomancer_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(RawAnimation.begin().then("geomancer_idle", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("geomancer_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getInstanceCache() {
-        return cache;
     }
 
     @Override
@@ -216,6 +216,16 @@ public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable
         return illagerArmPose;
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     class SummonPillarsGoal extends Goal {
         public GeomancerEntity mob;
         @Nullable
@@ -255,10 +265,10 @@ public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable
             mob.playSound(ModSoundEvents.GEOMANCER_PRE_ATTACK.get(), 1.0F, mob.getVoicePitch());
             if (mob.random.nextBoolean()) {
                 mob.summonWallsAnimationTick = mob.summonWallsAnimationLength;
-                mob.level.broadcastEntityEvent(mob, (byte) 4);
+                mob.level().broadcastEntityEvent(mob, (byte) 4);
             } else {
                 mob.summonBombsAttackAnimationTick = mob.summonBombsAttackAnimationLength;
-                mob.level.broadcastEntityEvent(mob, (byte) 11);
+                mob.level().broadcastEntityEvent(mob, (byte) 11);
             }
         }
 

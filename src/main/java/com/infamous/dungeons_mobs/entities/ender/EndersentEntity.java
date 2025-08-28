@@ -31,9 +31,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+
+import static software.bernie.geckolib.core.animation.Animation.LoopType.*;
 
 public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnimatable {
 
@@ -84,11 +91,11 @@ public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnima
         if (p_189794_1_ == 15) {
             if (this.getTarget() != null) {
                 this.setPos(this.getTarget().getX() - 5 + this.random.nextInt(10), this.getTarget().getY(), this.getTarget().getZ() - 5 + this.random.nextInt(10));
-                this.level.playSound(null, this.xo, this.yo, this.zo, ModSoundEvents.ENDERSENT_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
+                this.level().playSound(null, this.xo, this.yo, this.zo, ModSoundEvents.ENDERSENT_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
                 this.playSound(ModSoundEvents.ENDERSENT_TELEPORT.get(), 1.0F, 1.0F);
             } else {
                 this.setPos(this.getX() - 20 + this.random.nextInt(40), this.getY(), this.getZ() - 20 + this.random.nextInt(40));
-                this.level.playSound(null, this.xo, this.yo, this.zo, ModSoundEvents.ENDERSENT_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
+                this.level().playSound(null, this.xo, this.yo, this.zo, ModSoundEvents.ENDERSENT_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
                 this.playSound(ModSoundEvents.ENDERSENT_TELEPORT.get(), 1.0F, 1.0F);
             }
         }
@@ -106,7 +113,7 @@ public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnima
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         }
 
@@ -201,28 +208,24 @@ public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnima
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 5, this::predicate));
+
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.deathTime > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("endersent_death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_death", HOLD_ON_LAST_FRAME));
         } else if (this.isTeleporting() > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("endersent_teleport", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_teleport", PLAY_ONCE));
         } else if (this.isAttacking() > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("endersent_attack", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_attack", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(RawAnimation.begin().then("endersent_walk", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_walk", LOOP));
         } else {
-            event.getController().setAnimation(RawAnimation.begin().then("endersent_idle", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("endersent_idle", LOOP));
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     protected boolean teleport() {
@@ -249,19 +252,19 @@ public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnima
     protected boolean teleport(double p_70825_1_, double p_70825_3_, double p_70825_5_) {
         BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos(p_70825_1_, p_70825_3_, p_70825_5_);
 
-        while (blockpos$mutable.getY() > 0 && !this.level.getBlockState(blockpos$mutable).getMaterial().blocksMotion()) {
+        while (blockpos$mutable.getY() > 0 && !this.level().getBlockState(blockpos$mutable).blocksMotion()) {
             blockpos$mutable.move(Direction.DOWN);
         }
 
-        BlockState blockstate = this.level.getBlockState(blockpos$mutable);
-        boolean flag = blockstate.getMaterial().blocksMotion();
+        BlockState blockstate = this.level().getBlockState(blockpos$mutable);
+        boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
             EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(this, p_70825_1_, p_70825_3_, p_70825_5_);
             if (event.isCanceled()) return false;
             boolean flag2 = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
             if (flag2 && !this.isSilent()) {
-                this.level.playSound(null, this.xo, this.yo, this.zo, ModSoundEvents.ENDERSENT_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
+                this.level().playSound(null, this.xo, this.yo, this.zo, ModSoundEvents.ENDERSENT_TELEPORT.get(), this.getSoundSource(), 1.0F, 1.0F);
                 this.playSound(ModSoundEvents.ENDERSENT_TELEPORT.get(), 1.0F, 1.0F);
             }
 
@@ -269,6 +272,16 @@ public class EndersentEntity extends AbstractEnderlingEntity implements GeoAnima
         } else {
             return false;
         }
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class AttackGoal extends MeleeAttackGoal {

@@ -4,36 +4,36 @@ package com.infamous.dungeons_mobs.client.models.summonables;// Made with Blockb
 
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
+import com.infamous.dungeons_mobs.entities.illagers.GeomancerEntity;
 import com.infamous.dungeons_mobs.entities.summonables.ConstructEntity;
 import com.infamous.dungeons_mobs.entities.summonables.GeomancerBombEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
 
-public class GeomancerConstructModel extends AnimatedGeoModel {
+public class GeomancerConstructModel extends GeoModel<ConstructEntity> {
 
     @Override
-    public ResourceLocation getAnimationResource(Object entity) {
+    public ResourceLocation getAnimationResource(ConstructEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/geomancer_pillar.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Object entity) {
+    public ResourceLocation getModelResource(ConstructEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/geomancer_pillar.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Object entity) {
+    public ResourceLocation getTextureResource(ConstructEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
         return entity instanceof GeomancerBombEntity ? new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png") : new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_wall.png");
     }
 
     @Override
-    public void setCustomAnimations(IAnimatable entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(ConstructEntity entity, long uniqueID, AnimationState<ConstructEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        ConstructEntity entityIn = (ConstructEntity) entity;
+//        ConstructEntity entityIn = (ConstructEntity) entity;
 
     }
 

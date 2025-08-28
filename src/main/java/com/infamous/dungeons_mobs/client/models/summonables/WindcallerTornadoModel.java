@@ -6,38 +6,37 @@ package com.infamous.dungeons_mobs.client.models.summonables;// Made with Blockb
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.summonables.WindcallerTornadoEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-public class WindcallerTornadoModel extends AnimatedGeoModel {
+public class WindcallerTornadoModel extends GeoModel<WindcallerTornadoEntity> {
 
     @Override
-    public ResourceLocation getAnimationResource(Object entity) {
+    public ResourceLocation getAnimationResource(WindcallerTornadoEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/windcaller_tornado.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Object entity) {
+    public ResourceLocation getModelResource(WindcallerTornadoEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/windcaller_tornado.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Object entity) {
+    public ResourceLocation getTextureResource(WindcallerTornadoEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/windcaller_tornado.png");
     }
 
     @Override
-    public void setCustomAnimations(IAnimatable entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(WindcallerTornadoEntity entity, long uniqueID, AnimationState<WindcallerTornadoEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        IBone everything = this.getAnimationProcessor().getBone("everything");
+        var everything = this.getAnimationProcessor().getBone("everything");
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
 
-        if (((WindcallerTornadoEntity) entity).isBlast() && (extraData.headPitch != 0 || extraData.netHeadYaw != 0)) {
+        if (((WindcallerTornadoEntity) entity).isBlast() && (extraData.headPitch() != 0 || extraData.netHeadYaw() != 0)) {
             //everything.setRotationX(((Entity)entity).getXRot());
             //everything.setRotationY(((Entity)entity).yRot);
         }

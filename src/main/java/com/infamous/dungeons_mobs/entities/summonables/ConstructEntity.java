@@ -10,13 +10,14 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("EntityConstructor")
-public abstract class ConstructEntity extends PathfinderMob {
+public abstract class ConstructEntity extends PathfinderMob implements GeoAnimatable {
     public static final EntityDataAccessor<Integer> LIFE_TICKS = SynchedEntityData.defineId(ConstructEntity.class, EntityDataSerializers.INT);
     public Direction directionToFace = null;
     private LivingEntity caster;

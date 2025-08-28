@@ -7,15 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 public class WhispererModel<T extends WhispererEntity> extends GeoModel<T> {
 
@@ -35,47 +32,39 @@ public class WhispererModel<T extends WhispererEntity> extends GeoModel<T> {
     }
 
     @Override
-    public void setCustomAnimations(T entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(T entity, long uniqueID, AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        IBone head = this.getAnimationProcessor().getBone("jaw");
-        IBone cape = this.getAnimationProcessor().getBone("bipedCape");
+        var head = this.getAnimationProcessor().getBone("jaw");
+        var cape = this.getAnimationProcessor().getBone("bipedCape");
 
         cape.setHidden(true);
 
-        IBone leftHand = this.getAnimationProcessor().getBone("bipedHandLeft");
-        IBone rightHand = this.getAnimationProcessor().getBone("bipedHandRight");
+        var leftHand = this.getAnimationProcessor().getBone("bipedHandLeft");
+        var rightHand = this.getAnimationProcessor().getBone("bipedHandRight");
 
         if (entity.tickCount % 1 == 0 && rightHand instanceof GeoBone && leftHand instanceof GeoBone && entity.isSpellcasting()) {
-            GeoBone leftHandBone = ((GeoBone) leftHand);
-            GeoBone rightHandBone = ((GeoBone) rightHand);
-            entity.level.addParticle(ModParticleTypes.CORRUPTED_MAGIC.get(), leftHandBone.getWorldPosition().x, leftHandBone.getWorldPosition().y, leftHandBone.getWorldPosition().z, 0, 0, 0);
-            entity.level.addParticle(ModParticleTypes.CORRUPTED_MAGIC.get(), rightHandBone.getWorldPosition().x, rightHandBone.getWorldPosition().y, rightHandBone.getWorldPosition().z, 0, 0, 0);
+            var leftHandBone = ((GeoBone) leftHand);
+            var rightHandBone = ((GeoBone) rightHand);
+            entity.level().addParticle(ModParticleTypes.CORRUPTED_MAGIC.get(), leftHandBone.getWorldPosition().x, leftHandBone.getWorldPosition().y, leftHandBone.getWorldPosition().z, 0, 0, 0);
+            entity.level().addParticle(ModParticleTypes.CORRUPTED_MAGIC.get(), rightHandBone.getWorldPosition().x, rightHandBone.getWorldPosition().y, rightHandBone.getWorldPosition().z, 0, 0, 0);
         }
 
         if (entity.tickCount % 2 == 0 && rightHand instanceof GeoBone && leftHand instanceof GeoBone && entity.isSpellcasting()) {
             GeoBone leftHandBone = ((GeoBone) leftHand);
             GeoBone rightHandBone = ((GeoBone) rightHand);
-            entity.level.addParticle(ModParticleTypes.CORRUPTED_DUST.get(), leftHandBone.getWorldPosition().x, leftHandBone.getWorldPosition().y, leftHandBone.getWorldPosition().z, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01);
-            entity.level.addParticle(ModParticleTypes.CORRUPTED_DUST.get(), rightHandBone.getWorldPosition().x, rightHandBone.getWorldPosition().y, rightHandBone.getWorldPosition().z, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01);
+            entity.level().addParticle(ModParticleTypes.CORRUPTED_DUST.get(), leftHandBone.getWorldPosition().x, leftHandBone.getWorldPosition().y, leftHandBone.getWorldPosition().z, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01);
+            entity.level().addParticle(ModParticleTypes.CORRUPTED_DUST.get(), rightHandBone.getWorldPosition().x, rightHandBone.getWorldPosition().y, rightHandBone.getWorldPosition().z, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01, entity.getRandom().nextGaussian() * 0.01);
         }
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
 
-        if (extraData.headPitch != 0 || extraData.netHeadYaw != 0) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * ((float) Math.PI / 180F)));
-            head.setRotationY(head.getRotationY() + (extraData.netHeadYaw * ((float) Math.PI / 180F)));
+        if (extraData.headPitch() != 0 || extraData.netHeadYaw() != 0) {
+            head.setRotX(head.getRotX() + (extraData.headPitch() * ((float) Math.PI / 180F)));
+            head.setRotY(head.getRotY() + (extraData.netHeadYaw() * ((float) Math.PI / 180F)));
         }
-    }
-
-    @Override
-    public void setMolangQueries(IAnimatable animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
-        LivingEntity livingEntity = (LivingEntity) animatable;
-        Vec3 velocity = livingEntity.getDeltaMovement();
+        Vec3 velocity = entity.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 12.5);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 12.5);
     }
 }

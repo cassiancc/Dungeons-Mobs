@@ -6,11 +6,8 @@ import com.infamous.dungeons_mobs.entities.water.DrownedNecromancerEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
 
 public class DrownedNecromancerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
@@ -25,21 +22,14 @@ public class DrownedNecromancerArmorGearModel<T extends ArmorGear> extends Armor
     }
 
     @Override
-    public void setCustomAnimations(T entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(T entity, long uniqueID, AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        IBone cloak = this.getAnimationProcessor().getBone("armorCloak");
+        var cloak = this.getAnimationProcessor().getBone("armorCloak");
 
         cloak.setHidden(this.getWearer() != null && this.getWearer() instanceof DrownedNecromancerEntity);
-    }
-
-    @Override
-    public void setMolangQueries(IAnimatable animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
         Vec3 velocity = wearer.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 13);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 13);
     }
 }

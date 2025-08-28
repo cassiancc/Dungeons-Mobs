@@ -27,29 +27,29 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class IceologerEntity extends AbstractIllager implements IAnimatable, SpawnArmoredMob {
+public class IceologerEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
     public int summonAnimationTick;
     public int summonAnimationLength = 60;
     public int summonAnimationActionPoint = 40;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public IceologerEntity(Level world) {
         super(ModEntityTypes.ICEOLOGER.get(), world);
@@ -102,11 +102,12 @@ public class IceologerEntity extends AbstractIllager implements IAnimatable, Spa
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
+
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.summonAnimationTick > 0) {
             event.getController().setAnimation(RawAnimation.begin().then("iceologer_summon", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
@@ -119,11 +120,6 @@ public class IceologerEntity extends AbstractIllager implements IAnimatable, Spa
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -187,6 +183,16 @@ public class IceologerEntity extends AbstractIllager implements IAnimatable, Spa
         return ModItems.ICEOLOGER_ARMOR;
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     class SummonIceChunkGoal extends Goal {
         public IceologerEntity mob;
         @Nullable
@@ -214,7 +220,7 @@ public class IceologerEntity extends AbstractIllager implements IAnimatable, Spa
         @Override
         public boolean canUse() {
             target = mob.getTarget();
-            int nearbyChunks = mob.level.getEntities(mob, mob.getBoundingBox().inflate(20.0D), ICE_CHUNK)
+            int nearbyChunks = mob.level().getEntities(mob, mob.getBoundingBox().inflate(20.0D), ICE_CHUNK)
                     .size();
 
             return target != null && mob.random.nextInt(20) == 0 && mob.distanceTo(target) <= 12 && nearbyChunks <= 0 && mob.hasLineOfSight(target) && animationsUseable();
@@ -229,7 +235,7 @@ public class IceologerEntity extends AbstractIllager implements IAnimatable, Spa
         public void start() {
             mob.playSound(ModSoundEvents.ICEOLOGER_ATTACK.get(), 1.0F, mob.getVoicePitch());
             mob.summonAnimationTick = mob.summonAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override

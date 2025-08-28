@@ -7,11 +7,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class LeapleafModel extends GeoModel<LeapleafEntity> {
 
@@ -31,14 +29,10 @@ public class LeapleafModel extends GeoModel<LeapleafEntity> {
     }
 
     @Override
-    public void setMolangQueries(GeoAnimatable animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
-        LivingEntity livingEntity = (LivingEntity) animatable;
-        Vec3 velocity = livingEntity.getDeltaMovement();
+    public void setCustomAnimations(LeapleafEntity animatable, long instanceId, AnimationState<LeapleafEntity> animationState) {
+        Vec3 velocity = animatable.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 17.5);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 17.5);
     }
 }
 

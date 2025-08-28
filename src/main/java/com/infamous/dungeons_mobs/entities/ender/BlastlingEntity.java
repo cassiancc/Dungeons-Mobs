@@ -24,26 +24,26 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class BlastlingEntity extends AbstractEnderlingEntity implements IAnimatable, RangedAttackMob {
+
+public class BlastlingEntity extends AbstractEnderlingEntity implements GeoAnimatable, RangedAttackMob {
 
     public static final EntityDataAccessor<Integer> SHOOT_TIME = SynchedEntityData.defineId(BlastlingEntity.class, EntityDataSerializers.INT);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public float flameTicks;
 
@@ -108,7 +108,7 @@ public class BlastlingEntity extends AbstractEnderlingEntity implements IAnimata
             this.setShootTime(this.getShootTime() - 1);
         }
 
-        if (!this.level.isClientSide && (this.getShootTime() == 2 || this.getShootTime() == 8) && this.getTarget() != null && this.getTarget().isAlive()) {
+        if (!this.level().isClientSide && (this.getShootTime() == 2 || this.getShootTime() == 8) && this.getTarget() != null && this.getTarget().isAlive()) {
 
             this.shoot(this.getShootTime() == 2, this.getTarget());
         }
@@ -126,11 +126,11 @@ public class BlastlingEntity extends AbstractEnderlingEntity implements IAnimata
         double d3 = p_82209_2_ - d0;
         double d4 = p_82209_4_ - d1;
         double d5 = p_82209_6_ - d2;
-        BlastlingBulletEntity blastlingBulletEntity = new BlastlingBulletEntity(this.level, this, d3, d4, d5);
+        BlastlingBulletEntity blastlingBulletEntity = new BlastlingBulletEntity(this.level(), this, d3, d4, d5);
         blastlingBulletEntity.setOwner(this);
 
         blastlingBulletEntity.setPosRaw(d0, d1, d2);
-        this.level.addFreshEntity(blastlingBulletEntity);
+        this.level().addFreshEntity(blastlingBulletEntity);
     }
 
     private double getHeadX(boolean p_82214_1_) {
@@ -167,11 +167,11 @@ public class BlastlingEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller", 5, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.getShootTime() > 0) {
             event.getController().setAnimation(RawAnimation.begin().then("blastling_shoot", LOOP));
         } else {
@@ -185,8 +185,13 @@ public class BlastlingEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     public class AvoidEntityGoal<T extends LivingEntity> extends Goal {

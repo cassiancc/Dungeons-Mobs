@@ -4,30 +4,30 @@ package com.infamous.dungeons_mobs.client.models.redstone;// Made with Blockbenc
 
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
+import com.infamous.dungeons_mobs.entities.redstone.RedstoneMineEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
 
-public class RedstoneMineModel extends AnimatedGeoModel {
+public class RedstoneMineModel extends GeoModel<RedstoneMineEntity> {
 
     @Override
-    public ResourceLocation getAnimationResource(Object entity) {
+    public ResourceLocation getAnimationResource(RedstoneMineEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/redstone_mine.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Object entity) {
+    public ResourceLocation getModelResource(RedstoneMineEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/redstone_mine.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Object entity) {
+    public ResourceLocation getTextureResource(RedstoneMineEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_mine.png");
     }
 
     @Override
-    public void setCustomAnimations(IAnimatable entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(RedstoneMineEntity entity, long uniqueID, AnimationState<RedstoneMineEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
     }

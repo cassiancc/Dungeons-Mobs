@@ -3,9 +3,9 @@ package com.infamous.dungeons_mobs.client.models.summonables;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.summonables.KelpTrapEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class KelpTrapModel<T extends KelpTrapEntity> extends AnimatedGeoModel<T> {
+public class KelpTrapModel<T extends KelpTrapEntity> extends GeoModel<T> {
 
     @Override
     public ResourceLocation getAnimationResource(T entity) {

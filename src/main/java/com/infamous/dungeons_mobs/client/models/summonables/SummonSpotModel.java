@@ -4,9 +4,9 @@ package com.infamous.dungeons_mobs.client.models.summonables;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.summonables.SummonSpotEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class SummonSpotModel<T extends SummonSpotEntity> extends AnimatedGeoModel<T> {
+public class SummonSpotModel<T extends SummonSpotEntity> extends GeoModel<T> {
 
     @Override
     public ResourceLocation getAnimationResource(T entity) {

@@ -6,12 +6,9 @@ import com.infamous.dungeons_mobs.entities.illagers.WindcallerEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.model.GeoModel;
 
-public class WindcallerModel extends AnimatedGeoModel<WindcallerEntity> {
+public class WindcallerModel extends GeoModel<WindcallerEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WindcallerEntity entity) {

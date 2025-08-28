@@ -22,25 +22,25 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimatable {
+public class SnarelingEntity extends AbstractEnderlingEntity implements GeoAnimatable {
 
     public static final EntityDataAccessor<Integer> SHOOT_TIME = SynchedEntityData.defineId(SnarelingEntity.class, EntityDataSerializers.INT);
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public SnarelingEntity(EntityType<? extends SnarelingEntity> p_i50210_1_, Level p_i50210_2_) {
         super(p_i50210_1_, p_i50210_2_);
@@ -103,7 +103,7 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimata
             this.setShootTime(this.getShootTime() - 1);
         }
 
-        if (!this.level.isClientSide && this.getShootTime() == 15 && this.getTarget() != null && this.getTarget().isAlive()) {
+        if (!this.level().isClientSide && this.getShootTime() == 15 && this.getTarget() != null && this.getTarget().isAlive()) {
 
             this.performRangedAttack(this.getTarget(), 2.0F);
         }
@@ -120,7 +120,7 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     public void performRangedAttack(LivingEntity p_82196_1_, float p_82196_2_) {
-        SnarelingGlobEntity snowballentity = new SnarelingGlobEntity(this.level, this);
+        SnarelingGlobEntity snowballentity = new SnarelingGlobEntity(this.level(), this);
         double d0 = p_82196_1_.getEyeY() - 1.75F;
         double d1 = p_82196_1_.getX() - this.getX();
         double d2 = d0 - snowballentity.getY();
@@ -128,7 +128,7 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimata
         float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
         snowballentity.shoot(d1, d2 + (double) f, d3, 1.6F, 2.0F);
         this.playSound(ModSoundEvents.SNARELING_SHOOT.get(), 2.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(snowballentity);
+        this.level().addFreshEntity(snowballentity);
     }
 
     protected void defineSynchedData() {
@@ -145,11 +145,12 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller", 5, this::predicate));
+
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.getShootTime() > 0) {
             event.getController().setAnimation(RawAnimation.begin().then("snareling_shoot", LOOP));
         } else if (this.isAttacking() > 0) {
@@ -163,8 +164,13 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements IAnimata
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class AttackGoal extends MeleeAttackGoal {

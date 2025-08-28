@@ -34,23 +34,22 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class WindcallerEntity extends AbstractIllager implements IAnimatable, SpawnArmoredMob {
+public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
     public int liftAttackAnimationTick;
     public int liftAttackAnimationLength = 25;
@@ -60,7 +59,7 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
     public int blastAttackAnimationLength = 32;
     public int blastAttackAnimationActionPoint = 20;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int soundLoopTick;
 
@@ -108,12 +107,12 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
         boolean blockBeneath = false;
 
         for (int i = 0; i < 4; i++) {
-            if (!this.level.getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() - i, this.blockPosition().getZ())).isAir()) {
+            if (!this.level().getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() - i, this.blockPosition().getZ())).isAir()) {
                 blockBeneath = true;
             }
         }
 
-        return !this.level.isClientSide && blockBeneath == false;
+        return !this.level().isClientSide() && blockBeneath == false;
     }
 
     @Override
@@ -125,7 +124,7 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
         super.baseTick();
         this.tickDownAnimTimers();
 
-        if (this.getTarget() != null && this.distanceTo(this.getTarget()) > 4 && ((!this.isOnGround() && steepDropBelow()) || ((this.getTarget().getY() > this.getY() + 4 || this.getY() < this.getTarget().getY() - 2) && this.distanceTo(this.getTarget()) > 4) || this.distanceTo(this.getTarget()) > 10)) {
+        if (this.getTarget() != null && this.distanceTo(this.getTarget()) > 4 && ((!this.onGround() && steepDropBelow()) || ((this.getTarget().getY() > this.getY() + 4 || this.getY() < this.getTarget().getY() - 2) && this.distanceTo(this.getTarget()) > 4) || this.distanceTo(this.getTarget()) > 10)) {
             if (this.getY() < this.getTarget().getY() + 4) {
                 this.setDeltaMovement(0.0D, 0.05D, 0.0D);
             } else {
@@ -154,12 +153,12 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
 
     public void aiStep() {
 
-        if (!this.onGround && this.getDeltaMovement().y < 0.0D) {
+        if (!this.onGround() && this.getDeltaMovement().y < 0.0D) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.5D, 1.0D));
         }
 
-        if (this.level.isClientSide) {
-            this.level.addParticle(ModParticleTypes.WIND.get(), this.getRandomX(0.1D), this.getY() + 0.05D, this.getRandomZ(0.1D), (this.random.nextDouble() - 0.5D) * 1.0D, 0.0, (this.random.nextDouble() - 0.5D) * 1.0D);
+        if (this.level().isClientSide) {
+            this.level().addParticle(ModParticleTypes.WIND.get(), this.getRandomX(0.1D), this.getY() + 0.05D, this.getRandomZ(0.1D), (this.random.nextDouble() - 0.5D) * 1.0D, 0.0, (this.random.nextDouble() - 0.5D) * 1.0D);
         }
 
         super.aiStep();
@@ -176,12 +175,12 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.addAnimationController(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
 
-    private <P extends IAnimatable> PlayState predicate(AnimationState<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.liftAttackAnimationTick > 0) {
             event.getController().setAnimation(RawAnimation.begin().then("windcaller_lift", LOOP));
         } else if (this.blastAttackAnimationTick > 10) {
@@ -263,6 +262,16 @@ public class WindcallerEntity extends AbstractIllager implements IAnimatable, Sp
     @Override
     public ArmorSet getArmorSet() {
         return ModItems.WINDCALLER_ARMOR;
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class LiftAttackGoal extends Goal {

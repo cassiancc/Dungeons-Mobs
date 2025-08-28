@@ -7,11 +7,8 @@ import com.infamous.dungeons_mobs.entities.illagers.WindcallerEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
 
 public class WindcallerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
@@ -26,28 +23,21 @@ public class WindcallerArmorGearModel<T extends ArmorGear> extends ArmorGearMode
     }
 
     @Override
-    public void setCustomAnimations(T entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(T entity, long uniqueID, AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        IBone cloak = this.getAnimationProcessor().getBone("armorCloak");
+        var cloak = this.getAnimationProcessor().getBone("armorCloak");
 
         cloak.setHidden(this.getWearer() != null && this.getWearer() instanceof WindcallerEntity);
 
-        IBone rightArm = this.getAnimationProcessor().getBone("armorRightArm");
-        IBone leftArm = this.getAnimationProcessor().getBone("armorLeftArm");
+        var rightArm = this.getAnimationProcessor().getBone("armorRightArm");
+        var leftArm = this.getAnimationProcessor().getBone("armorLeftArm");
         if (!DungeonsMobsConfig.COMMON.ENABLE_3D_SLEEVES.get()) {
             rightArm.setHidden(true);
             leftArm.setHidden(true);
         }
-    }
-
-    @Override
-    public void setMolangQueries(IAnimatable animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
         Vec3 velocity = wearer.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 13);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 13);
     }
 }

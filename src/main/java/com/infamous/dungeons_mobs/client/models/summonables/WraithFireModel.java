@@ -4,10 +4,10 @@ package com.infamous.dungeons_mobs.client.models.summonables;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.summonables.WraithFireEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
 
-public class WraithFireModel extends AnimatedGeoModel<WraithFireEntity> {
+public class WraithFireModel extends GeoModel<WraithFireEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WraithFireEntity entity) {
@@ -25,7 +25,7 @@ public class WraithFireModel extends AnimatedGeoModel<WraithFireEntity> {
     }
 
     @Override
-    public void setCustomAnimations(WraithFireEntity entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(WraithFireEntity entity, long uniqueID, AnimationState<WraithFireEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
     }
