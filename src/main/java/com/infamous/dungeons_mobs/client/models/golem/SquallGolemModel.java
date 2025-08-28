@@ -2,6 +2,10 @@ package com.infamous.dungeons_mobs.client.models.golem;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.golem.SquallGolemEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -24,6 +28,11 @@ public class SquallGolemModel extends GeoModel<SquallGolemEntity> {
     public ResourceLocation getTextureResource(SquallGolemEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/golem/squall_golem.png");
+    }
+
+    @Override
+    public RenderType getRenderType(SquallGolemEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

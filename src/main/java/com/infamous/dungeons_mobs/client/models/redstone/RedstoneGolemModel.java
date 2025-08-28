@@ -5,6 +5,10 @@ package com.infamous.dungeons_mobs.client.models.redstone;// Made with Blockbenc
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.redstone.RedstoneGolemEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -27,6 +31,11 @@ public class RedstoneGolemModel extends GeoModel<RedstoneGolemEntity> {
     public ResourceLocation getTextureResource(RedstoneGolemEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem.png");
+    }
+
+    @Override
+    public RenderType getRenderType(RedstoneGolemEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

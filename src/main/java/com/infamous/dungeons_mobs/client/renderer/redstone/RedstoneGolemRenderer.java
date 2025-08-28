@@ -12,13 +12,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity> {
     @SuppressWarnings("unchecked")
     public RedstoneGolemRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new RedstoneGolemModel());
-        this.addLayer(new GeoEyeLayer<RedstoneGolemEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_light.png")) {
+        this.addRenderLayer(new GeoEyeLayer<RedstoneGolemEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_light.png")) {
             @Override
             public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
                                RedstoneGolemEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
@@ -29,7 +30,7 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
                 }
             }
         });
-        this.addLayer(new PulsatingGlowLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png"), 0.1F, 0.5F, 0.0F) {
+        this.addRenderLayer(new PulsatingGlowLayer<RedstoneGolemEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png"), 0.1F, 0.5F, 0.0F) {
             @Override
             public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
                                LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
@@ -43,7 +44,7 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
                 }
             }
         });
-        this.addLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png")) {
+        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png")) {
             @Override
             public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
                                LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
@@ -57,11 +58,11 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
                 }
             }
         });
-        this.addLayer(new PulsatingGlowLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_white_light.png"), 0.2F, 0.75F, 0.0F) {
+        this.addRenderLayer(new PulsatingGlowLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_white_light.png"), 0.2F, 0.75F, 0.0F) {
             @Override
-            public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                               LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                               float ageInTicks, float netHeadYaw, float headPitch) {
+            public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
+                               MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick,
+                               int packedLight, int packedOverlay) {
 
                 RedstoneGolemEntity redstoneGolem = ((RedstoneGolemEntity) entitylivingbaseIn);
 
@@ -78,12 +79,5 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
         float scaleFactor = 1.0f;
         matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
         super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-    }
-
-    @Override
-    public RenderType getRenderType(RedstoneGolemEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 }

@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.client.renderer.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -8,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
@@ -31,9 +33,9 @@ public class PulsatingGlowLayer<T extends LivingEntity & GeoAnimatable> extends 
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                       T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                       float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick,
+                       int packedLight, int packedOverlay) {
 
         GeoModel<T> geomodel = this.getGeoModel();
 
@@ -41,7 +43,7 @@ public class PulsatingGlowLayer<T extends LivingEntity & GeoAnimatable> extends 
         // original amount: 0.25F
 
         float glow = Math.max(minimumPulseAmount, Mth.cos(ageInTicks * pulseSpeed) * pulseAmount);
-        render(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
+        renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
     }
 
     @Override
