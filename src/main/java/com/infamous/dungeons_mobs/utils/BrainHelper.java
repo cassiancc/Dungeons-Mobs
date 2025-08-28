@@ -3,11 +3,13 @@ package com.infamous.dungeons_mobs.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.infamous.dungeons_mobs.entities.piglin.FungusThrowerEntity;
 import com.infamous.dungeons_mobs.mixin.BrainAccessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.Behavior;
+import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.schedule.Activity;
 
 public class BrainHelper {
@@ -20,12 +22,13 @@ public class BrainHelper {
     }
     */
 
-    public static <E extends LivingEntity> ImmutableList<? extends Pair<Integer, ? extends Behavior<? super E>>> createPriorityPairs(int priorityStart, ImmutableList<? extends Behavior<? super E>> tasks) {
+
+    public static <E extends FungusThrowerEntity> ImmutableList<? extends Pair<Integer, ? extends Behavior<? super E>>> createPriorityPairs(int priorityStart, ImmutableList<? extends BehaviorControl<? super E>> tasks) {
         int priorityIndex = priorityStart;
         ImmutableList.Builder<Pair<Integer, ? extends Behavior<? super E>>> priorityPairs = ImmutableList.builder();
 
-        for (Behavior<? super E> task : tasks) {
-            priorityPairs.add(Pair.of(priorityIndex++, task));
+        for (BehaviorControl<? super E> task : tasks) {
+            priorityPairs.add((Pair<Integer, ? extends Behavior<? super E>>) Pair.of(priorityIndex++, task));
         }
 
         return priorityPairs.build();

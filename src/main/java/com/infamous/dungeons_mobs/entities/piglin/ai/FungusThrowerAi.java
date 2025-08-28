@@ -14,7 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BackUpIfTooClose;
 import net.minecraft.world.entity.ai.behavior.Behavior;
-import net.minecraft.world.entity.ai.behavior.RunIf;
+import net.minecraft.world.entity.ai.behavior.BehaviorControl;
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.Item;
@@ -30,8 +31,8 @@ public class FungusThrowerAi {
 
     public static <E extends FungusThrowerEntity> void addFungusThrowerTasks(Brain<E> brain) {
 
-        ImmutableList<? extends Behavior<? super E>> additionalFightTasks = ImmutableList.of(
-                new RunIf<>(FungusThrowerAi::hasBlueNethershroom, new BackUpIfTooClose<>(6, 0.75F)),
+        ImmutableList<? extends BehaviorControl<? super E>> additionalFightTasks = ImmutableList.of(
+                BehaviorBuilder.triggerIf(FungusThrowerAi::hasBlueNethershroom, BackUpIfTooClose.create(6, 0.75F)),
                 new ThrowAtTargetTask<>(FUNGUS_ITEM_STACK_PREDICATE, FungusThrowerAi::performFungusThrow));
 
         int priorityStart = 7; // Number of fight tasks piglins start with - would like to find a way to dynamically get this from the brain
@@ -49,15 +50,15 @@ public class FungusThrowerAi {
         float horizDistSq = Mth.sqrt((float) (xDiff * xDiff + zDiff * zDiff));
         InteractionHand weaponHoldingHand = ProjectileUtil.getWeaponHoldingHand(fungusThrower, FUNGUS_ITEM_PREDICATE);
         ItemStack fungusStack = fungusThrower.getItemInHand(weaponHoldingHand);
-        BlueNethershroomEntity blueNethershroom = BlueNethershroomItem.createBlueNethershroom(fungusThrower.level, fungusThrower, fungusStack.copy());
+        BlueNethershroomEntity blueNethershroom = BlueNethershroomItem.createBlueNethershroom(fungusThrower.level(), fungusThrower, fungusStack.copy());
 
         blueNethershroom.setXRot(blueNethershroom.getXRot() + 20.0F);
         blueNethershroom.shoot(xDiff, yDiff + (double) (horizDistSq * 0.2F), zDiff, 0.75F, 8.0F);
         if (!fungusThrower.isSilent()) {
-            fungusThrower.level.playSound(null, fungusThrower.getX(), fungusThrower.getY(), fungusThrower.getZ(), ModSoundEvents.FUNGUS_THROWER_THROW.get(), fungusThrower.getSoundSource(), 1.0F, (fungusThrower.getRandom().nextFloat() - fungusThrower.getRandom().nextFloat()) * 0.2F + 1.0F);
+            fungusThrower.level().playSound(null, fungusThrower.getX(), fungusThrower.getY(), fungusThrower.getZ(), ModSoundEvents.FUNGUS_THROWER_THROW.get(), fungusThrower.getSoundSource(), 1.0F, (fungusThrower.getRandom().nextFloat() - fungusThrower.getRandom().nextFloat()) * 0.2F + 1.0F);
         }
 
-        fungusThrower.level.addFreshEntity(blueNethershroom);
+        fungusThrower.level().addFreshEntity(blueNethershroom);
         fungusThrower.swing(weaponHoldingHand);
     }
 
