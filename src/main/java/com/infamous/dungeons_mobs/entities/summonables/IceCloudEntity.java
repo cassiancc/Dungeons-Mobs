@@ -115,7 +115,7 @@ public class IceCloudEntity extends Entity implements GeoAnimatable {
                 double d0 = this.random.nextGaussian() * 0.3D;
                 double d1 = this.random.nextGaussian() * 0.2D;
                 double d2 = this.random.nextGaussian() * 0.3D;
-                this.level.addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), d0, d1, d2);
             }
         } else if (p_28844_ == 6) {
             this.hasFormed = true;
@@ -164,7 +164,7 @@ public class IceCloudEntity extends Entity implements GeoAnimatable {
             }
         }
 
-        HitResult raytraceresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+        HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         boolean flag = false;
         if (raytraceresult.getType() == HitResult.Type.BLOCK) {
             BlockPos blockpos = ((BlockHitResult) raytraceresult).getBlockPos();
@@ -274,9 +274,9 @@ public class IceCloudEntity extends Entity implements GeoAnimatable {
 
     private void land() {
         if (this.isAlive()) {
-            for (LivingEntity entity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.5D), ALIVE)) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.5D), ALIVE)) {
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2));
-                entity.hurt(ModDamageSources.iceChunk(this, this.owner), 15.0F);
+                entity.hurt(damageSources().source(ModDamageSources.ICE_CHUNK, this, this.owner), 15.0F);
                 this.strongKnockback(entity);
             }
 

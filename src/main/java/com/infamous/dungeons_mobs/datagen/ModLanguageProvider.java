@@ -12,7 +12,7 @@ import static com.infamous.dungeons_mobs.mod.ModMobEnchants.MOB_ENCHANTS_DEFERRE
 public class ModLanguageProvider extends LanguageProvider {
 
     public ModLanguageProvider(DataGenerator gen, String locale) {
-        super(gen, DungeonsMobs.MODID, locale);
+        super(gen.getPackOutput(), DungeonsMobs.MODID, locale);
     }
 
     //TODO Completely improve, getting onto it shortly -- Meme Man

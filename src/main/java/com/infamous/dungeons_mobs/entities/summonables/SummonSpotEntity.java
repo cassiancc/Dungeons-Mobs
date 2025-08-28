@@ -17,6 +17,7 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -117,7 +118,8 @@ public class SummonSpotEntity extends Entity implements GeoAnimatable {
         controllers.add(new AnimationController<>(this, "controller", 1, this::predicate));
     }
 
-    private <P extends GeoAnimatable> PlayState predicate(RawAnimation event) {
+
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.getSummonType() == 0) {
             event.getController().setAnimation(RawAnimation.begin().then("illusioner_summon_spot_summon", LOOP));
         } else if (this.getSummonType() == 1) {

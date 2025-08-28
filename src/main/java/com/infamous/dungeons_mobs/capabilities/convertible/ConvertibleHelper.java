@@ -26,7 +26,7 @@ public class ConvertibleHelper {
     public static void onDrownedAndConvertedTo(Mob original, Mob convertedTo) {
         if (original instanceof AbstractSkeleton && convertedTo instanceof SunkenSkeletonEntity) {
             if (!original.isSilent()) {
-                original.level.levelEvent(null, 1040, original.blockPosition(), 0);
+                ((AbstractSkeleton) original).level().levelEvent(null, 1040, original.blockPosition(), 0);
             }
             DungeonsMobs.LOGGER.info("Converted {} to {}", original, convertedTo);
         }
@@ -52,7 +52,7 @@ public class ConvertibleHelper {
     private static void handleZombieAttributes(Zombie convertedToZombie) {
         Method handleAttributesMethod = ObfuscationReflectionHelper.findMethod(Zombie.class, "func_207304_a", Float.class);
         try {
-            handleAttributesMethod.invoke(convertedToZombie, convertedToZombie.level.getCurrentDifficultyAt(convertedToZombie.blockPosition()).getSpecialMultiplier());
+            handleAttributesMethod.invoke(convertedToZombie, convertedToZombie.level().getCurrentDifficultyAt(convertedToZombie.blockPosition()).getSpecialMultiplier());
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

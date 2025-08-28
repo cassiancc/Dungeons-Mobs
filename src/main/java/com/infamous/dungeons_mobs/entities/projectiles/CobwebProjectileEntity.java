@@ -67,7 +67,7 @@ public class CobwebProjectileEntity extends Projectile implements GeoAnimatable 
         }
 
         Vec3 vector3d = this.getDeltaMovement();
-        HitResult raytraceresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+        HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
             this.onHit(raytraceresult);
         }
@@ -99,7 +99,7 @@ public class CobwebProjectileEntity extends Projectile implements GeoAnimatable 
 
         } else {
             if (entity instanceof LivingEntity) {
-                p_213868_1_.getEntity().hurt(DamageSource.indirectMobAttack(this, (LivingEntity) entity).setProjectile(), 1.0F);
+                p_213868_1_.getEntity().hurt(damageSources().indirectMagic(this, (LivingEntity) entity), 1.0F);
             }
 
             if (!this.level().isClientSide) {

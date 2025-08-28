@@ -21,11 +21,4 @@ public class GeomancerWallRenderer extends GeoEntityRenderer<GeomancerWallEntity
                                   float rotationYaw, float partialTicks) {
         super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
     }
-
-    @Override
-    public RenderType getRenderType(GeomancerWallEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

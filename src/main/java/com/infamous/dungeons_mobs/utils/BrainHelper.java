@@ -23,12 +23,12 @@ public class BrainHelper {
     */
 
 
-    public static <E extends FungusThrowerEntity> ImmutableList<? extends Pair<Integer, ? extends Behavior<? super E>>> createPriorityPairs(int priorityStart, ImmutableList<? extends BehaviorControl<? super E>> tasks) {
+    public static <E extends FungusThrowerEntity> ImmutableList<? extends Pair<Integer, ? extends BehaviorControl<? super E>>> createPriorityPairs(int priorityStart, ImmutableList<? extends BehaviorControl<? super E>> tasks) {
         int priorityIndex = priorityStart;
-        ImmutableList.Builder<Pair<Integer, ? extends Behavior<? super E>>> priorityPairs = ImmutableList.builder();
+        ImmutableList.Builder<Pair<Integer, ? extends BehaviorControl<? super E>>> priorityPairs = ImmutableList.builder();
 
         for (BehaviorControl<? super E> task : tasks) {
-            priorityPairs.add((Pair<Integer, ? extends Behavior<? super E>>) Pair.of(priorityIndex++, task));
+            priorityPairs.add(Pair.of(priorityIndex++, task));
         }
 
         return priorityPairs.build();
@@ -55,14 +55,11 @@ public class BrainHelper {
     }
      */
 
-    public static <E extends LivingEntity> void addPrioritizedBehaviors(Activity activity, ImmutableList<? extends Pair<Integer, ? extends Behavior<? super E>>> prioritizedTasks, Brain<E> brain) {
-        BrainAccessor<E> brainAccessor = castToAccessor(brain);
+    public static <E extends LivingEntity> void addPrioritizedBehaviors(Activity activity, ImmutableList<? extends Pair<Integer, ? extends BehaviorControl<? super E>>> prioritizedTasks, Brain<E> brain) {
+//        BrainAccessor<E> brainAccessor = castToAccessor(brain);
 
-        for (Pair<Integer, ? extends Behavior<? super E>> pair : prioritizedTasks) {
-            brainAccessor.getAvailableBehaviorsByPriority()
-                    .computeIfAbsent(pair.getFirst(), (p) -> Maps.newHashMap())
-                    .computeIfAbsent(activity, (a) -> Sets.newLinkedHashSet())
-                    .add(pair.getSecond());
+        for (Pair<Integer, ? extends BehaviorControl<? super E>> pair : prioritizedTasks) {
+            brain.addActivity(Activity.FIGHT, pair.getFirst(), ImmutableList.of(pair.getSecond()));
         }
     }
 

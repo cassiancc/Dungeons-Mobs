@@ -66,13 +66,13 @@ public class ModItems {
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> NETHERITE_PIGLIN_HELMET = ITEMS.register("netherite_piglin_helmet",
-            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, EquipmentSlot.HEAD, new Item.Properties()));
+            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, HELMET, new Item.Properties()));
     public static final RegistryObject<Item> CRACKED_NETHERITE_PIGLIN_HELMET = ITEMS.register("cracked_netherite_piglin_helmet",
-            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, EquipmentSlot.HEAD, new Item.Properties()));
+            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, HELMET, new Item.Properties()));
     public static final RegistryObject<Item> GOLD_PIGLIN_HELMET = ITEMS.register("gold_piglin_helmet",
-            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, EquipmentSlot.HEAD, new Item.Properties()));
+            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, HELMET, new Item.Properties()));
     public static final RegistryObject<Item> CRACKED_GOLD_PIGLIN_HELMET = ITEMS.register("cracked_gold_piglin_helmet",
-            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, EquipmentSlot.HEAD, new Item.Properties()));
+            () -> new PiglinHelmetItem(ArmorMaterials.GOLD, HELMET, new Item.Properties()));
 
     public static final ArmorSet CHEF_ARMOR = registerArmorSet("chef_armor", "chef_helmet", "chef_chestplate", null, null);
     public static final ArmorSet DROWNED_NECROMANCER_ARMOR = registerArmorSetDrownedNecromancer("drowned_necromancer_armor", "drowned_necromancer_helmet", "drowned_necromancer_chestplate", "drowned_necromancer_leggings", null);

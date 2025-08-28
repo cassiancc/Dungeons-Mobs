@@ -23,7 +23,7 @@ public interface IAquaticMob {
         if (aquaticMob != this) throw new IllegalArgumentException("Supplied aquaticMob is not this instance!");
 
         if (target != null) {
-            return !aquaticMob.level.isDay() || target.isInWater();
+            return !aquaticMob.level().isDay() || target.isInWater();
         } else {
             return false;
         }
@@ -57,7 +57,7 @@ public interface IAquaticMob {
     default <T extends Mob & IAquaticMob> void updateNavigation(T aquaticMob) {
         if (aquaticMob != this) throw new IllegalArgumentException("Supplied aquaticMob is not this instance!");
 
-        if (!aquaticMob.level.isClientSide) {
+        if (!aquaticMob.level().isClientSide) {
             if (aquaticMob.isEffectiveAi() && aquaticMob.isInWater() && this.wantsToSwim(aquaticMob)) {
                 aquaticMob.setNavigation(aquaticMob.getWaterNavigation());
                 aquaticMob.setSwimming(true);

@@ -4,7 +4,7 @@ import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMobHelper;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.DrownedModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer;
@@ -38,7 +38,7 @@ public class CustomDrownedRenderer extends AbstractZombieRenderer<Drowned, Drown
         super.setupRotations(drowned, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
         float swimAmount = drowned.getSwimAmount(p_225621_5_);
         if (swimAmount > 0.0F) {
-            matrixStack.mulPose(Vector3f.XP.rotationDegrees(Mth.lerp(swimAmount, drowned.getXRot(), -10.0F - drowned.getXRot())));
+            matrixStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(swimAmount, drowned.getXRot(), -10.0F - drowned.getXRot())));
         }
     }
 

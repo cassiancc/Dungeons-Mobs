@@ -22,11 +22,4 @@ public class KelpTrapRenderer extends GeoEntityRenderer<KelpTrapEntity> {
         float scaleFactor = 2.0F;
         stackIn.scale(scaleFactor, scaleFactor, scaleFactor);
     }
-
-    @Override
-    public RenderType getRenderType(KelpTrapEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

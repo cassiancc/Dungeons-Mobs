@@ -1,7 +1,12 @@
 package com.infamous.dungeons_mobs.client.models.ender;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
+import com.infamous.dungeons_mobs.entities.ender.AbstractEnderlingEntity;
 import com.infamous.dungeons_mobs.entities.ender.SnarelingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib.constant.DataTickets;
@@ -28,7 +33,12 @@ public class SnarelingModel extends GeoModel<SnarelingEntity> {
     }
 
     @Override
-    public void setCustomAnimations(SnarelingEntity entity, int uniqueID, AnimationState<SnarelingEntity> customPredicate) {
+    public RenderType getRenderType(SnarelingEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
+    }
+
+    @Override
+    public void setCustomAnimations(SnarelingEntity entity, long uniqueID, AnimationState<SnarelingEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         var head = this.getAnimationProcessor().getBone("head");
 

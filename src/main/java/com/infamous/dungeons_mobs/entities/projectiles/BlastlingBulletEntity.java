@@ -6,6 +6,7 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -44,7 +45,7 @@ public class BlastlingBulletEntity extends NecromancerOrbEntity {
             Entity entity1 = this.getOwner();
             if (entity1 instanceof LivingEntity && !(entity instanceof AbstractEnderlingEntity)) {
                 LivingEntity livingentity = (LivingEntity) entity1;
-                entity.hurt(ModDamageSources.blastlingBullet(this, livingentity), 4.0F);
+                entity.hurt(entity1.damageSources().source(ModDamageSources.BLASTLING, this, livingentity), 4.0F);
             }
 
         }
@@ -77,7 +78,7 @@ public class BlastlingBulletEntity extends NecromancerOrbEntity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

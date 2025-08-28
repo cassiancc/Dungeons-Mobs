@@ -4,6 +4,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -13,12 +14,12 @@ public class CosmeticArmorMaterial implements ArmorMaterial {
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot p_200896_1_) {
-        return HEALTH_PER_SLOT[p_200896_1_.getIndex()] * 5;
+    public int getDurabilityForType(ArmorItem.Type pType) {
+        return HEALTH_PER_SLOT[pType.getSlot().getIndex()] * 5;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot p_200902_1_) {
+    public int getDefenseForType(ArmorItem.Type pType) {
         return 0;
     }
 

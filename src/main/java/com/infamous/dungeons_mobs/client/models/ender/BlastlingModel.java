@@ -1,7 +1,12 @@
 package com.infamous.dungeons_mobs.client.models.ender;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
+import com.infamous.dungeons_mobs.entities.ender.AbstractEnderlingEntity;
 import com.infamous.dungeons_mobs.entities.ender.BlastlingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib.constant.DataTickets;
@@ -24,6 +29,11 @@ public class BlastlingModel extends GeoModel<BlastlingEntity> {
     @Override
     public ResourceLocation getTextureResource(BlastlingEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entity).flameTicks) % 3) + ".png");
+    }
+
+    @Override
+    public RenderType getRenderType(BlastlingEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

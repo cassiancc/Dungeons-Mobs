@@ -7,6 +7,11 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.GeomancerEntity;
 import com.infamous.dungeons_mobs.entities.summonables.ConstructEntity;
 import com.infamous.dungeons_mobs.entities.summonables.GeomancerBombEntity;
+import com.infamous.dungeons_mobs.entities.summonables.GeomancerWallEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -27,6 +32,11 @@ public class GeomancerConstructModel extends GeoModel<ConstructEntity> {
     public ResourceLocation getTextureResource(ConstructEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
         return entity instanceof GeomancerBombEntity ? new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png") : new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_wall.png");
+    }
+
+    @Override
+    public RenderType getRenderType(GeomancerWallEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

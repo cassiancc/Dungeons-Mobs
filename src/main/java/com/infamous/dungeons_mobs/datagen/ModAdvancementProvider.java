@@ -9,11 +9,12 @@ import java.util.function.Consumer;
 
 public class ModAdvancementProvider extends AdvancementProvider {
     public ModAdvancementProvider(DataGenerator generatorIn, ExistingFileHelper fileHelperIn) {
-        super(generatorIn, fileHelperIn);
+        //FIXME
+        super(generatorIn.getPackOutput(), null, null);
     }
 
-    @Override
-    protected void registerAdvancements(Consumer<Advancement> consumer, ExistingFileHelper fileHelper) {
-        new ModNetherAdvancements().accept(consumer);
-    }
+//    @Override
+//    protected void registerAdvancements(Consumer<Advancement> consumer, ExistingFileHelper fileHelper) {
+//        new ModNetherAdvancements().accept(consumer);
+//    }
 }

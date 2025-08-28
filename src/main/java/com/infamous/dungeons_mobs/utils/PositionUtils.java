@@ -17,7 +17,7 @@ public class PositionUtils {
 
     public static BlockPos getOffsetBlockPos(Entity entity, double offsetX, double offsetY, double offsetZ, float rotation) {
         Vec3 vector3d = (new Vec3(offsetZ, offsetY, offsetX).yRot(-rotation * ((float) Math.PI / 180F) - ((float) Math.PI / 2F)));
-        return entity.blockPosition().offset(vector3d.x, vector3d.y, vector3d.z);
+        return new BlockPos.MutableBlockPos(entity.getX()+vector3d.x, entity.getY()+vector3d.y, entity.getZ()+vector3d.z);
     }
 
     public static Vec3 getOffsetMotion(Entity entity, double offsetX, double offsetY, double offsetZ, float rotation) {
@@ -32,11 +32,11 @@ public class PositionUtils {
 
         do {
             BlockPos blockpos1 = blockpos.below();
-            BlockState blockstate = entity.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(entity.level, blockpos1, Direction.UP)) {
-                if (!entity.level.isEmptyBlock(blockpos)) {
-                    BlockState blockstate1 = entity.level.getBlockState(blockpos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(entity.level, blockpos);
+            BlockState blockstate = entity.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(entity.level(), blockpos1, Direction.UP)) {
+                if (!entity.level().isEmptyBlock(blockpos)) {
+                    BlockState blockstate1 = entity.level().getBlockState(blockpos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(entity.level(), blockpos);
                     if (!voxelshape.isEmpty()) {
                         d0 = voxelshape.max(Direction.Axis.Y);
                     }

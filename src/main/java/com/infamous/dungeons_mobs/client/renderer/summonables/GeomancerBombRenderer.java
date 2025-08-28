@@ -15,7 +15,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class GeomancerBombRenderer extends GeoEntityRenderer<GeomancerBombEntity> {
     public GeomancerBombRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeomancerConstructModel());
-        this.addLayer(new PulsatingGlowLayer<GeomancerBombEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png"), 0.5F, 0.6F, 0.2F) {
+        this.addRenderLayer(new PulsatingGlowLayer<GeomancerBombEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png"), 0.5F, 0.6F, 0.2F) {
             @Override
             public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
                                GeomancerBombEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,

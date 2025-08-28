@@ -33,7 +33,7 @@ public class BurningMobEnchant extends MobEnchant {
                 PROXY.spawnParticles(entity, ParticleTypes.FLAME);
                 applyToNearbyEntities(entity, 1.5F,
                         getCanApplyToEnemyPredicate(entity), (LivingEntity nearbyEntity) -> {
-                            nearbyEntity.hurt(DamageSource.ON_FIRE, 0.5F * level);
+                            nearbyEntity.hurt(nearbyEntity.damageSources().onFire(), 0.5F * level);
                             PROXY.spawnParticles(nearbyEntity, ParticleTypes.FLAME);
                         }
                 );

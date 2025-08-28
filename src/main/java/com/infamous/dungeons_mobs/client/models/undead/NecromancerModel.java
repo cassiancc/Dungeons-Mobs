@@ -3,6 +3,10 @@ package com.infamous.dungeons_mobs.client.models.undead;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.undead.NecromancerEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -33,6 +37,11 @@ public class NecromancerModel extends GeoModel<NecromancerEntity> {
     @Override
     public ResourceLocation getTextureResource(NecromancerEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/skeleton/necromancer.png");
+    }
+
+    @Override
+    public RenderType getRenderType(NecromancerEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

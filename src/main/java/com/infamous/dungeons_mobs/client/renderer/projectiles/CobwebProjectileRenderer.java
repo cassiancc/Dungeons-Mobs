@@ -23,11 +23,4 @@ public class CobwebProjectileRenderer extends GeoEntityRenderer<CobwebProjectile
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
-
-    @Override
-    public RenderType getRenderType(CobwebProjectileEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

@@ -33,11 +33,11 @@ public class NecromancerTridentItem extends ArtifactItem implements IHasInventor
 
             if (itemUseContextPlayer != null) {
                 for (int i = 0; i < 8; i++) {
-                    TridentStormEntity tridentStorm = ModEntityTypes.TRIDENT_STORM.get().create(itemUseContextPlayer.level);
+                    TridentStormEntity tridentStorm = ModEntityTypes.TRIDENT_STORM.get().create(itemUseContextPlayer.level());
                     tridentStorm.owner = itemUseContextPlayer;
                     tridentStorm.moveTo(new BlockPos(itemUseContextPos.getX() - tridentSummonRange + itemUseContextPlayer.getRandom().nextInt(tridentSummonRange * 2), itemUseContextPos.getY(), itemUseContextPos.getZ() - tridentSummonRange + itemUseContextPlayer.getRandom().nextInt(tridentSummonRange * 2)), 0, 0);
                     tridentStorm.setYRot(itemUseContextPlayer.getRandom().nextInt(360));
-                    itemUseContextPlayer.level.addFreshEntity(tridentStorm);
+                    itemUseContextPlayer.level().addFreshEntity(tridentStorm);
                     PositionUtils.moveToCorrectHeight(tridentStorm);
                 }
                 itemUseContextItem.hurtAndBreak(1, itemUseContextPlayer, (entity) -> NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), new BreakItemMessage(entity.getId(), itemUseContextItem)));

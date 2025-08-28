@@ -116,7 +116,7 @@ public abstract class SpiderEntityMixin extends Monster implements IWebShooter {
         TargetingConditions spiderTargeting = TargetingConditions.forCombat().range(10.0D).ignoreInvisibilityTesting();
 
         if (notifyOthers) {
-            List<Spider> spiders = this.level.getNearbyEntities(Spider.class, spiderTargeting, this, this.getBoundingBox().inflate(10.0D));
+            List<Spider> spiders = this.level().getNearbyEntities(Spider.class, spiderTargeting, this, this.getBoundingBox().inflate(10.0D));
 
             for (Spider spider : spiders) {
                 if (spider instanceof ITrapsTarget && this.getTarget() != null && spider.getTarget() != null && spider.getTarget() == this.getTarget()) {

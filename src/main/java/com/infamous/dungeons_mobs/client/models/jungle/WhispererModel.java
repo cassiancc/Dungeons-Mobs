@@ -3,6 +3,10 @@ package com.infamous.dungeons_mobs.client.models.jungle;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.jungle.WhispererEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +33,11 @@ public class WhispererModel<T extends WhispererEntity> extends GeoModel<T> {
     @Override
     public ResourceLocation getTextureResource(T entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/whisperer.png");
+    }
+
+    @Override
+    public RenderType getRenderType(WhispererEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

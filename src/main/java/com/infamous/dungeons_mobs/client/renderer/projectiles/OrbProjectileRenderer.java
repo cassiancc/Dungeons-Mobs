@@ -53,15 +53,8 @@ public class OrbProjectileRenderer extends GeoEntityRenderer<NecromancerOrbEntit
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
-    @Override
-    public RenderType getRenderType(NecromancerOrbEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-//        return RenderType.entityTranslucent(getTextureLocation(animatable));
-            return RenderType.eyes(getTextureLocation(animatable));
-    }
-
-    @Override
+    //FIXME
+//    @Override
     public Color getRenderColor(NecromancerOrbEntity animatable, float partialTick, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight) {
         return color;
     }

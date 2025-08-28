@@ -11,11 +11,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
     public ModEntityTypeTagsProvider(DataGenerator p_126517_, @Nullable ExistingFileHelper existingFileHelper) {
-        super(p_126517_, DungeonsMobs.MODID, existingFileHelper);
+        //FIXME
+        super(p_126517_.getPackOutput(), null, DungeonsMobs.MODID, existingFileHelper);
     }
 
-    @Override
-    protected void addTags() {
-        this.tag(EntityTags.PIGLINS).add(EntityType.PIGLIN).add(ModEntityTypes.FUNGUS_THROWER.get());
-    }
+//    @Override
+//    protected void addTags() {
+//        this.tag(EntityTags.PIGLINS).add(EntityType.PIGLIN).add(ModEntityTypes.FUNGUS_THROWER.get());
+//    }
 }

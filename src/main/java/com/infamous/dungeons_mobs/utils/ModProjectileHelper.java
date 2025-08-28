@@ -51,7 +51,7 @@ public class ModProjectileHelper {
     }
 
     public static HitResult getLaserRayTrace(LivingEntity shooter) {
-        Level world = shooter.level;
+        Level world = shooter.level();
         BlockHitResult blockRTR = (BlockHitResult) shooter.pick(RAYTRACE_DISTANCE, 1.0F, false);
         Vec3 startVec = shooter.getEyePosition(1.0F);
         Vec3 lookVec = shooter.getViewVector(1.0F);

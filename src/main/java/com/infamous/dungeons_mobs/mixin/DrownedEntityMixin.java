@@ -42,6 +42,6 @@ public abstract class DrownedEntityMixin extends Zombie {
     private ThrownTrident createTrident(ThrownTrident original) {
         InteractionHand tridentHoldingHand = ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof TridentItem);
         ItemStack tridentStack = this.getItemInHand(tridentHoldingHand);
-        return new ThrownTrident(this.level, this, tridentStack);
+        return new ThrownTrident(this.level(), this, tridentStack);
     }
 }

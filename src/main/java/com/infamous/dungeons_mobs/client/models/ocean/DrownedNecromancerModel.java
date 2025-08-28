@@ -6,6 +6,10 @@ package com.infamous.dungeons_mobs.client.models.ocean;// Made with Blockbench 3
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.water.DrownedNecromancerEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -37,6 +41,11 @@ public class DrownedNecromancerModel extends GeoModel<DrownedNecromancerEntity> 
     @Override
     public ResourceLocation getTextureResource(DrownedNecromancerEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/drowned_necromancer.png");
+    }
+
+    @Override
+    public RenderType getRenderType(DrownedNecromancerEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

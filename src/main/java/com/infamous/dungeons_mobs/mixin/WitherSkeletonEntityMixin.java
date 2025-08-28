@@ -33,9 +33,9 @@ public abstract class WitherSkeletonEntityMixin extends AbstractSkeleton {
         arrow.clearFire();
         if (arrow instanceof Arrow && ((ArrowAccessor) arrow).getEffects().isEmpty()) {
             int difficultyFactor = 0;
-            if (this.level.getDifficulty() == Difficulty.NORMAL) {
+            if (this.level().getDifficulty() == Difficulty.NORMAL) {
                 difficultyFactor = 5;
-            } else if (this.level.getDifficulty() == Difficulty.HARD) {
+            } else if (this.level().getDifficulty() == Difficulty.HARD) {
                 difficultyFactor = 10;
             }
             if (difficultyFactor > 0) {

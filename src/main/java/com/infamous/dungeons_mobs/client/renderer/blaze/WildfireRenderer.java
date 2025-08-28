@@ -47,79 +47,76 @@ public class WildfireRenderer extends DynamicGeoEntityRenderer<WildfireEntity> {
 
     }
 
-    @Override
-    public RenderType getRenderType(WildfireEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
-
-    @Override
-    public void renderRecursively(PoseStack poseStack, WildfireEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        if (this.isArmorBone(bone)) {
-            bone.setChildrenHidden(true);
-        }
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
-    protected boolean isArmorBone(GeoBone bone) {
-        return bone.getName().startsWith("armor");
-    }
-
-    @Override
-    protected ItemDisplayContext getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
-        return ItemDisplayContext.NONE;
-    }
-
-    @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WildfireEntity currentEntity, IBone bone) {
-        if (item == this.mainHand) {
-            stack.mulPose(Axis.XP.rotationDegrees(-90f));
-
-            if (item.getItem() instanceof ShieldItem)
-                stack.translate(0, 0.125, -0.25);
-        }
-        else if (item == this.offHand) {
-            stack.mulPose(Axis.XP.rotationDegrees(-90f));
-
-            if (item.getItem() instanceof ShieldItem) {
-                stack.translate(0, 0.125, 0.25);
-                stack.mulPose(Axis.YP.rotationDegrees(180));
-            }
-        }
-    }
 
 
-
-    @Nullable
-    @Override
-    protected ItemStack getArmorForBone(String boneName, WildfireEntity currentEntity) {
-        switch (boneName) {
-            case "armorHead":
-                return helmet;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    protected EquipmentSlot getEquipmentSlotForArmorBone(String boneName, WildfireEntity currentEntity) {
-        switch (boneName) {
-            case "armorHead":
-                return EquipmentSlot.HEAD;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    protected ModelPart getArmorPartForBone(String name, HumanoidModel<?> armorBipedModel) {
-        switch (name) {
-            case "armorHead":
-                return armorBipedModel.head;
-            default:
-                return null;
-        }
-    }
+    //FIXME
+//
+//    @Override
+//    public void renderRecursively(PoseStack poseStack, WildfireEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+//        if (this.isArmorBone(bone)) {
+//            bone.setChildrenHidden(true);
+//        }
+//        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+//    }
+//
+//    @Override
+//    protected boolean isArmorBone(GeoBone bone) {
+//        return bone.getName().startsWith("armor");
+//    }
+//
+//    @Override
+//    protected ItemDisplayContext getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
+//        return ItemDisplayContext.NONE;
+//    }
+//
+//    @Override
+//    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WildfireEntity currentEntity, IBone bone) {
+//        if (item == this.mainHand) {
+//            stack.mulPose(Axis.XP.rotationDegrees(-90f));
+//
+//            if (item.getItem() instanceof ShieldItem)
+//                stack.translate(0, 0.125, -0.25);
+//        }
+//        else if (item == this.offHand) {
+//            stack.mulPose(Axis.XP.rotationDegrees(-90f));
+//
+//            if (item.getItem() instanceof ShieldItem) {
+//                stack.translate(0, 0.125, 0.25);
+//                stack.mulPose(Axis.YP.rotationDegrees(180));
+//            }
+//        }
+//    }
+//
+//
+//
+//    @Nullable
+//    @Override
+//    protected ItemStack getArmorForBone(String boneName, WildfireEntity currentEntity) {
+//        switch (boneName) {
+//            case "armorHead":
+//                return helmet;
+//            default:
+//                return null;
+//        }
+//    }
+//
+//    @Override
+//    protected EquipmentSlot getEquipmentSlotForArmorBone(String boneName, WildfireEntity currentEntity) {
+//        switch (boneName) {
+//            case "armorHead":
+//                return EquipmentSlot.HEAD;
+//            default:
+//                return null;
+//        }
+//    }
+//
+//    @Override
+//    protected ModelPart getArmorPartForBone(String name, HumanoidModel<?> armorBipedModel) {
+//        switch (name) {
+//            case "armorHead":
+//                return armorBipedModel.head;
+//            default:
+//                return null;
+//        }
+//    }
 }

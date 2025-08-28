@@ -33,7 +33,7 @@ public class AnimatedPropsMessage {
         NetworkEvent.Context context = contextSupplier.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.level.getEntity(message.entityId);
+                Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
                 if (entity instanceof Mob) {
                     AnimatedProps cap = AnimatedPropsHelper.getAnimatedPropsCapability((Mob) entity);
                     cap.setAttackAnimationTick(message.cap.getAttackAnimationTick());

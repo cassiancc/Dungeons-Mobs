@@ -32,11 +32,4 @@ public class SummonSpotRenderer extends GeoEntityRenderer<SummonSpotEntity> {
     protected int getBlockLightLevel(SummonSpotEntity p_225624_1_, BlockPos p_225624_2_) {
         return 15;
     }
-
-    @Override
-    public RenderType getRenderType(SummonSpotEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

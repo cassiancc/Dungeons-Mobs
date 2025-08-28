@@ -40,11 +40,6 @@ public class TridentStormEntity extends Entity implements GeoAnimatable {
 
     }
 
-    @Override
-    public int tickTimer() {
-        return this.tickCount;
-    }
-
     private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         event.getController().setAnimation(RawAnimation.begin().then("trident_storm_strike", LOOP));
         return PlayState.CONTINUE;
@@ -61,18 +56,18 @@ public class TridentStormEntity extends Entity implements GeoAnimatable {
 
         this.refreshDimensions();
 
-        List<Entity> list = this.level.getEntities(this, this.getBoundingBox(), Entity::isAlive);
-        if (!list.isEmpty() && !this.level.isClientSide) {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), Entity::isAlive);
+        if (!list.isEmpty() && !this.level().isClientSide) {
             for (Entity entity : list) {
                 if (entity instanceof LivingEntity) {
                     LivingEntity livingEntity = (LivingEntity) entity;
                     if (this.lifeTime >= 80 && this.lifeTime <= 90) {
                         if (this.owner != null) {
                             if (livingEntity != this.owner) {
-                                livingEntity.hurt(ModDamageSources.summonedTridentStorm(this, owner), 20);
+                                livingEntity.hurt(damageSources().source(ModDamageSources.SUMMONED_TRIDENT_STORM, this, owner), 20);
                             }
                         } else {
-                            livingEntity.hurt(ModDamageSources.tridentStorm(this), 20);
+                            livingEntity.hurt(damageSources().source(ModDamageSources.TRIDENT_STORM,this), 20);
                         }
                     }
                 }
@@ -86,7 +81,7 @@ public class TridentStormEntity extends Entity implements GeoAnimatable {
             this.playSound(ModSoundEvents.DROWNED_NECROMANCER_TRIDENT_STORM_HIT.get(), 3.0F, 1.0F);
         }
 
-        if (this.lifeTime >= 500 && !this.level.isClientSide) {
+        if (this.lifeTime >= 500 && !this.level().isClientSide()) {
             this.remove(RemovalReason.DISCARDED);
         }
     }

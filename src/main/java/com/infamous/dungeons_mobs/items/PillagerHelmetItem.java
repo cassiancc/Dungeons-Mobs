@@ -19,7 +19,7 @@ import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.PILLA
 public class PillagerHelmetItem extends ArmorItem {
     private final boolean isDiamond;
 
-    public PillagerHelmetItem(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn, boolean isDiamondIn) {
+    public PillagerHelmetItem(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builderIn, boolean isDiamondIn) {
         super(materialIn, slot, builderIn);
         this.isDiamond = isDiamondIn;
     }

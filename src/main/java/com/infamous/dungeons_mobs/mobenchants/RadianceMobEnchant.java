@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.mobenchants;
 
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -23,14 +24,14 @@ public class RadianceMobEnchant extends MobEnchant {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent event) {
         Entity attacker;
-        if (!event.getSource().isProjectile()) {
+        if (!event.getSource().is(DamageTypeTags.IS_PROJECTILE)) {
             attacker = event.getSource().getDirectEntity();
         } else {
             attacker = event.getSource().getEntity();
         }
         if (attacker instanceof LivingEntity)
             executeIfPresentWithLevel((LivingEntity) attacker, RADIANCE.get(), (level) -> {
-                LivingEntity source = event.getSource().isProjectile() ? event.getEntity() : (LivingEntity) attacker;
+                LivingEntity source = event.getSource().is(DamageTypeTags.IS_PROJECTILE) ? event.getEntity() : (LivingEntity) attacker;
                 applyToNearbyEntities(source, 1.5F,
                         getCanHealPredicate(source), (LivingEntity nearbyEntity) -> {
                             nearbyEntity.heal(level);

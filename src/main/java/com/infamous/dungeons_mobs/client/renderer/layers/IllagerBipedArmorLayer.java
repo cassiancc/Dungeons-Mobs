@@ -40,7 +40,7 @@ public class IllagerBipedArmorLayer<T extends AbstractIllager, M extends Illager
         ItemStack itemstack = p_241739_3_.getItemBySlot(p_241739_4_);
         if (itemstack.getItem() instanceof ArmorItem) {
             ArmorItem armoritem = (ArmorItem) itemstack.getItem();
-            if (armoritem.getSlot() == p_241739_4_) {
+            if (armoritem.getType().getSlot() == p_241739_4_) {
                 this.getParentModel().copyPropertiesTo(crossedArmsModel);
                 ResourceLocation crossedTexture = this.getArmorResource(p_241739_3_, itemstack, p_241739_4_, "crossed");
                 boolean armsCanBeCrossed = IllagerArmsUtil.resourceExists(crossedTexture);

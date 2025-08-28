@@ -33,7 +33,7 @@ public abstract class AbstractNecromancerStaffItem extends AbstractStaffItem {
         double d3 = targetZ - pos.z;
         Projectile projectile = createOrb(playerIn, d1, d2, d3);
         projectile.moveTo(pos.x, pos.y, pos.z);
-        playerIn.level.addFreshEntity(projectile);
+        playerIn.level().addFreshEntity(projectile);
         playerIn.playSound(ModSoundEvents.NECROMANCER_SHOOT.get(), 1.0F, 1.0F);
         playerIn.getCooldowns().addCooldown(itemStack.getItem(), 20);
         itemStack.hurtAndBreak(1, playerIn, playerEntity -> playerEntity.broadcastBreakEvent(hand));

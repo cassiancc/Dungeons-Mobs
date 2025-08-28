@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.entities.jungle;
 import com.infamous.dungeons_mobs.tags.EntityTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
@@ -94,7 +95,7 @@ public class VinePartEntity extends PartEntity<AbstractVineEntity> {
         return this.getSizeForSegment();
     }
 
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         throw new UnsupportedOperationException();
     }
 }

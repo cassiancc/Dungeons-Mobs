@@ -6,26 +6,13 @@ import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
 import com.infamous.dungeons_mobs.entities.jungle.WhispererEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
-
-import javax.annotation.Nullable;
-
-import static net.minecraft.client.renderer.entity.ShulkerRenderer.getTextureLocation;
 
 @OnlyIn(Dist.CLIENT)
 public class WhispererRenderer extends DynamicGeoEntityRenderer<WhispererEntity> {
@@ -45,167 +32,162 @@ public class WhispererRenderer extends DynamicGeoEntityRenderer<WhispererEntity>
 
     }
 
-    @Override
-    public RenderType getRenderType(WhispererEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
-
-    @Override
-    public void renderRecursively(PoseStack poseStack, WhispererEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        if (this.isArmorBone(bone)) {
-            bone.setChildrenHidden(true);
-        }
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
-    protected boolean isArmorBone(GeoBone bone) {
-        return bone.getName().startsWith("armor");
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getTextureForBone(String s, WhispererEntity windcallerEntity) {
-        return null;
-    }
-
-    @Override
-    protected ItemStack getHeldItemForBone(String boneName, WhispererEntity currentEntity) {
-        switch (boneName) {
-            case DefaultBipedBoneIdents.LEFT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? mainHand : offHand;
-            case DefaultBipedBoneIdents.RIGHT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? offHand : mainHand;
-            case DefaultBipedBoneIdents.POTION_BONE_IDENT:
-                break;
-        }
-        return null;
-    }
-
-    @Override
-    protected TransformType getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
-        switch (boneName) {
-            case DefaultBipedBoneIdents.LEFT_HAND_BONE_IDENT:
-                return TransformType.THIRD_PERSON_RIGHT_HAND;
-            case DefaultBipedBoneIdents.RIGHT_HAND_BONE_IDENT:
-                return TransformType.THIRD_PERSON_RIGHT_HAND;
-            default:
-                return TransformType.NONE;
-        }
-    }
-
-    @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WhispererEntity currentEntity, GeoBone bone) {
-        if (item == this.mainHand) {
-            stack.mulPose(Axis.XP.rotationDegrees(-90f));
-
-            if (item.getItem() instanceof ShieldItem)
-                stack.translate(0, 0.125, -0.25);
-        }
-        else if (item == this.offHand) {
-            stack.mulPose(Axis.XP.rotationDegrees(-90f));
-
-            if (item.getItem() instanceof ShieldItem) {
-                stack.translate(0, 0.125, 0.25);
-                stack.mulPose(Axis.YP.rotationDegrees(180));
-            }
-        }
-    }
-
-    @Override
-    protected void postRenderItem(PoseStack matrixStack, ItemStack item, String boneName, WhispererEntity currentEntity, IBone bone) {
-
-    }
-
-    @Override
-    protected BlockState getHeldBlockForBone(String boneName, WhispererEntity currentEntity) {
-        return null;
-    }
-
-    @Override
-    protected void preRenderBlock(PoseStack matrixStack, BlockState block, String boneName,
-                                  WhispererEntity currentEntity) {
-
-    }
-
-    @Override
-    protected void postRenderBlock(PoseStack matrixStack, BlockState block, String boneName,
-                                   WhispererEntity currentEntity) {
-
-    }
-
-    @Nullable
-    @Override
-    protected ItemStack getArmorForBone(String boneName, WhispererEntity currentEntity) {
-        switch (boneName) {
-            case "armorBipedLeftFoot":
-            case "armorBipedRightFoot":
-                return boots;
-            case "armorBipedLeftLeg":
-            case "armorBipedRightLeg":
-                return leggings;
-            case "armorBipedBody":
-            case "armorBipedRightArm":
-            case "armorBipedLeftArm":
-            case "armorIllagerRightArm":
-            case "armorIllagerLeftArm":
-                return chestplate;
-            case "armorBipedHead":
-                return helmet;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    protected EquipmentSlot getEquipmentSlotForArmorBone(String boneName, WhispererEntity currentEntity) {
-        switch (boneName) {
-            case "armorBipedLeftFoot":
-            case "armorBipedRightFoot":
-                return EquipmentSlot.FEET;
-            case "armorBipedLeftLeg":
-            case "armorBipedRightLeg":
-                return EquipmentSlot.LEGS;
-            case "armorBipedRightHand":
-                return !currentEntity.isLeftHanded() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-            case "armorBipedLeftHand":
-                return currentEntity.isLeftHanded() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-            case "armorBipedRightArm":
-            case "armorBipedLeftArm":
-            case "armorIllagerRightArm":
-            case "armorIllagerLeftArm":
-            case "armorBipedBody":
-                return EquipmentSlot.CHEST;
-            case "armorBipedHead":
-                return EquipmentSlot.HEAD;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    protected ModelPart getArmorPartForBone(String name, HumanoidModel<?> armorBipedModel) {
-        switch (name) {
-            case "armorBipedLeftFoot":
-            case "armorBipedLeftLeg":
-                return armorBipedModel.leftLeg;
-            case "armorBipedRightFoot":
-            case "armorBipedRightLeg":
-                return armorBipedModel.rightLeg;
-            case "armorBipedRightArm":
-            case "armorIllagerRightArm":
-                return armorBipedModel.rightArm;
-            case "armorBipedLeftArm":
-            case "armorIllagerLeftArm":
-                return armorBipedModel.leftArm;
-            case "armorBipedBody":
-                return armorBipedModel.body;
-            case "armorBipedHead":
-                return armorBipedModel.head;
-            default:
-                return null;
-        }
-    }
+    //FIXME
+//
+//    @Override
+//    public void renderRecursively(PoseStack poseStack, WhispererEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+//        if (this.isArmorBone(bone)) {
+//            bone.setChildrenHidden(true);
+//        }
+//        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+//    }
+//
+//    @Override
+//    protected boolean isArmorBone(GeoBone bone) {
+//        return bone.getName().startsWith("armor");
+//    }
+//
+//    @Nullable
+//    @Override
+//    protected ResourceLocation getTextureForBone(String s, WhispererEntity windcallerEntity) {
+//        return null;
+//    }
+//
+//    @Override
+//    protected ItemStack getHeldItemForBone(String boneName, WhispererEntity currentEntity) {
+//        switch (boneName) {
+//            case DefaultBipedBoneIdents.LEFT_HAND_BONE_IDENT:
+//                return currentEntity.isLeftHanded() ? mainHand : offHand;
+//            case DefaultBipedBoneIdents.RIGHT_HAND_BONE_IDENT:
+//                return currentEntity.isLeftHanded() ? offHand : mainHand;
+//            case DefaultBipedBoneIdents.POTION_BONE_IDENT:
+//                break;
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    protected TransformType getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
+//        switch (boneName) {
+//            case DefaultBipedBoneIdents.LEFT_HAND_BONE_IDENT:
+//                return TransformType.THIRD_PERSON_RIGHT_HAND;
+//            case DefaultBipedBoneIdents.RIGHT_HAND_BONE_IDENT:
+//                return TransformType.THIRD_PERSON_RIGHT_HAND;
+//            default:
+//                return TransformType.NONE;
+//        }
+//    }
+//
+//    @Override
+//    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WhispererEntity currentEntity, GeoBone bone) {
+//        if (item == this.mainHand) {
+//            stack.mulPose(Axis.XP.rotationDegrees(-90f));
+//
+//            if (item.getItem() instanceof ShieldItem)
+//                stack.translate(0, 0.125, -0.25);
+//        }
+//        else if (item == this.offHand) {
+//            stack.mulPose(Axis.XP.rotationDegrees(-90f));
+//
+//            if (item.getItem() instanceof ShieldItem) {
+//                stack.translate(0, 0.125, 0.25);
+//                stack.mulPose(Axis.YP.rotationDegrees(180));
+//            }
+//        }
+//    }
+//
+//    @Override
+//    protected void postRenderItem(PoseStack matrixStack, ItemStack item, String boneName, WhispererEntity currentEntity, IBone bone) {
+//
+//    }
+//
+//    @Override
+//    protected BlockState getHeldBlockForBone(String boneName, WhispererEntity currentEntity) {
+//        return null;
+//    }
+//
+//    @Override
+//    protected void preRenderBlock(PoseStack matrixStack, BlockState block, String boneName,
+//                                  WhispererEntity currentEntity) {
+//
+//    }
+//
+//    @Override
+//    protected void postRenderBlock(PoseStack matrixStack, BlockState block, String boneName,
+//                                   WhispererEntity currentEntity) {
+//
+//    }
+//
+//    @Nullable
+//    @Override
+//    protected ItemStack getArmorForBone(String boneName, WhispererEntity currentEntity) {
+//        switch (boneName) {
+//            case "armorBipedLeftFoot":
+//            case "armorBipedRightFoot":
+//                return boots;
+//            case "armorBipedLeftLeg":
+//            case "armorBipedRightLeg":
+//                return leggings;
+//            case "armorBipedBody":
+//            case "armorBipedRightArm":
+//            case "armorBipedLeftArm":
+//            case "armorIllagerRightArm":
+//            case "armorIllagerLeftArm":
+//                return chestplate;
+//            case "armorBipedHead":
+//                return helmet;
+//            default:
+//                return null;
+//        }
+//    }
+//
+//    @Override
+//    protected EquipmentSlot getEquipmentSlotForArmorBone(String boneName, WhispererEntity currentEntity) {
+//        switch (boneName) {
+//            case "armorBipedLeftFoot":
+//            case "armorBipedRightFoot":
+//                return EquipmentSlot.FEET;
+//            case "armorBipedLeftLeg":
+//            case "armorBipedRightLeg":
+//                return EquipmentSlot.LEGS;
+//            case "armorBipedRightHand":
+//                return !currentEntity.isLeftHanded() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+//            case "armorBipedLeftHand":
+//                return currentEntity.isLeftHanded() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+//            case "armorBipedRightArm":
+//            case "armorBipedLeftArm":
+//            case "armorIllagerRightArm":
+//            case "armorIllagerLeftArm":
+//            case "armorBipedBody":
+//                return EquipmentSlot.CHEST;
+//            case "armorBipedHead":
+//                return EquipmentSlot.HEAD;
+//            default:
+//                return null;
+//        }
+//    }
+//
+//    @Override
+//    protected ModelPart getArmorPartForBone(String name, HumanoidModel<?> armorBipedModel) {
+//        switch (name) {
+//            case "armorBipedLeftFoot":
+//            case "armorBipedLeftLeg":
+//                return armorBipedModel.leftLeg;
+//            case "armorBipedRightFoot":
+//            case "armorBipedRightLeg":
+//                return armorBipedModel.rightLeg;
+//            case "armorBipedRightArm":
+//            case "armorIllagerRightArm":
+//                return armorBipedModel.rightArm;
+//            case "armorBipedLeftArm":
+//            case "armorIllagerLeftArm":
+//                return armorBipedModel.leftArm;
+//            case "armorBipedBody":
+//                return armorBipedModel.body;
+//            case "armorBipedHead":
+//                return armorBipedModel.head;
+//            default:
+//                return null;
+//        }
+//    }
 }

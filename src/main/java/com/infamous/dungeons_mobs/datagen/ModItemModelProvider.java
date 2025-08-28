@@ -15,7 +15,7 @@ import static com.infamous.dungeons_mobs.mod.ModItems.ARMORS;
 public class ModItemModelProvider extends ItemModelProvider {
 
     public ModItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, MODID, existingFileHelper);
+        super(generator.getPackOutput(), MODID, existingFileHelper);
     }
 
     @Override

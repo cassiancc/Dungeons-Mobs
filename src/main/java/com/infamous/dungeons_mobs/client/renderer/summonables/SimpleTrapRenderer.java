@@ -27,11 +27,4 @@ public class SimpleTrapRenderer extends GeoEntityRenderer<SimpleTrapEntity> {
         }
         stackIn.scale(scaleFactor, scaleFactor, scaleFactor);
     }
-
-    @Override
-    public RenderType getRenderType(SimpleTrapEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

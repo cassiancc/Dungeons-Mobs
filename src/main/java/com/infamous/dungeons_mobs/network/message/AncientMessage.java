@@ -31,7 +31,7 @@ public class AncientMessage {
         NetworkEvent.Context context = contextSupplier.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.level.getEntity(message.entityId);
+                Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
                 if (entity instanceof LivingEntity) {
                     Ancient cap = AncientHelper.getAncientCapability(entity);
                     cap.setAncient(message.ancient);

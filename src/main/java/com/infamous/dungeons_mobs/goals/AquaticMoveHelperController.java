@@ -40,7 +40,7 @@ public class AquaticMoveHelperController<T extends Mob & IAquaticMob> extends Mo
             this.aquaticMob.setSpeed(f2);
             this.aquaticMob.setDeltaMovement(this.aquaticMob.getDeltaMovement().add((double) f2 * d0 * 0.005D, (double) f2 * d1 * 0.1D, (double) f2 * d2 * 0.005D));
         } else {
-            if (!this.aquaticMob.isOnGround()) {
+            if (!this.aquaticMob.onGround()) {
                 this.aquaticMob.setDeltaMovement(this.aquaticMob.getDeltaMovement().add(0.0D, -0.008D, 0.0D));
             }
 

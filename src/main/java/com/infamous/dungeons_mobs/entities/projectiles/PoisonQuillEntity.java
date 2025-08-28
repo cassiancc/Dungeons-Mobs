@@ -6,6 +6,7 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -111,7 +112,7 @@ public class PoisonQuillEntity extends StraightMovingProjectileEntity implements
         if (!this.level().isClientSide()) {
             super.onHitEntity(entity);
             boolean flag;
-            flag = entity.hurt(ModDamageSources.poisonQuill(this, MoreObjects.firstNonNull(this.getOwner(), this)), 5.0F);
+            flag = entity.hurt(entity.damageSources().source(ModDamageSources.POISON_QUILL, this, MoreObjects.firstNonNull(this.getOwner(), this)), 5.0F);
             if (entity instanceof LivingEntity) {
                 int i = 0;
                 if (this.level().getDifficulty() == Difficulty.NORMAL) {
@@ -159,7 +160,7 @@ public class PoisonQuillEntity extends StraightMovingProjectileEntity implements
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

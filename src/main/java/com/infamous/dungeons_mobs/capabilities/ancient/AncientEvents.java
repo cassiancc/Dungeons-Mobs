@@ -37,15 +37,15 @@ public class AncientEvents {
     @SubscribeEvent
     public static void onLivingUpdate(LivingEvent.LivingTickEvent event) {
         LivingEntity entityLiving = event.getEntity();
-        if (!entityLiving.level.isClientSide) {
+        if (!entityLiving.level().isClientSide) {
             Ancient cap = AncientHelper.getAncientCapability(entityLiving);
             if (cap.isAncient() && cap.getBossInfo() != null) {
-                List<ServerPlayer> nearbyEntities = entityLiving.level.getNearbyEntities(ServerPlayer.class, TargetingConditions.forNonCombat().range(20.0D).ignoreInvisibilityTesting(), entityLiving, entityLiving.getBoundingBox().inflate(20D, 10D, 20D));
+                List<ServerPlayer> nearbyEntities = entityLiving.level().getNearbyEntities(ServerPlayer.class, TargetingConditions.forNonCombat().range(20.0D).ignoreInvisibilityTesting(), entityLiving, entityLiving.getBoundingBox().inflate(20D, 10D, 20D));
                 nearbyEntities.forEach(playerEntity ->
                         cap.getBossInfo().addPlayer(playerEntity)
                 );
                 List<ServerPlayer> trackingPlayers = new ObjectArrayList<>(cap.getBossInfo().getPlayers());
-                List<ServerPlayer> furtherEntities = entityLiving.level.getNearbyEntities(ServerPlayer.class, TargetingConditions.forNonCombat().range(50.0D).ignoreInvisibilityTesting(), entityLiving, entityLiving.getBoundingBox().inflate(50D, 20D, 50D));
+                List<ServerPlayer> furtherEntities = entityLiving.level().getNearbyEntities(ServerPlayer.class, TargetingConditions.forNonCombat().range(50.0D).ignoreInvisibilityTesting(), entityLiving, entityLiving.getBoundingBox().inflate(50D, 20D, 50D));
                 trackingPlayers.forEach(playerEntity -> {
                     if (!furtherEntities.contains(playerEntity)) {
                         cap.getBossInfo().removePlayer(playerEntity);

@@ -57,12 +57,6 @@ public class WindcallerTornadoEntity extends Entity implements GeoAnimatable {
         this.setPos(d0, d1, d2);
     }
 
-    @Override
-    public void registerControllers(AnimatableManager<WindcallerTornadoEntity> data) {
-        data.addController(new AnimationController<>(this, "controller", 1, this::predicate));
-    }
-
-
     private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.isBlast()) {
             event.getController().setAnimation(RawAnimation.begin().then("windcaller_tornado_blast", LOOP));

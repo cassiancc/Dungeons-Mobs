@@ -34,11 +34,4 @@ public class WindcallerTornadoRenderer extends GeoEntityRenderer<WindcallerTorna
 
         }
     }
-
-    @Override
-    public RenderType getRenderType(WindcallerTornadoEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

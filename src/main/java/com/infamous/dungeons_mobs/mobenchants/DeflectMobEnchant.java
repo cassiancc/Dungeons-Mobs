@@ -35,7 +35,7 @@ public class DeflectMobEnchant extends MobEnchant {
                 return;
             }
             executeIfPresentWithLevel(victim, DEFLECT.get(), (level) -> {
-                if (projectile.level.isClientSide) {
+                if (projectile.level().isClientSide) {
                     deflectProjectile(projectile, victim);
                     projectile.setOwner(victim);
                     event.setCanceled(true);
@@ -74,7 +74,7 @@ public class DeflectMobEnchant extends MobEnchant {
             double d1 = projectile.getOwner().getY(0.3333333333333333D) - projectile.getY();
             double d2 = projectile.getOwner().getZ() - victim.getZ();
             double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
-            projectile.shoot(d0, d1 + d3 * (double) 0.2F, d2, (float) speed, (float) (14 - victim.level.getDifficulty().getId() * 4));
+            projectile.shoot(d0, d1 + d3 * (double) 0.2F, d2, (float) speed, (float) (14 - victim.level().getDifficulty().getId() * 4));
         }
     }
 

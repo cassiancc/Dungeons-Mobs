@@ -36,7 +36,7 @@ public class FungusThrowerAi {
                 new ThrowAtTargetTask<>(FUNGUS_ITEM_STACK_PREDICATE, FungusThrowerAi::performFungusThrow));
 
         int priorityStart = 7; // Number of fight tasks piglins start with - would like to find a way to dynamically get this from the brain
-        ImmutableList<? extends Pair<Integer, ? extends Behavior<? super E>>> prioritizedFightTasks =
+        ImmutableList<? extends Pair<Integer, ? extends BehaviorControl<? super E>>> prioritizedFightTasks =
                 BrainHelper.createPriorityPairs(priorityStart, additionalFightTasks);
 
         BrainHelper.addPrioritizedBehaviors(Activity.FIGHT, prioritizedFightTasks, brain);

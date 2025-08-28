@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -125,7 +126,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
             this.updateRotation();
         }
 
-        if (!this.level.isClientSide && this.vanishesAfterTime()) {
+        if (!this.level().isClientSide() && this.vanishesAfterTime()) {
             if (this.lifeTime < this.vanishAfterTime() + this.getVanishAnimationLength()) {
                 this.lifeTime++;
             } else {
@@ -133,7 +134,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
             }
         }
 
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             if (this.lifeTime < this.vanishAfterTime() + this.getVanishAnimationLength()) {
                 this.lifeTime++;
             }
@@ -155,7 +156,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
                 this.setSecondsOnFire(1);
             }
 
-            HitResult raytraceresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+            HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
             if (raytraceresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }
@@ -337,7 +338,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
         return 1.0F;
     }
 
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.tags;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -16,7 +17,7 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> PIGLINS = tag("piglins");
 
     private static TagKey<EntityType<?>> tag(String name) {
-        return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(DungeonsMobs.MODID, name));
+        return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(DungeonsMobs.MODID, name));
     }
 
     public static void register() {

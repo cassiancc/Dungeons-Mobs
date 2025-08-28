@@ -35,7 +35,7 @@ public class RedstoneCubeEntity extends Monster {
     public RedstoneCubeEntity(EntityType<? extends RedstoneCubeEntity> type, Level worldIn) {
         super(type, worldIn);
         this.moveControl = new RedstoneCubeEntity.MoveHelperController(this);
-        this.maxUpStep = 1.0F;
+        this.setMaxUpStep(1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -82,7 +82,7 @@ public class RedstoneCubeEntity extends Monster {
     protected void dealDamage(LivingEntity entityIn) {
         if (this.isAlive()) {
             int i = 2; // Using biggest slime size
-            if (this.distanceToSqr(entityIn) < 0.6D * (double) i * 0.6D * (double) i && this.hasLineOfSight(entityIn) && entityIn.hurt(DamageSource.mobAttack(this), this.getAttackDamageAmount())) {
+            if (this.distanceToSqr(entityIn) < 0.6D * (double) i * 0.6D * (double) i && this.hasLineOfSight(entityIn) && entityIn.hurt(damageSources().mobAttack(this), this.getAttackDamageAmount())) {
                 this.playSound(SoundEvents.STONE_HIT, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 this.doEnchantDamageEffects(this, entityIn);
             }
@@ -195,7 +195,7 @@ public class RedstoneCubeEntity extends Monster {
          * method as well.
          */
         public boolean canUse() {
-            return this.redstoneCubeEntity.getTarget() == null && (this.redstoneCubeEntity.isOnGround() || this.redstoneCubeEntity.isInWater() || this.redstoneCubeEntity.isInLava() || this.redstoneCubeEntity.hasEffect(MobEffects.LEVITATION));
+            return this.redstoneCubeEntity.getTarget() == null && (this.redstoneCubeEntity.onGround() || this.redstoneCubeEntity.isInWater() || this.redstoneCubeEntity.isInLava() || this.redstoneCubeEntity.hasEffect(MobEffects.LEVITATION));
         }
 
         /**
@@ -241,7 +241,7 @@ public class RedstoneCubeEntity extends Monster {
                 this.mob.setZza(0.0F);
             } else if (this.operation == Operation.MOVE_TO) {
                 this.operation = MoveControl.Operation.WAIT;
-                if (this.mob.isOnGround() || this.mob.isInWater()) {
+                if (this.mob.onGround() || this.mob.isInWater()) {
                     this.mob.setSpeed((float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
                     if (!this.redstoneCubeEntity.isRolling() && this.redstoneCubeEntity.shouldRoll()) {
                         this.redstoneCubeEntity.startRolling(20);
@@ -255,8 +255,8 @@ public class RedstoneCubeEntity extends Monster {
     public void aiStep() {
         super.aiStep();
         if (this.isRolling()) {
-            if (this.level.isClientSide) {
-                this.level.addParticle(DustParticleOptions.REDSTONE,
+            if (this.level().isClientSide) {
+                this.level().addParticle(DustParticleOptions.REDSTONE,
                         this.getRandomX(0.5D) + 1.0D,
                         this.getRandomY() - 0.25D + 1.0D,
                         this.getRandomZ(0.5D) + 1.0D,
@@ -275,20 +275,20 @@ public class RedstoneCubeEntity extends Monster {
 
     public void startRolling(int timeIn) {
         this.rollingDuration = timeIn;
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.setIsRolling(true);
         }
     }
 
     public void stopRolling() {
         this.rollingDuration = 0;
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.setIsRolling(false);
         }
     }
 
     public boolean shouldRoll() {
-        return (this.isOnGround() || this.isInWater());
+        return (this.onGround() || this.isInWater());
     }
 
     protected void updateRoll() {
@@ -296,7 +296,7 @@ public class RedstoneCubeEntity extends Monster {
             this.rollingDuration = 0;
         }
 
-        if (!this.level.isClientSide && this.rollingDuration <= 0) {
+        if (!this.level().isClientSide && this.rollingDuration <= 0) {
             this.setIsRolling(false);
         }
     }

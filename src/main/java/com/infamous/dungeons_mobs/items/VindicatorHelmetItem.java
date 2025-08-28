@@ -19,7 +19,7 @@ import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.VINDI
 public class VindicatorHelmetItem extends ArmorItem {
     private final boolean isDiamond;
 
-    public VindicatorHelmetItem(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn, boolean isDiamondIn) {
+    public VindicatorHelmetItem(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builderIn, boolean isDiamondIn) {
         super(materialIn, slot, builderIn);
         this.isDiamond = isDiamondIn;
     }

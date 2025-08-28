@@ -17,7 +17,7 @@ public interface IWebShooter extends ITrapsTarget {
     static void shootWeb(Mob webShooter, LivingEntity target) {
         Vec3 pos = PositionUtils.getOffsetPos(webShooter, 0.0, 1.0, -0.75, webShooter.yBodyRot);
 
-        CobwebProjectileEntity projectile = new CobwebProjectileEntity(webShooter.level, webShooter);
+        CobwebProjectileEntity projectile = new CobwebProjectileEntity(webShooter.level(), webShooter);
         projectile.setPos(pos.x, pos.y, pos.z);
         double d0 = target.getX() - pos.x;
         double d1 = target.getY(0.3333333333333333D) - pos.y;
@@ -28,7 +28,7 @@ public interface IWebShooter extends ITrapsTarget {
             webShooter.playSound(ModSoundEvents.SPIDER_SHOOT.get(), 1.0F, 1.0F);
         }
 
-        webShooter.level.addFreshEntity(projectile);
+        webShooter.level().addFreshEntity(projectile);
         projectile.delayedSpawnParticles = true;
     }
 }

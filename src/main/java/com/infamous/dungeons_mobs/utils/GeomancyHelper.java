@@ -76,24 +76,25 @@ public class GeomancyHelper {
     }
 
     private static BlockPos createCenteredBlockPosOnTarget(Entity targetEntity) {
-        return new BlockPos(
+        return new BlockPos.MutableBlockPos(
                 Math.floor(targetEntity.getX()),
                 Math.floor(targetEntity.getY()),
                 Math.floor(targetEntity.getZ()));
     }
 
     private static void summonAreaDenialConstruct(LivingEntity casterEntity, Entity targetEntity, EntityType<? extends ConstructEntity> wallEntityType, double xshift, double zshift, Direction pillarFacing) {
-        BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity).offset(xshift, 0, zshift);
+        BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity);
+        targetPos = new BlockPos.MutableBlockPos(targetPos.getX()+xshift, targetPos.getY(), targetPos.getZ()+zshift);
         boolean flag = false;
         double yShift = 0.0D;
 
         do {
             BlockPos blockpos1 = targetPos.below();
-            BlockState blockstate = casterEntity.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(casterEntity.level, blockpos1, Direction.UP)) {
-                if (!casterEntity.level.isEmptyBlock(targetPos)) {
-                    BlockState blockstate1 = casterEntity.level.getBlockState(targetPos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level, targetPos);
+            BlockState blockstate = casterEntity.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(casterEntity.level(), blockpos1, Direction.UP)) {
+                if (!casterEntity.level().isEmptyBlock(targetPos)) {
+                    BlockState blockstate1 = casterEntity.level().getBlockState(targetPos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level(), targetPos);
                     if (!voxelshape.isEmpty()) {
                         yShift = voxelshape.max(Direction.Axis.Y);
                     }
@@ -108,30 +109,30 @@ public class GeomancyHelper {
 
         // verify that the construct will be summoned on valid ground
         if (flag && canAllowBlockEntitySpawn(casterEntity, targetPos)) {
-            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level);
+            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level());
             if (constructEntity != null) {
                 constructEntity.setCaster(casterEntity);
                 constructEntity.setPos(targetPos.getX(), targetPos.getY() + yShift, targetPos.getZ());
                 constructEntity.setLifeTicks(100 + casterEntity.getRandom().nextInt(10));
                 constructEntity.directionToFace = pillarFacing;
                 constructEntity.spawnAreaDamage();
-                casterEntity.level.addFreshEntity(constructEntity);
+                casterEntity.level().addFreshEntity(constructEntity);
             }
         }
     }
 
     private static void summonAreaDenialConstruct(LivingEntity casterEntity, BlockPos targetPos, EntityType<? extends ConstructEntity> wallEntityType, double xshift, double zshift, Direction pillarFacing) {
-        targetPos = targetPos.offset(xshift, 0, zshift);
+        targetPos = new BlockPos.MutableBlockPos(targetPos.getX()+xshift, targetPos.getY(), targetPos.getZ()+zshift);
         boolean flag = false;
         double yShift = 0.0D;
 
         do {
             BlockPos blockpos1 = targetPos.below();
-            BlockState blockstate = casterEntity.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(casterEntity.level, blockpos1, Direction.UP)) {
-                if (!casterEntity.level.isEmptyBlock(targetPos)) {
-                    BlockState blockstate1 = casterEntity.level.getBlockState(targetPos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level, targetPos);
+            BlockState blockstate = casterEntity.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(casterEntity.level(), blockpos1, Direction.UP)) {
+                if (!casterEntity.level().isEmptyBlock(targetPos)) {
+                    BlockState blockstate1 = casterEntity.level().getBlockState(targetPos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level(), targetPos);
                     if (!voxelshape.isEmpty()) {
                         yShift = voxelshape.max(Direction.Axis.Y);
                     }
@@ -146,14 +147,14 @@ public class GeomancyHelper {
 
         // verify that the construct will be summoned on valid ground
         if (flag && canAllowBlockEntitySpawn(casterEntity, targetPos)) {
-            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level);
+            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level());
             if (constructEntity != null) {
                 constructEntity.setCaster(casterEntity);
                 constructEntity.setPos(targetPos.getX(), targetPos.getY() + yShift, targetPos.getZ());
                 constructEntity.setLifeTicks(100 + casterEntity.getRandom().nextInt(10));
                 constructEntity.directionToFace = pillarFacing;
                 constructEntity.spawnAreaDamage();
-                casterEntity.level.addFreshEntity(constructEntity);
+                casterEntity.level().addFreshEntity(constructEntity);
             }
         }
     }
@@ -162,7 +163,7 @@ public class GeomancyHelper {
         BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity);
         // verify that the construct will be summoned on valid ground
         if (canAllowBlockEntitySpawn(casterEntity, targetPos)) {
-            AbstractVineEntity vineEntity = entityType.create(casterEntity.level);
+            AbstractVineEntity vineEntity = entityType.create(casterEntity.level());
             if (vineEntity != null) {
                 vineEntity.setPos(targetPos.getX() + xShift, targetPos.getY(), targetPos.getZ() + zShift);
                 PositionUtils.moveToCorrectHeight(vineEntity);
@@ -173,7 +174,7 @@ public class GeomancyHelper {
                 vineEntity.setShouldRetract(false);
                 double vineLength = targetEntity.getY() - vineEntity.getY();
                 vineEntity.setLengthInBlocks((float) vineLength + 3 + vineEntity.getRandom().nextInt(6));
-                casterEntity.level.addFreshEntity(vineEntity);
+                casterEntity.level().addFreshEntity(vineEntity);
                 if (casterEntity instanceof Mob) {
                     vineEntity.setTarget(((Mob) casterEntity).getTarget());
                 }
@@ -182,10 +183,11 @@ public class GeomancyHelper {
     }
 
     private static void summonAreaDenialVine(LivingEntity casterEntity, LivingEntity targetEntity, EntityType<? extends AbstractVineEntity> entityType, double xshift, double zshift, Direction pillarFacing) {
-        BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity).offset(xshift, 0, zshift);
+        BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity);
+        targetPos = new BlockPos.MutableBlockPos(targetPos.getX()+xshift, targetPos.getY(), targetPos.getZ()+zshift);
         // verify that the construct will be summoned on valid ground
         if (canAllowBlockEntitySpawn(casterEntity, targetPos)) {
-            AbstractVineEntity vineEntity = entityType.create(casterEntity.level);
+            AbstractVineEntity vineEntity = entityType.create(casterEntity.level());
             if (vineEntity != null) {
                 vineEntity.setPos(targetPos.getX(), targetPos.getY(), targetPos.getZ());
                 PositionUtils.moveToCorrectHeight(vineEntity);
@@ -196,23 +198,24 @@ public class GeomancyHelper {
                 vineEntity.setShouldRetract(false);
                 double vineLength = targetEntity.getY() - vineEntity.getY();
                 vineEntity.setLengthInBlocks((float) vineLength + 3 + vineEntity.getRandom().nextInt(6));
-                casterEntity.level.addFreshEntity(vineEntity);
+                casterEntity.level().addFreshEntity(vineEntity);
             }
         }
     }
 
     public static void summonOffensiveConstruct(LivingEntity casterEntity, Entity targetEntity, EntityType<? extends ConstructEntity> wallEntityType, double xshift, double zshift, Direction pillarFacing) {
-        BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity).offset(xshift, 0, zshift);
+        BlockPos targetPos = createCenteredBlockPosOnTarget(targetEntity);
+        targetPos = new BlockPos.MutableBlockPos(targetPos.getX()+xshift, targetPos.getY(), targetPos.getZ()+zshift);
         boolean flag = false;
         double yShift = 0.0D;
 
         do {
             BlockPos blockpos1 = targetPos.below();
-            BlockState blockstate = casterEntity.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(casterEntity.level, blockpos1, Direction.UP)) {
-                if (!casterEntity.level.isEmptyBlock(targetPos)) {
-                    BlockState blockstate1 = casterEntity.level.getBlockState(targetPos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level, targetPos);
+            BlockState blockstate = casterEntity.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(casterEntity.level(), blockpos1, Direction.UP)) {
+                if (!casterEntity.level().isEmptyBlock(targetPos)) {
+                    BlockState blockstate1 = casterEntity.level().getBlockState(targetPos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level(), targetPos);
                     if (!voxelshape.isEmpty()) {
                         yShift = voxelshape.max(Direction.Axis.Y);
                     }
@@ -227,7 +230,7 @@ public class GeomancyHelper {
 
         // verify that the construct will be summoned on valid ground
         if (flag && canAllowBlockEntitySpawn(casterEntity, targetPos)) {
-            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level);
+            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level());
             if (constructEntity != null) {
                 constructEntity.setCaster(casterEntity);
                 constructEntity.setPos(targetPos.getX(), targetPos.getY() + yShift, targetPos.getZ());
@@ -235,23 +238,23 @@ public class GeomancyHelper {
                 constructEntity.directionToFace = pillarFacing;
                 constructEntity.spawnAreaDamage();
                 constructEntity.playSound(ModSoundEvents.GEOMANCER_BOMB_SPAWN.get(), 2.0F, 1.0F);
-                casterEntity.level.addFreshEntity(constructEntity);
+                casterEntity.level().addFreshEntity(constructEntity);
             }
         }
     }
 
     public static void summonOffensiveConstruct(LivingEntity casterEntity, BlockPos targetPos, EntityType<? extends ConstructEntity> wallEntityType, double xshift, double zshift, Direction pillarFacing) {
-        targetPos = targetPos.offset(xshift, 0, zshift);
+        targetPos = new BlockPos.MutableBlockPos(targetPos.getX()+xshift, targetPos.getY(), targetPos.getZ()+zshift);
         boolean flag = false;
         double yShift = 0.0D;
 
         do {
             BlockPos blockpos1 = targetPos.below();
-            BlockState blockstate = casterEntity.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(casterEntity.level, blockpos1, Direction.UP)) {
-                if (!casterEntity.level.isEmptyBlock(targetPos)) {
-                    BlockState blockstate1 = casterEntity.level.getBlockState(targetPos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level, targetPos);
+            BlockState blockstate = casterEntity.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(casterEntity.level(), blockpos1, Direction.UP)) {
+                if (!casterEntity.level().isEmptyBlock(targetPos)) {
+                    BlockState blockstate1 = casterEntity.level().getBlockState(targetPos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(casterEntity.level(), targetPos);
                     if (!voxelshape.isEmpty()) {
                         yShift = voxelshape.max(Direction.Axis.Y);
                     }
@@ -266,14 +269,14 @@ public class GeomancyHelper {
 
         // verify that the construct will be summoned on valid ground
         if (flag && canAllowBlockEntitySpawn(casterEntity, targetPos)) {
-            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level);
+            ConstructEntity constructEntity = wallEntityType.create(casterEntity.level());
             if (constructEntity != null) {
                 constructEntity.setCaster(casterEntity);
                 constructEntity.setPos(targetPos.getX(), targetPos.getY() + yShift, targetPos.getZ());
                 constructEntity.setLifeTicks(100 + casterEntity.getRandom().nextInt(10));
                 constructEntity.directionToFace = pillarFacing;
                 constructEntity.playSound(ModSoundEvents.GEOMANCER_BOMB_SPAWN.get(), 2.0F, 1.0F);
-                casterEntity.level.addFreshEntity(constructEntity);
+                casterEntity.level().addFreshEntity(constructEntity);
             }
         }
     }
@@ -420,6 +423,6 @@ public class GeomancyHelper {
     }
 
     public static boolean canAllowBlockEntitySpawn(Entity entity, BlockPos blockPos) {
-        return entity.level.getBlockState(blockPos).canBeReplaced(Fluids.EMPTY);
+        return entity.level().getBlockState(blockPos).canBeReplaced(Fluids.EMPTY);
     }
 }

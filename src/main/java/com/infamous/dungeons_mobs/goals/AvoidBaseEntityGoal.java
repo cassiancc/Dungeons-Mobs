@@ -100,7 +100,7 @@ public class AvoidBaseEntityGoal<T extends Entity> extends Goal {
 
     @Nullable
     private <T extends Entity> T getNearestEntity(Class<? extends T> entityClass, LivingEntity livingEntity, double xPos, double yPos, double zPos, AABB axisAlignedBB) {
-        return this.getClosestEntity(livingEntity.level.getEntitiesOfClass(entityClass, axisAlignedBB, ALIVE), livingEntity, xPos, yPos, zPos);
+        return this.getClosestEntity(livingEntity.level().getEntitiesOfClass(entityClass, axisAlignedBB, ALIVE), livingEntity, xPos, yPos, zPos);
     }
 
 

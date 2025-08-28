@@ -90,10 +90,10 @@ public class ClientEvents {
         event.registerEntityRenderer(ModEntityTypes.GEOMANCER.get(), manager -> new DefaultIllagerRenderer<>(manager, new GeomancerModel()));
 
         event.registerEntityRenderer(ModEntityTypes.MAGE.get(), manager -> new DefaultIllagerRenderer<MageEntity>(manager, new MageModel()));
-        event.registerEntityRenderer(ModEntityTypes.MAGE_CLONE.get(), manager -> new DefaultIllagerRenderer<MageCloneEntity>(manager, new MageModel()));
+        event.registerEntityRenderer(ModEntityTypes.MAGE_CLONE.get(), manager -> new DefaultIllagerRenderer<MageCloneEntity>(manager, new MageCloneModel()));
 
         event.registerEntityRenderer(ModEntityTypes.ILLUSIONER.get(), DungeonsIllusionerRenderer::new);
-        event.registerEntityRenderer(ModEntityTypes.ILLUSIONER_CLONE.get(), manager -> new DefaultIllagerRenderer<IllusionerCloneEntity>(manager, new DungeonsIllusionerModel()));
+        event.registerEntityRenderer(ModEntityTypes.ILLUSIONER_CLONE.get(), manager -> new DefaultIllagerRenderer<IllusionerCloneEntity>(manager, new IllusionerCloneModel()));
         event.registerEntityRenderer(ModEntityTypes.WINDCALLER.get(), manager -> new DefaultIllagerRenderer<>(manager, new WindcallerModel()));
 
 //        event.registerEntityRenderer(ModEntityTypes.ENCHANTER.get(), EnchanterRenderer::new);

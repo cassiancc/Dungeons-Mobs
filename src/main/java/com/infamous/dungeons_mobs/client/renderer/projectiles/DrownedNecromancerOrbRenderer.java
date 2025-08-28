@@ -44,11 +44,4 @@ public class DrownedNecromancerOrbRenderer extends GeoEntityRenderer<DrownedNecr
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
-
-    @Override
-    public RenderType getRenderType(DrownedNecromancerOrbEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

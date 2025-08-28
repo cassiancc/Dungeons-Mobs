@@ -15,7 +15,7 @@ public class GoToBeachGoal<T extends PathfinderMob & IAquaticMob> extends MoveTo
     }
 
     public boolean canUse() {
-        return super.canUse() && !this.aquaticMob.level.isDay() && this.aquaticMob.isInWater() && this.aquaticMob.getY() >= (double) (this.aquaticMob.level.getSeaLevel() - 3);
+        return super.canUse() && !this.aquaticMob.level().isDay() && this.aquaticMob.isInWater() && this.aquaticMob.getY() >= (double) (this.aquaticMob.level().getSeaLevel() - 3);
     }
 
     public boolean canContinueToUse() {

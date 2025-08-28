@@ -15,7 +15,8 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 public class ModItemTagsProvider extends ItemTagsProvider {
 
     public ModItemTagsProvider(DataGenerator dataGenerator, BlockTagsProvider blockTagProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(dataGenerator, blockTagProvider, MODID, existingFileHelper);
+        //FIXME
+        super(dataGenerator.getPackOutput(), null, blockTagProvider.contentsGetter(), MODID, existingFileHelper);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class WavewhispererRenderer extends WhispererRenderer {
     @SuppressWarnings("unchecked")
     public WavewhispererRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
-        this.addLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/wavewhisperer_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/wavewhisperer_glow.png")));
     }
 
     public boolean isShaking(WhispererEntity p_230495_1_) {

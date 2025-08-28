@@ -3,6 +3,10 @@ package com.infamous.dungeons_mobs.client.models.projectile;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.projectiles.NecromancerOrbEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -28,6 +32,12 @@ public class OrbProjectileModel extends GeoModel<NecromancerOrbEntity> {
     @Override
     public ResourceLocation getTextureResource(NecromancerOrbEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/projectile/orb_projectile_" + entity.textureChange % 3 + ".png");
+    }
+
+    @Override
+    public RenderType getRenderType(NecromancerOrbEntity animatable, ResourceLocation textureLocation) {
+//        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.eyes(textureLocation);
     }
 
     @Override

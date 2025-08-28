@@ -2,6 +2,10 @@ package com.infamous.dungeons_mobs.client.models.jungle;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.jungle.LeapleafEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +30,11 @@ public class LeapleafModel extends GeoModel<LeapleafEntity> {
     @Override
     public ResourceLocation getTextureResource(LeapleafEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/leapleaf.png");
+    }
+
+    @Override
+    public RenderType getRenderType(LeapleafEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class SwimUpGoal<T extends PathfinderMob & IAquaticMob> extends Goal {
     }
 
     public boolean canUse() {
-        return !this.aquaticMob.level.isDay() && this.aquaticMob.isInWater() && this.aquaticMob.getY() < (double) (this.seaLevel - 2);
+        return !this.aquaticMob.level().isDay() && this.aquaticMob.isInWater() && this.aquaticMob.getY() < (double) (this.seaLevel - 2);
     }
 
     public boolean canContinueToUse() {

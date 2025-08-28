@@ -36,11 +36,4 @@ public class TridentStormRenderer extends GeoEntityRenderer<TridentStormEntity> 
     protected int getBlockLightLevel(TridentStormEntity p_225624_1_, BlockPos p_225624_2_) {
         return 15;
     }
-
-    @Override
-    public RenderType getRenderType(TridentStormEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

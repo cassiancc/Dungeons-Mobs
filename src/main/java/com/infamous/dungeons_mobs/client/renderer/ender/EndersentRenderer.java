@@ -4,6 +4,7 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.ender.EndersentModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
 import com.infamous.dungeons_mobs.entities.ender.AbstractEnderlingEntity;
+import com.infamous.dungeons_mobs.entities.ender.EndersentEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,7 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EndersentRenderer extends GeoEntityRenderer<AbstractEnderlingEntity> {
+public class EndersentRenderer extends GeoEntityRenderer<EndersentEntity> {
     public EndersentRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new EndersentModel());
         this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/endersent_eyes.png")));

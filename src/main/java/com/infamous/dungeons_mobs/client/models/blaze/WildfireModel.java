@@ -2,13 +2,20 @@ package com.infamous.dungeons_mobs.client.models.blaze;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.blaze.WildfireEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 public class WildfireModel extends GeoModel<WildfireEntity> {
 
@@ -28,7 +35,12 @@ public class WildfireModel extends GeoModel<WildfireEntity> {
     }
 
     @Override
-    public void setCustomAnimations(WildfireEntity entity, int uniqueID, AnimationState<WildfireEntity> customPredicate) {
+    public RenderType getRenderType(WildfireEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
+    }
+
+    @Override
+    public void setCustomAnimations(WildfireEntity entity, long uniqueID, AnimationState<WildfireEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         LivingEntity entityIn = (LivingEntity) entity;
@@ -69,21 +81,14 @@ public class WildfireModel extends GeoModel<WildfireEntity> {
             shield4.setHidden(true);
         }
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if (extraData.headPitch != 0 || extraData.netHeadYaw != 0) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * ((float) Math.PI / 180F)));
-            head.setRotationY(head.getRotationY() + (extraData.netHeadYaw * ((float) Math.PI / 180F)));
+        EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
+        if (extraData.headPitch() != 0 || extraData.netHeadYaw() != 0) {
+            head.setRotX(head.getRotX() + (extraData.headPitch() * ((float) Math.PI / 180F)));
+            head.setRotY(head.getRotY() + (extraData.netHeadYaw() * ((float) Math.PI / 180F)));
         }
-    }
-
-    @Override
-    public void setMolangQueries(WildfireEntity animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
-        LivingEntity livingEntity = (LivingEntity) animatable;
-        Vec3 velocity = livingEntity.getDeltaMovement();
+        Vec3 velocity = entity.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 30);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 30);
     }
+
 }

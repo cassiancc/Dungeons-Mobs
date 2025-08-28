@@ -15,7 +15,7 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 public class PiglinHelmetItem extends ArmorItem {
 
-    public PiglinHelmetItem(ArmorMaterial armorMaterial, EquipmentSlot slotType, Properties properties) {
+    public PiglinHelmetItem(ArmorMaterial armorMaterial, ArmorItem.Type slotType, Properties properties) {
         super(armorMaterial, slotType, properties);
     }
 

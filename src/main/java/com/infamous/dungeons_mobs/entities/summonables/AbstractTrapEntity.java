@@ -46,10 +46,10 @@ public abstract class AbstractTrapEntity extends Entity implements GeoAnimatable
     public void increaseLifeTime() {
         this.lifeTime++;
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (this.lifeTime == this.timeToDecay()) {
                 this.decayAnimationTick = this.getDecayAnimationLength();
-                this.level.broadcastEntityEvent(this, (byte) 2);
+                this.level().broadcastEntityEvent(this, (byte) 2);
             }
 
             if (this.decayAnimationTick == 2) {

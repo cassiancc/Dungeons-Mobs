@@ -18,10 +18,14 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Predicate;
+
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
 public class WraithFireEntity extends Entity implements GeoAnimatable {
     private static final Predicate<Entity> ALIVE = Entity::isAlive;
@@ -53,7 +57,7 @@ public class WraithFireEntity extends Entity implements GeoAnimatable {
         }
 
         if (this.random.nextInt(24) == 0 && !this.isSilent()) {
-            this.level.playLocalSound(this.getX() + 0.5D, this.getY() + 0.5D, this.getZ() + 0.5D, SoundEvents.FIRE_AMBIENT, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
+            this.level().playLocalSound(this.getX() + 0.5D, this.getY() + 0.5D, this.getZ() + 0.5D, SoundEvents.FIRE_AMBIENT, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
         }
 
         double particleOffsetAmount = 1.25;
@@ -62,17 +66,17 @@ public class WraithFireEntity extends Entity implements GeoAnimatable {
             for (double x = -particleOffsetAmount; x < particleOffsetAmount * 2; x = x + particleOffsetAmount) {
                 for (double z = -particleOffsetAmount; z < particleOffsetAmount * 2; z = z + particleOffsetAmount) {
                     if (this.random.nextInt(10) == 0) {
-                        this.level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX() + x, this.getY(), this.getZ() + z, this.random.nextGaussian() * 0.01, 0.1, this.random.nextGaussian() * 0.01);
+                        this.level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX() + x, this.getY(), this.getZ() + z, this.random.nextGaussian() * 0.01, 0.1, this.random.nextGaussian() * 0.01);
                     }
 
                     if (this.random.nextInt(5) == 0) {
-                        this.level.addParticle(ParticleTypes.SMOKE, this.getX() + x, this.getY(), this.getZ() + z, this.random.nextGaussian() * 0.01, 0.15, this.random.nextGaussian() * 0.01);
+                        this.level().addParticle(ParticleTypes.SMOKE, this.getX() + x, this.getY(), this.getZ() + z, this.random.nextGaussian() * 0.01, 0.15, this.random.nextGaussian() * 0.01);
                     }
                 }
             }
         }
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
 
             if (this.isOnFire()) {
                 this.remove(RemovalReason.DISCARDED);
@@ -85,11 +89,11 @@ public class WraithFireEntity extends Entity implements GeoAnimatable {
             }
 
             if (this.isBurning()) {
-                List<Entity> list = this.level.getEntities(this, this.getBoundingBox(), ALIVE);
+                List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), ALIVE);
                 if (!list.isEmpty()) {
                     for (Entity entity : list) {
                         if (entity instanceof LivingEntity && this.canHarmEntity(entity)) {
-                            entity.hurt(DamageSource.FREEZE, 4.0F);
+                            entity.hurt(damageSources().freeze(), 4.0F);
                             //entity.setSecondsOnFire(4);
                         }
                     }
@@ -108,7 +112,7 @@ public class WraithFireEntity extends Entity implements GeoAnimatable {
     }
 
     private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("wraith_fire_burn", EDefaultLoopTypes.LOOP));
+        event.getController().setAnimation(RawAnimation.begin().then("wraith_fire_burn", LOOP));
         return PlayState.CONTINUE;
     }
 

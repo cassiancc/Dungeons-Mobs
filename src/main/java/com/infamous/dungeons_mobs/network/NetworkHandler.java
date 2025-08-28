@@ -23,11 +23,11 @@ public class NetworkHandler {
     public static void init() {
         INSTANCE.messageBuilder(AncientMessage.class, 0)
                 .encoder(AncientMessage::encode).decoder(AncientMessage::decode)
-                .consumer(AncientMessage::onPacketReceived)
+                .consumerNetworkThread(AncientMessage::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(AnimatedPropsMessage.class, 0)
                 .encoder(AnimatedPropsMessage::encode).decoder(AnimatedPropsMessage::decode)
-                .consumer(AnimatedPropsMessage::onPacketReceived)
+                .consumerNetworkThread(AnimatedPropsMessage::onPacketReceived)
                 .add();
     }
 

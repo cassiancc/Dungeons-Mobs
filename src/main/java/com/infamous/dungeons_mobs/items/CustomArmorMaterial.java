@@ -4,6 +4,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,12 +39,14 @@ public enum CustomArmorMaterial implements ArmorMaterial {
         this.repairIngredient = new LazyLoadedValue<>(p_i231593_10_);
     }
 
-    public int getDurabilityForSlot(EquipmentSlot p_200896_1_) {
-        return HEALTH_PER_SLOT[p_200896_1_.getIndex()] * this.durabilityMultiplier;
+    @Override
+    public int getDurabilityForType(ArmorItem.Type pType) {
+        return HEALTH_PER_SLOT[pType.getSlot().getIndex()] * this.durabilityMultiplier;
     }
 
-    public int getDefenseForSlot(EquipmentSlot p_200902_1_) {
-        return this.slotProtections[p_200902_1_.getIndex()];
+    @Override
+    public int getDefenseForType(ArmorItem.Type pType) {
+        return this.slotProtections[pType.getSlot().getIndex()];
     }
 
     public int getEnchantmentValue() {

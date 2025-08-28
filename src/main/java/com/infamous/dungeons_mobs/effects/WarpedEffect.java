@@ -12,7 +12,7 @@ public class WarpedEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        pLivingEntity.hurt(DamageSource.MAGIC, 1.0F);
+        pLivingEntity.hurt(pLivingEntity.damageSources().magic(), 1.0F);
     }
 
     @Override

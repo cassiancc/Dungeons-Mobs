@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.tags;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -14,11 +15,11 @@ public class BiomeTags {
     public static final TagKey<Biome> SQUALL_GOLEM_RAIDS_IN = tag("squall_golem_raids_in");
 
     private static TagKey<Biome> tag(String name) {
-        return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(DungeonsMobs.MODID, name));
+        return TagKey.create(Registries.BIOME, new ResourceLocation(DungeonsMobs.MODID, name));
     }
 
     private static TagKey<Biome> forgeTag(String name) {
-        return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("forge", name));
+        return TagKey.create(Registries.BIOME, new ResourceLocation("forge", name));
     }
 
     public static void register() {

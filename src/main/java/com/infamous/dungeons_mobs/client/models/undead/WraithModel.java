@@ -2,6 +2,10 @@ package com.infamous.dungeons_mobs.client.models.undead;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.undead.WraithEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -25,6 +29,11 @@ public class WraithModel extends GeoModel<WraithEntity> {
     @Override
     public ResourceLocation getTextureResource(WraithEntity entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/wraith/wraith.png");
+    }
+
+    @Override
+    public RenderType getRenderType(WraithEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override

@@ -42,13 +42,6 @@ public class AbstractVineRenderer<M extends AbstractVineModel> extends GeoEntity
     }
 
     @Override
-    public RenderType getRenderType(M animatable, ResourceLocation texture,
-                                    @Nullable MultiBufferSource bufferSource,
-                                    float partialTick) {
-        return RenderType.entityTranslucent(texture);
-    }
-
-    @Override
     protected float getDeathMaxRotation(AbstractVineEntity entityLivingBaseIn) {
         return 0;
     }

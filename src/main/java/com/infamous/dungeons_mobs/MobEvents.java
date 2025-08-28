@@ -70,7 +70,7 @@ public class MobEvents {
         LivingEntity livingEntity = event.getEntity();
         if (livingEntity instanceof Mob && ConvertibleHelper.convertsInWater((Mob) livingEntity)) {
             Mob mob = (Mob) livingEntity;
-            if (!mob.level.isClientSide && mob.isAlive() && !mob.isNoAi()) {
+            if (!mob.level().isClientSide && mob.isAlive() && !mob.isNoAi()) {
                 Convertible convertibleCap = ConvertibleHelper.getConvertibleCapability(mob);
                 if (convertibleCap == null) return;
 
@@ -110,11 +110,11 @@ public class MobEvents {
                     EntityHitResult entityRayTraceResult = (EntityHitResult) rayTraceResult;
                     if (entityRayTraceResult.getEntity() instanceof Player) {
                         Player playerEntity = (Player) entityRayTraceResult.getEntity();
-                        playerEntity.hurt(DamageSource.thrown(snowballEntity, shooter), 2.0F);
+                        playerEntity.hurt(playerEntity.damageSources().thrown(snowballEntity, shooter), 2.0F);
                         int i = 0;
-                        if (event.getEntity().level.getDifficulty() == Difficulty.NORMAL) {
+                        if (event.getEntity().level().getDifficulty() == Difficulty.NORMAL) {
                             i = 3;
-                        } else if (event.getEntity().level.getDifficulty() == Difficulty.HARD) {
+                        } else if (event.getEntity().level().getDifficulty() == Difficulty.HARD) {
                             i = 6;
                         }
 
@@ -135,9 +135,9 @@ public class MobEvents {
                 if (!(event.getEntity() instanceof Player)) {
                     event.setAmount(event.getAmount() + 2.0F);
                     int i = 0;
-                    if (event.getEntity().level.getDifficulty() == Difficulty.NORMAL) {
+                    if (event.getEntity().level().getDifficulty() == Difficulty.NORMAL) {
                         i = 3;
-                    } else if (event.getEntity().level.getDifficulty() == Difficulty.HARD) {
+                    } else if (event.getEntity().level().getDifficulty() == Difficulty.HARD) {
                         i = 6;
                     }
 
@@ -156,14 +156,14 @@ public class MobEvents {
             Entity shooter = arrowEntity.getOwner();
             if (shooter instanceof IllusionerCloneEntity) {
                 arrowEntity.playSound(ModSoundEvents.ILLUSIONER_CLONE_ARROW_HIT.get(), 1.0F, 1.0F);
-                if (!arrowEntity.level.isClientSide) {
+                if (!arrowEntity.level().isClientSide) {
                     arrowEntity.remove(Entity.RemovalReason.DISCARDED);
                 } else {
                     for (int i = 0; i < 2; ++i) {
                         double d0 = random.nextGaussian() * 0.02D;
                         double d1 = random.nextGaussian() * 0.02D;
                         double d2 = random.nextGaussian() * 0.02D;
-                        arrowEntity.level.addParticle(ParticleTypes.POOF, arrowEntity.getRandomX(1.0D), arrowEntity.getRandomY(), arrowEntity.getRandomZ(1.0D), d0, d1, d2);
+                        arrowEntity.level().addParticle(ParticleTypes.POOF, arrowEntity.getRandomX(1.0D), arrowEntity.getRandomY(), arrowEntity.getRandomZ(1.0D), d0, d1, d2);
                     }
                 }
             }
@@ -181,7 +181,7 @@ public class MobEvents {
     @SubscribeEvent
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
         handlePillarProtection(event);
-        if (event.getExplosion().getSourceMob() instanceof IcyCreeperEntity) {
+        if (event.getExplosion().getDamageSource().getEntity() instanceof IcyCreeperEntity) {
             if (!DungeonsMobsConfig.COMMON.ENABLE_ICY_CREEPER_GRIEFING.get()) {
                 event.getAffectedBlocks().clear();
             }
@@ -212,7 +212,7 @@ public class MobEvents {
     private static void handlePillarProtection(ExplosionEvent.Detonate event) {
         Explosion explosion = event.getExplosion();
         Entity source = explosion.getExploder();
-        BlockPos detonationOrigin = new BlockPos(explosion.getPosition());
+        BlockPos detonationOrigin = new BlockPos.MutableBlockPos(explosion.getPosition().x, explosion.getPosition().y, explosion.getPosition().z);
 
         List<Entity> entityList = event.getAffectedEntities();
         List<ConstructEntity> potentialProtectingPillars = new java.util.ArrayList<>(Collections.emptyList());

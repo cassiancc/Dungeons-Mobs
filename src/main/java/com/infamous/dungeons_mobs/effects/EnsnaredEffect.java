@@ -12,7 +12,7 @@ public class EnsnaredEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity owner, int amplifier) {
-        if (!owner.level.isClientSide) {
+        if (!owner.level().isClientSide) {
             owner.setDeltaMovement(0, owner.getDeltaMovement().y, 0);
             owner.setSpeed(0);
         }

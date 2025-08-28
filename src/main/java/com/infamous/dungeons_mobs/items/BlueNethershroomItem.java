@@ -33,7 +33,7 @@ public class BlueNethershroomItem extends ProjectileWeaponItem {
         if (!world.isClientSide) {
             BlueNethershroomEntity blueNethershroom = createBlueNethershroom(world, player, itemStack.copy());
             blueNethershroom.shootFromRotation(player, player.getXRot(), player.getYRot(), -20.0F, 0.5F, 1.0F);
-            player.level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSoundEvents.FUNGUS_THROWER_THROW.get(), player.getSoundSource(), 1.0F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSoundEvents.FUNGUS_THROWER_THROW.get(), player.getSoundSource(), 1.0F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
             world.addFreshEntity(blueNethershroom);
         }
 

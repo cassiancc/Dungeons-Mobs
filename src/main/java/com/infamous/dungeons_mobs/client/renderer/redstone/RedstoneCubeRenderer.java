@@ -3,7 +3,7 @@ package com.infamous.dungeons_mobs.client.renderer.redstone;
 import com.infamous.dungeons_mobs.client.models.redstone.RedstoneCubeModel;
 import com.infamous.dungeons_mobs.entities.redstone.RedstoneCubeEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -41,7 +41,7 @@ public class RedstoneCubeRenderer extends MobRenderer<RedstoneCubeEntity, Redsto
     private void rollCube(PoseStack matrixStackIn, float rotationAmount) {
         Vec3 offset = new Vec3(0.0, 0.5, 0);
         matrixStackIn.translate(offset.x, offset.y, offset.z);
-        matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(rotationAmount)); // Forward roll
+        matrixStackIn.mulPose(Axis.XP.rotationDegrees(rotationAmount)); // Forward roll
         matrixStackIn.translate(-offset.x, -offset.y, -offset.z);
     }
 

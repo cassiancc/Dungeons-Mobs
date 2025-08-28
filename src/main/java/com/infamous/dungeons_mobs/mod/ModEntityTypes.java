@@ -1,6 +1,5 @@
 package com.infamous.dungeons_mobs.mod;
 
-import static com.infamous.dungeons_mobs.DungeonsMobs.DUNGEONS_MOBS;
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 import java.util.List;
