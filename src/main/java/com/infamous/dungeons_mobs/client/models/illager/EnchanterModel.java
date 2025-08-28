@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.client.models.illager;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.EnchanterEntity;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -27,7 +28,12 @@ public class EnchanterModel extends GeoModel<EnchanterEntity> {
     }
 
     @Override
-    public void setCustomAnimations(EnchanterEntity entity, int uniqueID, AnimationState<EnchanterEntity> customPredicate) {
+    public RenderType getRenderType(EnchanterEntity animatable, ResourceLocation texture) {
+        return RenderType.entityTranslucent(texture);
+    }
+
+    @Override
+    public void setCustomAnimations(EnchanterEntity entity, long uniqueID, AnimationState<EnchanterEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         EnchanterEntity entityIn = (EnchanterEntity) entity;

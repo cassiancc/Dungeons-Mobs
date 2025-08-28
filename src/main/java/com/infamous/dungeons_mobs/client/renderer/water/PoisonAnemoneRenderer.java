@@ -20,7 +20,7 @@ public class PoisonAnemoneRenderer extends AbstractVineRenderer {
     @SuppressWarnings("unchecked")
     public PoisonAnemoneRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PoisonQuillVineModel());
-        this.addLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/quick_growing_kelp_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/quick_growing_kelp_glow.png")));
     }
 
     @Override

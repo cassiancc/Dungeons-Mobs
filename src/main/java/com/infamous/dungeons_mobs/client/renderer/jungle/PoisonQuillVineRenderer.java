@@ -13,6 +13,6 @@ public class PoisonQuillVineRenderer extends AbstractVineRenderer {
     @SuppressWarnings("unchecked")
     public PoisonQuillVineRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PoisonQuillVineModel());
-        this.addLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/poison_quill_vine_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/poison_quill_vine_glow.png")));
     }
 }

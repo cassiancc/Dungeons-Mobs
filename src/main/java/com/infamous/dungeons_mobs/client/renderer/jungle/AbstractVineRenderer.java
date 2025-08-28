@@ -12,7 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class AbstractVineRenderer<M extends AbstractVineModel> extends GeoEntityRenderer<AbstractVineEntity> {
@@ -36,14 +38,14 @@ public class AbstractVineRenderer<M extends AbstractVineModel> extends GeoEntity
 
     @Override
     protected int getBlockLightLevel(AbstractVineEntity p_225624_1_, BlockPos p_225624_2_) {
-        return p_225624_1_.isOnFire() ? 15 : p_225624_1_.level.getBrightness(LightLayer.BLOCK, p_225624_1_.getParts()[0].blockPosition());
+        return p_225624_1_.isOnFire() ? 15 : p_225624_1_.level().getBrightness(LightLayer.BLOCK, p_225624_1_.getParts()[0].blockPosition());
     }
 
     @Override
-    public RenderType getRenderType(AbstractVineEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(textureLocation);
+    public RenderType getRenderType(M animatable, ResourceLocation texture,
+                                    @Nullable MultiBufferSource bufferSource,
+                                    float partialTick) {
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
