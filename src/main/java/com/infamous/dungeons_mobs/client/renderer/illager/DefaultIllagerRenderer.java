@@ -17,10 +17,12 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.example.client.DefaultBipedBoneIdents;
+import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.item.GeoArmorItem;
@@ -55,16 +57,16 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends Dynam
     }
 
     @Override
-    public RenderType getRenderType(T animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
+    public RenderType getRenderType(T animatable, ResourceLocation texture,
+                                    @Nullable MultiBufferSource bufferSource,
+                                    float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
     @Override
     public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (this.isArmorBone(bone)) {
-            bone.setCubesHidden(true);
+            bone.setChildrenHidden(true);
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
@@ -72,12 +74,6 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends Dynam
     @Override
     protected boolean isArmorBone(GeoBone bone) {
         return bone.getName().startsWith("armor");
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getTextureForBone(String s, T currentEntity) {
-        return null;
     }
 
     @Override
@@ -108,7 +104,7 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends Dynam
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, T currentEntity, IBone bone) {
         if (item == this.mainHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem)
                 stack.translate(0, 0.125, -0.25);
@@ -121,28 +117,6 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends Dynam
                 stack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
-    }
-
-    @Override
-    protected void postRenderItem(PoseStack matrixStack, ItemStack item, String boneName, T currentEntity, IBone bone) {
-
-    }
-
-    @Override
-    protected BlockState getHeldBlockForBone(String boneName, T currentEntity) {
-        return null;
-    }
-
-    @Override
-    protected void preRenderBlock(PoseStack matrixStack, BlockState block, String boneName,
-                                  T currentEntity) {
-
-    }
-
-    @Override
-    protected void postRenderBlock(PoseStack matrixStack, BlockState block, String boneName,
-                                   T currentEntity) {
-
     }
 
     @Nullable
@@ -227,31 +201,39 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends Dynam
     }
 
     @Override
-    protected void setLimbBoneVisible(GeoArmorRenderer<? extends GeoArmorItem> armorRenderer, ModelPart limb, HumanoidModel<?> armorModel, EquipmentSlot slot) {
+    protected void setLimbBoneVisible(GeoArmorRenderer<? extends GeoItem> armorRenderer, ModelPart limb, HumanoidModel<?> armorModel, EquipmentSlot slot) {
         if (limb == armorModel.head || limb == armorModel.hat) {
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.headBone).setHidden(false);
+            armorRenderer.getHeadBone().setHidden(false);
         } else if (limb == armorModel.body) {
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.bodyBone).setHidden(false);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.leftArmBone).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.rightArmBone).setHidden(true);
+            armorRenderer.getBodyBone().setHidden(false);
+            armorRenderer.getLeftArmBone().setHidden(true);
+            armorRenderer.getRightArmBone().setHidden(true);
         } else if (limb == armorModel.leftArm) {
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.bodyBone).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.leftArmBone).setHidden(false);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.rightArmBone).setHidden(true);
+            armorRenderer.getBodyBone().setHidden(true);
+            armorRenderer.getLeftArmBone().setHidden(false);
+            armorRenderer.getRightArmBone().setHidden(true);
         } else if (limb == armorModel.leftLeg) {
-            armorRenderer.getGeoModelProvider().getBone((slot == EquipmentSlot.FEET ? armorRenderer.leftBootBone : armorRenderer.leftLegBone)).setHidden(false);
-            armorRenderer.getGeoModelProvider().getBone((slot == EquipmentSlot.FEET ? armorRenderer.leftLegBone : armorRenderer.leftBootBone)).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.rightBootBone).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.rightLegBone).setHidden(true);
+            if (slot == EquipmentSlot.FEET)
+                armorRenderer.getLeftBootBone().setHidden(false);
+            else armorRenderer.getLeftLegBone().setHidden(false);
+            if (slot == EquipmentSlot.FEET)
+                armorRenderer.getLeftLegBone().setHidden(true);
+            else armorRenderer.getLeftBootBone().setHidden(true);
+            armorRenderer.getRightBootBone().setHidden(true);
+            armorRenderer.getRightLegBone().setHidden(true);
         } else if (limb == armorModel.rightArm) {
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.bodyBone).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.leftArmBone).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.rightArmBone).setHidden(false);
+            armorRenderer.getBodyBone().setHidden(true);
+            armorRenderer.getLeftArmBone().setHidden(true);
+            armorRenderer.getRightArmBone().setHidden(false);
         } else if (limb == armorModel.rightLeg) {
-            armorRenderer.getGeoModelProvider().getBone((slot == EquipmentSlot.FEET ? armorRenderer.rightBootBone : armorRenderer.rightLegBone)).setHidden(false);
-            armorRenderer.getGeoModelProvider().getBone((slot == EquipmentSlot.FEET ? armorRenderer.rightLegBone : armorRenderer.rightBootBone)).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.leftBootBone).setHidden(true);
-            armorRenderer.getGeoModelProvider().getBone(armorRenderer.leftLegBone).setHidden(true);
+            if (slot == EquipmentSlot.FEET)
+                armorRenderer.getRightBootBone().setHidden(false);
+            else armorRenderer.getRightLegBone().setHidden(false);
+            if (slot == EquipmentSlot.FEET)
+                armorRenderer.getRightLegBone().setHidden(true);
+            else armorRenderer.getRightBootBone().setHidden(true);
+            armorRenderer.getLeftBootBone().setHidden(true);
+            armorRenderer.getLeftLegBone().setHidden(true);
         }
     }
 }

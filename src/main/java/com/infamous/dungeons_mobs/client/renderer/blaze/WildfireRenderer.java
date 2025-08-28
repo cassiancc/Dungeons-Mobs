@@ -7,16 +7,17 @@ import com.infamous.dungeons_mobs.entities.blaze.WildfireEntity;
 import com.infamous.dungeons_mobs.entities.jungle.WhispererEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.BlazeRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,24 +68,24 @@ public class WildfireRenderer extends DynamicGeoEntityRenderer<WildfireEntity> {
     }
 
     @Override
-    protected TransformType getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
-        return TransformType.NONE;
+    protected ItemDisplayContext getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
+        return ItemDisplayContext.NONE;
     }
 
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WildfireEntity currentEntity, IBone bone) {
         if (item == this.mainHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem)
                 stack.translate(0, 0.125, -0.25);
         }
         else if (item == this.offHand) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(-90f));
+            stack.mulPose(Axis.XP.rotationDegrees(-90f));
 
             if (item.getItem() instanceof ShieldItem) {
                 stack.translate(0, 0.125, 0.25);
-                stack.mulPose(Vector3f.YP.rotationDegrees(180));
+                stack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
     }
