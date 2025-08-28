@@ -35,7 +35,7 @@ public class RoyalGuardShieldBEWLR extends BlockEntityWithoutLevelRenderer {
         royalGuardShieldModel = new ShieldModel(p_172551_.bakeLayer(SHIELD));
     }
 
-    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         boolean flag = BlockItem.getBlockEntityData(stack) != null;
         matrixStack.pushPose();
         matrixStack.scale(1.0F, -1.0F, -1.0F);

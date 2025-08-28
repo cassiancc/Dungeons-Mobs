@@ -21,22 +21,22 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
 public class PoisonQuillVineEntity extends AbstractVineEntity {
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int delayedBehaviourTime;
 
@@ -72,6 +72,16 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
         return new PoisonQuillVineEntity.BodyHelperController(this);
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     class BodyHelperController extends BodyRotationControl {
         public BodyHelperController(Mob p_i50612_2_) {
             super(p_i50612_2_);
@@ -95,10 +105,10 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
                 .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.FOLLOW_RANGE, 25.0D);
     }
-
+    
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", this.getAnimationTransitionTime(), this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", this.getAnimationTransitionTime(), this::predicate));
     }
 
     @Override
@@ -106,32 +116,27 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
         return 5;
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.deathTime > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_retract", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_retract", LOOP));
         } else if (this.burstAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_burst", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_burst", LOOP));
         } else if (this.retractAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_retract", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_retract", LOOP));
         } else if (this.shootAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_shoot", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_shoot", LOOP));
         } else {
             if (this.isOut() || this.burstAnimationTick > 0) {
                 if (this.open) {
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_idle_open", LOOP));
+                    event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_idle_open", LOOP));
                 } else {
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_idle", LOOP));
+                    event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_idle", LOOP));
                 }
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("poison_quill_vine_idle_underground", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("poison_quill_vine_idle_underground", LOOP));
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -222,8 +227,8 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
 
     @Override
     public void spawnAreaDamage() {
-        AreaDamageEntity areaDamage = AreaDamageEntity.spawnAreaDamage(this.level, this.position(), this, 5.0F, DamageSource.mobAttack(this), 0.0F, 1.5F, 0.25F, 0.25F, 10, false, false, 0.75, 0.25, false, 0, 1);
-        this.level.addFreshEntity(areaDamage);
+        AreaDamageEntity areaDamage = AreaDamageEntity.spawnAreaDamage(this.level(), this.position(), this, 5.0F, damageSources().mobAttack(this), 0.0F, 1.5F, 0.25F, 0.25F, 10, false, false, 0.75, 0.25, false, 0, 1);
+        this.level().addFreshEntity(areaDamage);
     }
 
     @Override
@@ -305,7 +310,7 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
         public void start() {
             super.start();
             PoisonQuillVineEntity.this.open = true;
-            PoisonQuillVineEntity.this.level.broadcastEntityEvent(PoisonQuillVineEntity.this, (byte) 7);
+            PoisonQuillVineEntity.this.level().broadcastEntityEvent(PoisonQuillVineEntity.this, (byte) 7);
             PoisonQuillVineEntity.this.delayedBehaviourTime = 10;
             PoisonQuillVineEntity.this.playSound(PoisonQuillVineEntity.this.getOpenSound(), 1.0F, 1.0F);
         }
@@ -326,7 +331,7 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
         public void start() {
             super.start();
             PoisonQuillVineEntity.this.open = false;
-            PoisonQuillVineEntity.this.level.broadcastEntityEvent(PoisonQuillVineEntity.this, (byte) 8);
+            PoisonQuillVineEntity.this.level().broadcastEntityEvent(PoisonQuillVineEntity.this, (byte) 8);
             PoisonQuillVineEntity.this.delayedBehaviourTime = 40;
             PoisonQuillVineEntity.this.playSound(PoisonQuillVineEntity.this.getCloseSound(), 1.0F, 1.0F);
         }
@@ -365,7 +370,7 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
         @Override
         public void start() {
             mob.shootAnimationTick = mob.shootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 9);
+            mob.level().broadcastEntityEvent(mob, (byte) 9);
         }
 
         @Override
@@ -379,11 +384,11 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
                 double d1 = target.getX() - pos.x;
                 double d2 = target.getY(0.6D) - pos.y;
                 double d3 = target.getZ() - pos.z;
-                PoisonQuillEntity poisonQuill = new PoisonQuillEntity(mob.level, mob, d1, d2, d3);
+                PoisonQuillEntity poisonQuill = new PoisonQuillEntity(mob.level(), mob, d1, d2, d3);
                 poisonQuill.setKelp(mob.isKelp());
                 poisonQuill.rotateToMatchMovement();
                 poisonQuill.moveTo(pos.x, pos.y, pos.z);
-                mob.level.addFreshEntity(poisonQuill);
+                mob.level().addFreshEntity(poisonQuill);
                 mob.playSound(mob.getShootSound(), 1.25F, 1.0F);
             }
         }

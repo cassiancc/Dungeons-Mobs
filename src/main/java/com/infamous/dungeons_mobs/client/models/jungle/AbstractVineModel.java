@@ -1,7 +1,8 @@
 package com.infamous.dungeons_mobs.client.models.jungle;
 
 import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.molang.MolangParser;
 import software.bernie.geckolib.model.GeoModel;
@@ -24,5 +25,10 @@ public abstract class AbstractVineModel extends GeoModel<AbstractVineEntity> {
             }
         }
         MolangParser.INSTANCE.setValue("query.vine_length", entity::getLengthInSegments);
+    }
+
+    @Override
+    public RenderType getRenderType(AbstractVineEntity animatable, ResourceLocation resourceLocation) {
+        return RenderType.entityTranslucent(resourceLocation);
     }
 }

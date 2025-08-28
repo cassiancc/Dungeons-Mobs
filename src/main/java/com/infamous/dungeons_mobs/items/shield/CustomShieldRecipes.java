@@ -1,22 +1,24 @@
 package com.infamous.dungeons_mobs.items.shield;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class CustomShieldRecipes extends CustomRecipe {
 
-    public static final RecipeSerializer<CustomShieldRecipes> SERIALIZER = new SimpleRecipeSerializer<CustomShieldRecipes>(
+    public static final RecipeSerializer<CustomShieldRecipes> SERIALIZER = new SimpleCraftingRecipeSerializer<>(
             CustomShieldRecipes::new);
 
     public CustomShieldRecipes(ResourceLocation idIn) {
-        super(idIn);
+        super(idIn, CraftingBookCategory.EQUIPMENT);
     }
 
     public boolean matches(CraftingContainer inv, Level worldIn) {
@@ -53,7 +55,7 @@ public class CustomShieldRecipes extends CustomRecipe {
         return !itemstack.isEmpty() && !itemstack1.isEmpty();
     }
 
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack itemstack1 = ItemStack.EMPTY;
 

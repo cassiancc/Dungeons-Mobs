@@ -6,15 +6,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-public class SkeletonVanguardModel extends AnimatedGeoModel<SkeletonVanguardEntity> {
+public class SkeletonVanguardModel extends GeoModel<SkeletonVanguardEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SkeletonVanguardEntity entity) {
@@ -32,29 +30,21 @@ public class SkeletonVanguardModel extends AnimatedGeoModel<SkeletonVanguardEnti
     }
 
     @Override
-    public void setCustomAnimations(SkeletonVanguardEntity entity, int uniqueID, AnimationEvent customPredicate) {
+    public void setCustomAnimations(SkeletonVanguardEntity entity, long uniqueID, AnimationState<SkeletonVanguardEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        IBone head = this.getAnimationProcessor().getBone("bipedHead");
-        IBone cape = this.getAnimationProcessor().getBone("bipedCape");
+        var head = this.getAnimationProcessor().getBone("bipedHead");
+        var cape = this.getAnimationProcessor().getBone("bipedCape");
 
         cape.setHidden(true);
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if (extraData.headPitch != 0 || extraData.netHeadYaw != 0) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * ((float) Math.PI / 180F)));
-            head.setRotationY(head.getRotationY() + (extraData.netHeadYaw * ((float) Math.PI / 180F)));
+        EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
+        if (extraData.headPitch() != 0 || extraData.netHeadYaw() != 0) {
+            head.setRotX(head.getRotX() + (extraData.headPitch() * ((float) Math.PI / 180F)));
+            head.setRotY(head.getRotY() + (extraData.netHeadYaw() * ((float) Math.PI / 180F)));
         }
-    }
-
-    @Override
-    public void setMolangQueries(IAnimatable animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
-        LivingEntity livingEntity = (LivingEntity) animatable;
-        Vec3 velocity = livingEntity.getDeltaMovement();
+        Vec3 velocity = entity.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 20);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 20);
     }
 }

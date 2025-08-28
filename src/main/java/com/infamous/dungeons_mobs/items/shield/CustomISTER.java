@@ -21,10 +21,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,7 +48,7 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
         royalGuardShieldModel = new ShieldModel(p_172551_.bakeLayer(SHIELD));
     }
 
-    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         Item item = stack.getItem();
         if (item instanceof RoyalGuardShieldItem) {
             boolean flag = stack.getTagElement("BlockEntityTag") != null;
@@ -83,7 +80,7 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
         }
     }
 
-    private void renderTridentSpriteModel(ItemStack stack, PoseStack matrixStack, MultiBufferSource buffer, ItemTransforms.TransformType transformType, int combinedLight, int combinedOverlay, ColoredTridentItem item, boolean inHand) {
+    private void renderTridentSpriteModel(ItemStack stack, PoseStack matrixStack, MultiBufferSource buffer, ItemDisplayContext transformType, int combinedLight, int combinedOverlay, ColoredTridentItem item, boolean inHand) {
         matrixStack.pushPose();
         //matrixStack.translate(0.5, 0.5, 0.5);
         BakedModel model = Minecraft.getInstance().getModelManager().getModel(getTridentMRL(item.getTridentColor(), inHand));
@@ -91,7 +88,7 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
         matrixStack.popPose();
     }
 
-    private void renderTridentEntityModel(ItemStack stack, PoseStack matrixStack, MultiBufferSource buffer, ItemTransforms.TransformType transformType, int combinedLight, int combinedOverlay, ColoredTridentItem item) {
+    private void renderTridentEntityModel(ItemStack stack, PoseStack matrixStack, MultiBufferSource buffer, ItemDisplayContext transformType, int combinedLight, int combinedOverlay, ColoredTridentItem item) {
         matrixStack.pushPose();
         matrixStack.scale(1.0F, -1.0F, -1.0F);
         ResourceLocation texture = getTridentTexture(item.getTridentColor());

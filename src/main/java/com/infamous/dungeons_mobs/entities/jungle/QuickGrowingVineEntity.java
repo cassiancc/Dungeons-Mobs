@@ -9,20 +9,21 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+
 
 public class QuickGrowingVineEntity extends AbstractVineEntity {
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public QuickGrowingVineEntity(EntityType<? extends QuickGrowingVineEntity> p_i50147_1_, Level p_i50147_2_) {
         super(p_i50147_1_, p_i50147_2_);
@@ -33,10 +34,10 @@ public class QuickGrowingVineEntity extends AbstractVineEntity {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 15.0D);
     }
-
+    
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", this.getAnimationTransitionTime(), this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", this.getAnimationTransitionTime(), this::predicate));
     }
 
     @Override
@@ -44,26 +45,21 @@ public class QuickGrowingVineEntity extends AbstractVineEntity {
         return 2;
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.deathTime > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("quick_growing_vine_retract", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("quick_growing_vine_retract", LOOP));
         } else if (this.burstAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("quick_growing_vine_burst", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("quick_growing_vine_burst", LOOP));
         } else if (this.retractAnimationTick > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("quick_growing_vine_retract", LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("quick_growing_vine_retract", LOOP));
         } else {
             if (this.isOut() || this.burstAnimationTick > 0) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("quick_growing_vine_idle", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("quick_growing_vine_idle", LOOP));
             } else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("quick_growing_vine_idle_underground", LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("quick_growing_vine_idle_underground", LOOP));
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -133,8 +129,8 @@ public class QuickGrowingVineEntity extends AbstractVineEntity {
 
     @Override
     public void spawnAreaDamage() {
-        AreaDamageEntity areaDamage = AreaDamageEntity.spawnAreaDamage(this.level, this.position(), this, 2.5F, DamageSource.mobAttack(this), 0.0F, 1.25F, 0.25F, 0.25F, 5, false, false, 0.75, 0.25, false, 0, 1);
-        this.level.addFreshEntity(areaDamage);
+        AreaDamageEntity areaDamage = AreaDamageEntity.spawnAreaDamage(this.level(), this.position(), this, 2.5F, damageSources().mobAttack(this), 0.0F, 1.25F, 0.25F, 0.25F, 5, false, false, 0.75, 0.25, false, 0, 1);
+        this.level().addFreshEntity(areaDamage);
     }
 
     @Override
@@ -146,4 +142,13 @@ public class QuickGrowingVineEntity extends AbstractVineEntity {
         this.setDetectionDistance(5);
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
 }

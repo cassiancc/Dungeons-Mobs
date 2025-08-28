@@ -28,20 +28,21 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class MageCloneEntity extends AbstractIllager implements IAnimatable, SpawnArmoredMob {
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+
+public class MageCloneEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
     private static final EntityDataAccessor<Boolean> DELAYED_APPEAR = SynchedEntityData.defineId(MageCloneEntity.class,
             EntityDataSerializers.BOOLEAN);
@@ -57,7 +58,7 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
 
     private Mob owner;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public MageCloneEntity(EntityType<? extends MageCloneEntity> type, Level world) {
         super(type, world);
@@ -98,7 +99,7 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
 
     @Override
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (p_70097_1_.getEntity() != null && this.isAlliedTo(p_70097_1_.getEntity()) && p_70097_1_ != DamageSource.OUT_OF_WORLD) {
+        if (p_70097_1_.getEntity() != null && this.isAlliedTo(p_70097_1_.getEntity()) && p_70097_1_ != damageSources().fellOutOfWorld()) {
             return false;
         } else {
             return super.hurt(p_70097_1_, p_70097_2_);
@@ -122,7 +123,7 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         }
 
@@ -152,7 +153,7 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         } else {
             super.handleEntityEvent(p_28844_);
@@ -165,25 +166,25 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
 
         this.lifeTime++;
 
-        if (!this.level.isClientSide && this.hasDelayedAppear()) {
+        if (!this.level().isClientSide && this.hasDelayedAppear()) {
             this.appearAnimationTick = this.appearAnimationLength;
-            this.level.broadcastEntityEvent(this, (byte) 8);
+            this.level().broadcastEntityEvent(this, (byte) 8);
             this.setDelayedAppear(false);
         }
 
-        int lifeTimeByDifficulty = this.level.getCurrentDifficultyAt(this.blockPosition()).getDifficulty().getId();
+        int lifeTimeByDifficulty = this.level().getCurrentDifficultyAt(this.blockPosition()).getDifficulty().getId();
 
-        if (!this.level.isClientSide && (this.hurtTime > 0 || ((this.lifeTime >= lifeTimeByDifficulty * 100) || this.getOwner() != null && (this.getOwner().isDeadOrDying() || this.getOwner().hurtTime > 0 || this.getOwner().getTarget() == null)))) {
+        if (!this.level().isClientSide && (this.hurtTime > 0 || ((this.lifeTime >= lifeTimeByDifficulty * 100) || this.getOwner() != null && (this.getOwner().isDeadOrDying() || this.getOwner().hurtTime > 0 || this.getOwner().getTarget() == null)))) {
             if (this.hurtTime > 0) {
                 this.playSound(this.getDeathSound(), this.getSoundVolume(), this.getVoicePitch());
             } else {
                 this.playSound(SoundEvents.ILLUSIONER_MIRROR_MOVE, this.getSoundVolume(), 1.0F);
             }
             this.remove(RemovalReason.DISCARDED);
-            this.level.broadcastEntityEvent(this, (byte) 11);
+            this.level().broadcastEntityEvent(this, (byte) 11);
         }
 
-        if (!this.level.isClientSide && this.getOwner() != null) {
+        if (!this.level().isClientSide && this.getOwner() != null) {
             this.setHealth(this.getOwner().getHealth());
         }
     }
@@ -199,30 +200,25 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         if (this.appearAnimationTick > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("mage_appear", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_appear", LOOP));
         } else if (this.shootAnimationTick > 0) {
-            event.getController().setAnimation(RawAnimation.begin().then("mage_shoot", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_shoot", LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(RawAnimation.begin().then("mage_walk", EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then("mage_walk", LOOP));
         } else {
             if (this.isCelebrating()) {
-                event.getController().setAnimation(RawAnimation.begin().then("mage_celebrate", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("mage_celebrate", LOOP));
             } else {
-                event.getController().setAnimation(RawAnimation.begin().then("mage_idle", EDefaultLoopTypes.LOOP));
+                event.getController().setAnimation(RawAnimation.begin().then("mage_idle", LOOP));
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     /**
@@ -268,6 +264,16 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
         return ModItems.MAGE_ARMOR;
     }
 
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
+    }
+
     class ShootAttackGoal extends Goal {
         public MageCloneEntity mob;
         @Nullable
@@ -302,7 +308,7 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
         @Override
         public void start() {
             mob.shootAnimationTick = mob.shootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override
@@ -316,11 +322,11 @@ public class MageCloneEntity extends AbstractIllager implements IAnimatable, Spa
                 double d1 = target.getX() - pos.x;
                 double d2 = target.getY(0.6D) - pos.y;
                 double d3 = target.getZ() - pos.z;
-                MageMissileEntity mageMissile = new MageMissileEntity(mob.level, mob, d1 / 5, 5, d3 / 5);
+                MageMissileEntity mageMissile = new MageMissileEntity(mob.level(), mob, d1 / 5, 5, d3 / 5);
                 mageMissile.rotateToMatchMovement();
                 mageMissile.moveTo(pos.x, pos.y, pos.z);
                 mageMissile.setOwner(mob);
-                mob.level.addFreshEntity(mageMissile);
+                mob.level().addFreshEntity(mageMissile);
                 mob.playSound(ModSoundEvents.NECROMANCER_SHOOT.get(), 1.0F, 2.0F);
             }
         }

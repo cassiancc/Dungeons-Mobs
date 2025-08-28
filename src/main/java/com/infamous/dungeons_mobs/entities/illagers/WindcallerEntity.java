@@ -38,6 +38,7 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -176,7 +177,7 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.addAnimationController(new AnimationController<>(this, "controller", 2, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
 
@@ -195,11 +196,6 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -305,11 +301,11 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
             int nearbyTornadoes = 1;
 
             if (target != null) {
-                nearbyTornadoes = mob.level.getEntities(mob, target.getBoundingBox().inflate(5.0D), TORNADO)
+                nearbyTornadoes = mob.level().getEntities(mob, target.getBoundingBox().inflate(5.0D), TORNADO)
                         .size();
             }
 
-            return target != null && target.isOnGround() && mob.random.nextInt(30) == 0 && mob.distanceTo(target) <= 16 && mob.distanceTo(target) > 3 && nearbyTornadoes <= 0 && mob.hasLineOfSight(target) && animationsUseable();
+            return target != null && target.onGround() && mob.random.nextInt(30) == 0 && mob.distanceTo(target) <= 16 && mob.distanceTo(target) > 3 && nearbyTornadoes <= 0 && mob.hasLineOfSight(target) && animationsUseable();
         }
 
         @Override
@@ -321,7 +317,7 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
         public void start() {
             mob.playSound(ModSoundEvents.WINDCALLER_LIFT_VOCAL.get(), 1.0F, mob.getVoicePitch());
             mob.liftAttackAnimationTick = mob.liftAttackAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override
@@ -333,10 +329,10 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
             }
 
             if (target != null && mob.liftAttackAnimationTick == mob.liftAttackAnimationActionPoint) {
-                WindcallerTornadoEntity tornado = ModEntityTypes.TORNADO.get().create(mob.level);
+                WindcallerTornadoEntity tornado = ModEntityTypes.TORNADO.get().create(mob.level());
                 tornado.moveTo(target.blockPosition(), 0, 0);
                 tornado.playSound(ModSoundEvents.WINDCALLER_LIFT_WIND.get(), 1.5F, 1.0F);
-                ((ServerLevel) mob.level).addFreshEntityWithPassengers(tornado);
+                ((ServerLevel) mob.level()).addFreshEntityWithPassengers(tornado);
             }
         }
 
@@ -377,11 +373,11 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
             int nearbyTornadoes = 1;
 
             if (target != null) {
-                nearbyTornadoes = mob.level.getEntities(mob, target.getBoundingBox().inflate(5.0D), TORNADO)
+                nearbyTornadoes = mob.level().getEntities(mob, target.getBoundingBox().inflate(5.0D), TORNADO)
                         .size();
             }
 
-            return target != null && mob.random.nextInt(5) == 0 && (mob.distanceTo(target) <= 4 || (!target.isOnGround() && mob.random.nextInt(10) == 0 && mob.distanceTo(target) < 7.5)) && nearbyTornadoes <= 0 && mob.hasLineOfSight(target) && animationsUseable();
+            return target != null && mob.random.nextInt(5) == 0 && (mob.distanceTo(target) <= 4 || (!target.onGround() && mob.random.nextInt(10) == 0 && mob.distanceTo(target) < 7.5)) && nearbyTornadoes <= 0 && mob.hasLineOfSight(target) && animationsUseable();
         }
 
         @Override
@@ -393,7 +389,7 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
         public void start() {
             mob.playSound(ModSoundEvents.WINDCALLER_BLAST_VOCAL.get(), 1.0F, mob.getVoicePitch());
             mob.blastAttackAnimationTick = mob.blastAttackAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 11);
+            mob.level().broadcastEntityEvent(mob, (byte) 11);
         }
 
         @Override
@@ -408,16 +404,16 @@ public class WindcallerEntity extends AbstractIllager implements GeoAnimatable, 
                 double d1 = target.getX() - mob.getX();
                 double d2 = target.getY(0.5D) - mob.getY(0.5D);
                 double d3 = target.getZ() - mob.getZ();
-                WindcallerBlastProjectileEntity smallfireballentity = new WindcallerBlastProjectileEntity(mob.level, mob, d1, 0, d3);
+                WindcallerBlastProjectileEntity smallfireballentity = new WindcallerBlastProjectileEntity(mob.level(), mob, d1, 0, d3);
                 smallfireballentity.setPos(mob.getX(), mob.getY(0.25D), mob.getZ());
-                mob.level.addFreshEntity(smallfireballentity);
-                WindcallerTornadoEntity tornado = ModEntityTypes.TORNADO.get().create(mob.level);
+                mob.level().addFreshEntity(smallfireballentity);
+                WindcallerTornadoEntity tornado = ModEntityTypes.TORNADO.get().create(mob.level());
                 tornado.moveTo(mob.blockPosition(), 0, 0);
                 tornado.playSound(ModSoundEvents.WINDCALLER_BLAST_WIND.get(), 1.5F, 1.0F);
                 tornado.setBlast(true);
 //	            mob.lookAt(EntityAnchorArgument.Type.EYES, new Vector3d(target.getX(), target.getY(), target.getZ()));
                 tornado.setYRot(-mob.yHeadRot - 90);
-                ((ServerLevel) mob.level).addFreshEntityWithPassengers(tornado);
+                ((ServerLevel) mob.level()).addFreshEntityWithPassengers(tornado);
             }
         }
 

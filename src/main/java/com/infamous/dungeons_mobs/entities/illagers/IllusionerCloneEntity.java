@@ -30,21 +30,21 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class IllusionerCloneEntity extends AbstractIllager implements IAnimatable, SpawnArmoredMob {
+public class IllusionerCloneEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
     private static final EntityDataAccessor<Boolean> DELAYED_APPEAR = SynchedEntityData.defineId(IllusionerCloneEntity.class,
             EntityDataSerializers.BOOLEAN);
@@ -60,7 +60,7 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
 
     private Mob owner;
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public IllusionerCloneEntity(Level world) {
         super(ModEntityTypes.ILLUSIONER_CLONE.get(), world);
@@ -102,7 +102,7 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
 
     @Override
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (p_70097_1_.getEntity() != null && this.isAlliedTo(p_70097_1_.getEntity()) && p_70097_1_ != DamageSource.OUT_OF_WORLD) {
+        if (p_70097_1_.getEntity() != null && this.isAlliedTo(p_70097_1_.getEntity()) && p_70097_1_ != damageSources().fellOutOfWorld()) {
             return false;
         } else {
             return super.hurt(p_70097_1_, p_70097_2_);
@@ -126,7 +126,7 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         }
 
@@ -156,7 +156,7 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
                 double d0 = this.random.nextGaussian() * 0.02D;
                 double d1 = this.random.nextGaussian() * 0.02D;
                 double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+                this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
             }
         } else {
             super.handleEntityEvent(p_28844_);
@@ -169,25 +169,25 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
 
         this.lifeTime++;
 
-        if (!this.level.isClientSide && this.hasDelayedAppear()) {
+        if (!this.level().isClientSide && this.hasDelayedAppear()) {
             this.appearAnimationTick = this.appearAnimationLength;
-            this.level.broadcastEntityEvent(this, (byte) 8);
+            this.level().broadcastEntityEvent(this, (byte) 8);
             this.setDelayedAppear(false);
         }
 
-        int lifeTimeByDifficulty = this.level.getCurrentDifficultyAt(this.blockPosition()).getDifficulty().getId();
+        int lifeTimeByDifficulty = this.level().getCurrentDifficultyAt(this.blockPosition()).getDifficulty().getId();
 
-        if (!this.level.isClientSide && (this.hurtTime > 0 || ((this.lifeTime >= lifeTimeByDifficulty * 100) || this.getOwner() != null && (this.getOwner().isDeadOrDying() || this.getOwner().hurtTime > 0 || this.getOwner().getTarget() == null)))) {
+        if (!this.level().isClientSide && (this.hurtTime > 0 || ((this.lifeTime >= lifeTimeByDifficulty * 100) || this.getOwner() != null && (this.getOwner().isDeadOrDying() || this.getOwner().hurtTime > 0 || this.getOwner().getTarget() == null)))) {
             if (this.hurtTime > 0) {
                 this.playSound(this.getDeathSound(), this.getSoundVolume(), this.getVoicePitch());
             } else {
                 this.playSound(SoundEvents.ILLUSIONER_MIRROR_MOVE, this.getSoundVolume(), 1.0F);
             }
             this.remove(RemovalReason.DISCARDED);
-            this.level.broadcastEntityEvent(this, (byte) 11);
+            this.level().broadcastEntityEvent(this, (byte) 11);
         }
 
-        if (!this.level.isClientSide && this.getOwner() != null) {
+        if (!this.level().isClientSide && this.getOwner() != null) {
             this.setHealth(this.getOwner().getHealth());
         }
     }
@@ -203,11 +203,12 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
+
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         String suffix = "_uncrossed";
         if (IllagerArmsUtil.armorHasCrossedArms(this, this.getItemBySlot(EquipmentSlot.CHEST))) {
             suffix = "";
@@ -226,11 +227,6 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
             }
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     /**
@@ -281,9 +277,9 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
             double d1 = target.getY(0.3333333333333333D) - abstractarrowentity.getY();
             double d2 = target.getZ() - this.getZ();
             double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
-            abstractarrowentity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level.getDifficulty().getId() * 4));
+            abstractarrowentity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
             this.playSound(SoundEvents.ARROW_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-            this.level.addFreshEntity(abstractarrowentity);
+            this.level().addFreshEntity(abstractarrowentity);
         }
     }
 
@@ -294,6 +290,16 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
     @Override
     public ArmorSet getArmorSet() {
         return ModItems.ILLUSIONER_ARMOR;
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 
     class ShootAttackGoal extends Goal {
@@ -337,7 +343,7 @@ public class IllusionerCloneEntity extends AbstractIllager implements IAnimatabl
         @Override
         public void start() {
             mob.shootAnimationTick = mob.shootAnimationLength;
-            mob.level.broadcastEntityEvent(mob, (byte) 4);
+            mob.level().broadcastEntityEvent(mob, (byte) 4);
         }
 
         @Override

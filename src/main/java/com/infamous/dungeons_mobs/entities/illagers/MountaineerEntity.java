@@ -38,21 +38,21 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
+import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
-public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IAnimatable, AnimatableMeleeAttackMob {
+public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, GeoAnimatable, AnimatableMeleeAttackMob {
 
     private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(MountaineerEntity.class, EntityDataSerializers.BYTE);
     public int attackAnimationTick;
@@ -86,7 +86,7 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
 
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.setClimbing(this.horizontalCollision);
         }
 
@@ -193,7 +193,7 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
         return ModItems.MOUNTAINEER_ARMOR;
     }
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public void handleEntityEvent(byte p_28844_) {
         if (p_28844_ == 4) {
@@ -236,11 +236,11 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         String animation = "animation.vindicator";
         if (false) {
             animation += "_mcd";
@@ -259,11 +259,9 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
         if (this.attackAnimationTick > 0) {
             event.getController().setAnimation(RawAnimation.begin().then(animation + ".attack" + handSide, LOOP));
         } else if (this.isAggressive() && !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation(animation + ".run" + handSide, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then(animation + ".run" + handSide, LOOP));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation(animation + ".walk" + crossed, LOOP));
+            event.getController().setAnimation(RawAnimation.begin().then(animation + ".walk" + crossed, LOOP));
         } else {
             if (this.isCelebrating()) {
                 event.getController().setAnimation(RawAnimation.begin().then(animation + ".win", LOOP));
@@ -275,7 +273,12 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, IA
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return tickCount;
     }
 }

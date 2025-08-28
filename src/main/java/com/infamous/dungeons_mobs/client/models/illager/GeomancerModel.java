@@ -8,10 +8,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.molang.MolangParser;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
-import software.bernie.geckolib3.core.molang.MolangParser;
-import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class GeomancerModel extends GeoModel<GeomancerEntity> {
 
@@ -31,7 +30,7 @@ public class GeomancerModel extends GeoModel<GeomancerEntity> {
     }
 
     @Override
-    public void setCustomAnimations(GeomancerEntity entity, int uniqueID, AnimationState<GeomancerEntity> customPredicate) {
+    public void setCustomAnimations(GeomancerEntity entity, long uniqueID, AnimationState<GeomancerEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         var head = this.getAnimationProcessor().getBone("bipedHead");
@@ -47,16 +46,8 @@ public class GeomancerModel extends GeoModel<GeomancerEntity> {
             head.setRotX(head.getRotX() + (extraData.headPitch() * ((float) Math.PI / 180F)));
             head.setRotY(head.getRotY() + (extraData.netHeadYaw() * ((float) Math.PI / 180F)));
         }
-    }
-
-    @Override
-    public void setMolangQueries(GeomancerEntity animatable, double currentTick) {
-        super.setMolangQueries(animatable, currentTick);
-
-        MolangParser parser = GeckoLibCache.getInstance().parser;
-        LivingEntity livingEntity = (LivingEntity) animatable;
-        Vec3 velocity = livingEntity.getDeltaMovement();
+        Vec3 velocity = entity.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        parser.setValue("query.ground_speed", () -> groundSpeed * 20);
+        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 20);
     }
 }

@@ -7,12 +7,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class BasicModdedAttackGoal<T extends Mob & IAnimatable & AnimatableMeleeAttackMob> extends Goal {
+public class BasicModdedAttackGoal<T extends Mob & GeoAnimatable & AnimatableMeleeAttackMob> extends Goal {
 
     public T mob;
     @Nullable
@@ -40,7 +40,7 @@ public class BasicModdedAttackGoal<T extends Mob & IAnimatable & AnimatableMelee
 
     @Override
     public boolean canUse() {
-        long i = this.mob.level.getGameTime();
+        long i = this.mob.level().getGameTime();
         if (i - this.lastUseTime < cooldown) {
             return false;
         } else {
@@ -58,8 +58,8 @@ public class BasicModdedAttackGoal<T extends Mob & IAnimatable & AnimatableMelee
     @Override
     public void start() {
         mob.setAttackAnimationTick(mob.getAttackAnimationLength());
-        lastUseTime = this.mob.level.getGameTime();
-        mob.level.broadcastEntityEvent(mob, (byte) 4);
+        lastUseTime = this.mob.level().getGameTime();
+        mob.level().broadcastEntityEvent(mob, (byte) 4);
     }
 
     @Override
