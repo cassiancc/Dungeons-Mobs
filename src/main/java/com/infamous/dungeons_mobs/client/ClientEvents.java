@@ -43,7 +43,7 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
@@ -166,12 +166,6 @@ public class ClientEvents {
         event.registerEntityRenderer(ModEntityTypes.WILDFIRE.get(), WildfireRenderer::new);
 
 
-        GeoArmorRenderer.registerArmorRenderer(WindcallerArmorGear.class, WindcallerArmorGearRenderer::new);
-        GeoArmorRenderer.registerArmorRenderer(MageArmorGear.class, MageArmorGearRenderer::new);
-        GeoArmorRenderer.registerArmorRenderer(IceologerArmorGear.class, IceologerArmorGearRenderer::new);
-        GeoArmorRenderer.registerArmorRenderer(IllusionerArmorGear.class, IllusionerArmorGearRenderer::new);
-        GeoArmorRenderer.registerArmorRenderer(NecromancerArmorGear.class, NecromancerArmorGearRenderer::new);
-        GeoArmorRenderer.registerArmorRenderer(DrownedNecromancerArmorGear.class, DrownedNecromancerArmorGearRenderer::new);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -209,10 +209,10 @@ public class ModItems {
         ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new IllusionerArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new IllusionerArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new IllusionerArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(bootsId, () -> new IllusionerArmorGear(EquipmentSlot.FEET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
+                registerArmor(helmetId, () -> new IllusionerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new IllusionerArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new IllusionerArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(bootsId, () -> new IllusionerArmorGear(BOOTS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation))
         );
     }
 
@@ -223,9 +223,9 @@ public class ModItems {
         ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
-                registerArmor(helmetId, () -> new DrownedNecromancerArmorGear(EquipmentSlot.HEAD, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(chestId, () -> new DrownedNecromancerArmorGear(EquipmentSlot.CHEST, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
-                registerArmor(legsId, () -> new DrownedNecromancerArmorGear(EquipmentSlot.LEGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(helmetId, () -> new DrownedNecromancerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(chestId, () -> new DrownedNecromancerArmorGear(CHESTPLATE, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
+                registerArmor(legsId, () -> new DrownedNecromancerArmorGear(LEGGINGS, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
                 null
         );
     }

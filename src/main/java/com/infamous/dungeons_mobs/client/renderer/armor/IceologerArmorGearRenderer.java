@@ -13,8 +13,11 @@ import software.bernie.geckolib.model.GeoModel;
 
 public class IceologerArmorGearRenderer extends ArmorGearRenderer<IceologerArmorGear> {
 
-    public IceologerArmorGearRenderer() {
+    private final LivingEntity livingEntity;
+
+    public IceologerArmorGearRenderer(LivingEntity livingEntity) {
         super(new IceologerArmorGearModel<>().getWearer());
+        this.livingEntity = livingEntity;
     }
 
     @Override
@@ -22,7 +25,7 @@ public class IceologerArmorGearRenderer extends ArmorGearRenderer<IceologerArmor
 
         GeoModel<IceologerArmorGear> geoModelProvider = getGeoModel();
         if (geoModelProvider instanceof IceologerArmorGearModel) {
-            ((IceologerArmorGearModel<IceologerArmorGear>) geoModelProvider).setWearer((LivingEntity) this.currentEntity);
+            ((IceologerArmorGearModel<IceologerArmorGear>) geoModelProvider).setWearer(this.livingEntity);
         }
         super.renderRecursively(poseStack, animatable, getBodyBone(), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
