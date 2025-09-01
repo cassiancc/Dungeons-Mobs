@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class GeomancerBombRenderer extends GeoEntityRenderer {
+public class GeomancerBombRenderer extends GeoEntityRenderer<GeomancerBombEntity> {
     public GeomancerBombRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeomancerConstructModel());
         this.addRenderLayer(new PulsatingGlowLayer<GeomancerBombEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png"), 0.5F, 0.6F, 0.2F) {
@@ -31,11 +31,6 @@ public class GeomancerBombRenderer extends GeoEntityRenderer {
                 }
             }
         });
-    }
-
-    @Override
-    public Entity getAnimatable() {
-        return this.animatable;
     }
 
     protected void applyRotations(GeomancerBombEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,

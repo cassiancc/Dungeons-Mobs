@@ -13,34 +13,36 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class GeomancerConstructModel extends GeoModel<ConstructEntity> {
+public class GeomancerConstructModel extends GeoModel {
 
     @Override
-    public ResourceLocation getAnimationResource(ConstructEntity entity) {
+    public ResourceLocation getAnimationResource(GeoAnimatable entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "animations/geomancer_pillar.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(ConstructEntity entity) {
+    public ResourceLocation getModelResource(GeoAnimatable entity) {
         return new ResourceLocation(DungeonsMobs.MODID, "geo/geomancer_pillar.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(ConstructEntity entity) {
+    public ResourceLocation getTextureResource(GeoAnimatable entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
         return entity instanceof GeomancerBombEntity ? new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png") : new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_wall.png");
     }
 
     @Override
-    public RenderType getRenderType(ConstructEntity animatable, ResourceLocation textureLocation) {
+    public RenderType getRenderType(GeoAnimatable animatable, ResourceLocation textureLocation) {
         return RenderType.entityTranslucent(textureLocation);
     }
 
     @Override
-    public void setCustomAnimations(ConstructEntity entity, long uniqueID, AnimationState<ConstructEntity> customPredicate) {
+    public void setCustomAnimations(GeoAnimatable entity, long uniqueID, AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
 //        ConstructEntity entityIn = (ConstructEntity) entity;

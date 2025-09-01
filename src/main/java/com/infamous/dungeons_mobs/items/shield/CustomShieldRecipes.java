@@ -14,8 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class CustomShieldRecipes extends CustomRecipe {
 
-    public static final RecipeSerializer<CustomShieldRecipes> SERIALIZER = new SimpleCraftingRecipeSerializer<>(
-            CustomShieldRecipes::new);
+    public static final RecipeSerializer<CustomShieldRecipes> SERIALIZER = new SimpleCraftingRecipeSerializer<>(CustomShieldRecipes::new);
 
     public CustomShieldRecipes(ResourceLocation idIn) {
         super(idIn, CraftingBookCategory.EQUIPMENT);

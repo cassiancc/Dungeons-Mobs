@@ -42,7 +42,7 @@ public class PulsatingGlowLayer<T extends LivingEntity & GeoAnimatable> extends 
         // original speed: 0.045F
         // original amount: 0.25F
 
-        float glow = Math.max(minimumPulseAmount, Mth.cos(ageInTicks * pulseSpeed) * pulseAmount);
+        float glow = Math.max(minimumPulseAmount, Mth.cos(animatable.tickCount * pulseSpeed) * pulseAmount);
         renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
     }
 

@@ -19,56 +19,45 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
     @SuppressWarnings("unchecked")
     public RedstoneGolemRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new RedstoneGolemModel());
-        this.addRenderLayer(new GeoEyeLayer<RedstoneGolemEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_light.png")) {
+        this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_light.png")) {
             @Override
-            public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                               RedstoneGolemEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                               float ageInTicks, float netHeadYaw, float headPitch) {
+            public void render(PoseStack matrixStackIn, RedstoneGolemEntity entitylivingbaseIn, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+
                 if (!entitylivingbaseIn.isSummoningMines()) {
-                    super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks,
-                            ageInTicks, netHeadYaw, headPitch);
+                    super.render(matrixStackIn, entitylivingbaseIn, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+
                 }
             }
         });
-        this.addRenderLayer(new PulsatingGlowLayer<RedstoneGolemEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png"), 0.1F, 0.5F, 0.0F) {
+        this.addRenderLayer(new PulsatingGlowLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png"), 0.1F, 0.5F, 0.0F) {
             @Override
-            public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                               LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                               float ageInTicks, float netHeadYaw, float headPitch) {
+            public void render(PoseStack matrixStackIn, RedstoneGolemEntity entitylivingbaseIn, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
-                RedstoneGolemEntity redstoneGolem = ((RedstoneGolemEntity) entitylivingbaseIn);
 
-                if (!redstoneGolem.isSummoningMines()) {
-                    super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks,
-                            ageInTicks, netHeadYaw, headPitch);
+                if (!entitylivingbaseIn.isSummoningMines()) {
+                    super.render(matrixStackIn, entitylivingbaseIn, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
                 }
             }
         });
-        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png")) {
+        this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png")) {
             @Override
-            public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                               LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                               float ageInTicks, float netHeadYaw, float headPitch) {
+            public void render(PoseStack matrixStackIn, RedstoneGolemEntity entitylivingbaseIn, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
-                RedstoneGolemEntity redstoneGolem = ((RedstoneGolemEntity) entitylivingbaseIn);
+                if (entitylivingbaseIn.isSummoningMines()) {
+                    super.render(matrixStackIn, entitylivingbaseIn, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
 
-                if (redstoneGolem.isSummoningMines()) {
-                    super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks,
-                            ageInTicks, netHeadYaw, headPitch);
                 }
             }
         });
-        this.addRenderLayer(new PulsatingGlowLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_white_light.png"), 0.2F, 0.75F, 0.0F) {
+        this.addRenderLayer(new PulsatingGlowLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_white_light.png"), 0.2F, 0.75F, 0.0F) {
             @Override
-            public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
+            public void render(PoseStack poseStack, RedstoneGolemEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
                                MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick,
                                int packedLight, int packedOverlay) {
 
-                RedstoneGolemEntity redstoneGolem = ((RedstoneGolemEntity) entitylivingbaseIn);
-
-                if (redstoneGolem.isSummoningMines()) {
-                    super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks,
-                            ageInTicks, netHeadYaw, headPitch);
+                if (animatable.isSummoningMines()) {
+                    super.render(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight,
+                            packedOverlay);
                 }
             }
         });

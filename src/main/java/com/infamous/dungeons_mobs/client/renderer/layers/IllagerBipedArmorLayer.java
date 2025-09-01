@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractIllager;
@@ -25,9 +26,9 @@ public class IllagerBipedArmorLayer<T extends AbstractIllager, M extends Illager
     private final A armorModel;
     private final IllagerBipedModel<T> crossedArmsArmorModel;
 
-    public IllagerBipedArmorLayer(RenderLayerParent<T, M> p_i50936_1_, A p_i50936_2_, A p_i50936_3_, IllagerBipedModel<T> crossedArmsArmorModel) {
-        super(p_i50936_1_, p_i50936_2_, p_i50936_3_);
-        this.armorModel = p_i50936_3_;
+    public IllagerBipedArmorLayer(RenderLayerParent<T, M> pRenderer, A pInnerModel, A pOuterModel, ModelManager pModelManager, IllagerBipedModel<T> crossedArmsArmorModel) {
+        super(pRenderer, pInnerModel, pOuterModel, pModelManager);
+        this.armorModel = pOuterModel;
         this.crossedArmsArmorModel = crossedArmsArmorModel;
     }
 

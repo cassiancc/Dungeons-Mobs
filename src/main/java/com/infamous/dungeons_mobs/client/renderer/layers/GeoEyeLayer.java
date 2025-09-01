@@ -3,13 +3,16 @@ package com.infamous.dungeons_mobs.client.renderer.layers;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.ender.BlastlingEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
@@ -24,12 +27,12 @@ public class GeoEyeLayer<T extends LivingEntity & GeoAnimatable> extends GeoRend
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                       T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                       float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick,
+                       int packedLight, int packedOverlay) {
 
-        GeoModelProvider<T> geomodel = this.getEntityModel();
-        if (entitylivingbaseIn instanceof BlastlingEntity) {
+        GeoModel<T> geomodel = this.getGeoModel();
+        if (animatable instanceof BlastlingEntity) {
             renderModel(geomodel, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entitylivingbaseIn).flameTicks) % 3) + "_eyes.png"), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 1.0F, 1.0F, 1.0F);
         } else {
             renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 0.8F, 0.8F, 0.8F);
