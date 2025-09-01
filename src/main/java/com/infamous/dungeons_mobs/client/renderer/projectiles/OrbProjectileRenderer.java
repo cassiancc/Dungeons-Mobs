@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.client.renderer.projectiles;
 
 import com.infamous.dungeons_mobs.client.models.projectile.OrbProjectileModel;
 import com.infamous.dungeons_mobs.entities.projectiles.NecromancerOrbEntity;
+import com.infamous.dungeons_mobs.entities.summonables.SummonSpotEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -27,9 +29,8 @@ public class OrbProjectileRenderer extends GeoEntityRenderer<NecromancerOrbEntit
     }
 
     @Override
-    public void renderEarly(NecromancerOrbEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, NecromancerOrbEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
         float scaleFactor = 1.0F;
         if (animatable.lifeTime <= 3) {
             scaleFactor = 0.0F;

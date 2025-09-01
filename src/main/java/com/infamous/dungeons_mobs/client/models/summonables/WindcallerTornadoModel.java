@@ -33,9 +33,7 @@ public class WindcallerTornadoModel extends GeoModel<WindcallerTornadoEntity> {
     }
 
     @Override
-    public RenderType getRenderType(WindcallerTornadoEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
+    public RenderType getRenderType(WindcallerTornadoEntity animatable, ResourceLocation textureLocation) {
         return RenderType.entityTranslucent(textureLocation);
     }
 

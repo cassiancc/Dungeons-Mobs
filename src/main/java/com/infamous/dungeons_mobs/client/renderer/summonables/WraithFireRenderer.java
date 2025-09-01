@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WraithFireRenderer extends GeoEntityRenderer<WraithFireEntity> {
@@ -17,9 +18,8 @@ public class WraithFireRenderer extends GeoEntityRenderer<WraithFireEntity> {
     }
 
     @Override
-    public void renderEarly(WraithFireEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, WraithFireEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
         float scaleFactor = 1.0F;
         stackIn.scale(scaleFactor, scaleFactor, scaleFactor);
     }
@@ -27,12 +27,5 @@ public class WraithFireRenderer extends GeoEntityRenderer<WraithFireEntity> {
     @Override
     protected int getBlockLightLevel(WraithFireEntity p_225624_1_, BlockPos p_225624_2_) {
         return 15;
-    }
-
-    @Override
-    public RenderType getRenderType(WraithFireEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 }

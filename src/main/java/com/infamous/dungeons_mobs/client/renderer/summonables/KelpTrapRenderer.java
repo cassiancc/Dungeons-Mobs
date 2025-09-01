@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class KelpTrapRenderer extends GeoEntityRenderer<KelpTrapEntity> {
@@ -16,9 +17,8 @@ public class KelpTrapRenderer extends GeoEntityRenderer<KelpTrapEntity> {
     }
 
     @Override
-    public void renderEarly(KelpTrapEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, KelpTrapEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
         float scaleFactor = 2.0F;
         stackIn.scale(scaleFactor, scaleFactor, scaleFactor);
     }

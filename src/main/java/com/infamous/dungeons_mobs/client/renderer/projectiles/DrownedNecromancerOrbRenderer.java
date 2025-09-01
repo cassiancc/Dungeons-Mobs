@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DrownedNecromancerOrbRenderer extends GeoEntityRenderer<DrownedNecromancerOrbEntity> {
@@ -18,9 +19,8 @@ public class DrownedNecromancerOrbRenderer extends GeoEntityRenderer<DrownedNecr
     }
 
     @Override
-    public void renderEarly(DrownedNecromancerOrbEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, DrownedNecromancerOrbEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
 
         float scaleFactor = 1.0F;
         if (animatable.lifeTime <= 3) {

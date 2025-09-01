@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class TridentStormRenderer extends GeoEntityRenderer<TridentStormEntity> {
@@ -18,9 +19,8 @@ public class TridentStormRenderer extends GeoEntityRenderer<TridentStormEntity> 
     }
 
     @Override
-    public void renderEarly(TridentStormEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, TridentStormEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
 
         stackIn.mulPose(Axis.YP.rotationDegrees(animatable.getYRot() * ((float) Math.PI / 180F)));
 

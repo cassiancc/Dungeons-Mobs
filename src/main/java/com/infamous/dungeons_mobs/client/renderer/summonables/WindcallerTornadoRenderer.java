@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WindcallerTornadoRenderer extends GeoEntityRenderer<WindcallerTornadoEntity> {
@@ -17,9 +18,8 @@ public class WindcallerTornadoRenderer extends GeoEntityRenderer<WindcallerTorna
     }
 
     @Override
-    public void renderEarly(WindcallerTornadoEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, WindcallerTornadoEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
         if (!animatable.isBlast()) {
             float scaleFactor = 1.25F;
             stackIn.scale(scaleFactor, scaleFactor, scaleFactor);

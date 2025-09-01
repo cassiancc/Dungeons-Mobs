@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,8 +22,8 @@ public abstract class AbstractHorseEntityMixin extends Animal {
         super(type, worldIn);
     }
 
-    @Inject(at = @At("HEAD"), method = "travel", cancellable = true)
-    private void travel(Vec3 travelVector, CallbackInfo callbackInfo) {
+    @Inject(at = @At("HEAD"), method = "tickRidden", cancellable = true)
+    private void travel(Player pPlayer, Vec3 travelVector, CallbackInfo callbackInfo) {
         if (this.isAlive()) {
             if (this.isVehicle() && this.hasControllingPassenger() && this.isSaddled() && this.getControllingPassenger() instanceof Mob) {
                 //DungeonsMobs.LOGGER.info("Forcing saddled horse to follow rider's AI!");

@@ -5,6 +5,7 @@ package com.infamous.dungeons_mobs.client.models.redstone;// Made with Blockbenc
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.redstone.RedstoneMineEntity;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -30,6 +31,11 @@ public class RedstoneMineModel extends GeoModel<RedstoneMineEntity> {
     public void setCustomAnimations(RedstoneMineEntity entity, long uniqueID, AnimationState<RedstoneMineEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
+    }
+
+    @Override
+    public RenderType getRenderType(RedstoneMineEntity animatable, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
     }
 
 	/*public IBone getArm(HandSide p_191216_1_) {

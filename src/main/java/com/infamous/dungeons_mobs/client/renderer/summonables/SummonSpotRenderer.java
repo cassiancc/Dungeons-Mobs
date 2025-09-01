@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class SummonSpotRenderer extends GeoEntityRenderer<SummonSpotEntity> {
@@ -17,9 +18,8 @@ public class SummonSpotRenderer extends GeoEntityRenderer<SummonSpotEntity> {
     }
 
     @Override
-    public void renderEarly(SummonSpotEntity animatable, PoseStack stackIn, float partialTicks,
-                            MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                            float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stackIn, SummonSpotEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
+                          float alpha) {
         if (animatable.lifeTime <= 1) {
             float scaleFactor = 0.0F;
             stackIn.scale(scaleFactor, scaleFactor, scaleFactor);

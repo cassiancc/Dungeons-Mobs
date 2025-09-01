@@ -30,10 +30,4 @@ public class RedstoneMineRenderer extends GeoEntityRenderer<RedstoneMineEntity> 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
-    @Override
-    public RenderType getRenderType(RedstoneMineEntity animatable, float partialTicks, PoseStack stack,
-                                    MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                    ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
 }

@@ -35,7 +35,7 @@ public class GeomancerConstructModel extends GeoModel<ConstructEntity> {
     }
 
     @Override
-    public RenderType getRenderType(GeomancerWallEntity animatable, ResourceLocation textureLocation) {
+    public RenderType getRenderType(ConstructEntity animatable, ResourceLocation textureLocation) {
         return RenderType.entityTranslucent(textureLocation);
     }
 
