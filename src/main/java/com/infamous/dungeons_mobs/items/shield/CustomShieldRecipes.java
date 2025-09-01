@@ -16,8 +16,8 @@ public class CustomShieldRecipes extends CustomRecipe {
 
     public static final RecipeSerializer<CustomShieldRecipes> SERIALIZER = new SimpleCraftingRecipeSerializer<>(CustomShieldRecipes::new);
 
-    public CustomShieldRecipes(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.EQUIPMENT);
+    public CustomShieldRecipes(ResourceLocation idIn, CraftingBookCategory pCategory) {
+        super(idIn, pCategory);
     }
 
     public boolean matches(CraftingContainer inv, Level worldIn) {

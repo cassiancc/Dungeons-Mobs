@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.mixin;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -12,28 +13,23 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractHorse.class)
-public abstract class AbstractHorseEntityMixin extends Animal {
+@Mixin(LivingEntity.class)
+public abstract class AbstractHorseEntityMixin  {
 
-//    @Shadow @Nullable public abstract Entity getControllingPassenger();
+    @Shadow
+    public abstract boolean isAlive();
 
-    protected AbstractHorseEntityMixin(EntityType<? extends Animal> type, Level worldIn) {
-        super(type, worldIn);
-    }
-
-    @Inject(at = @At("HEAD"), method = "tickRidden", cancellable = true)
-    private void travel(Player pPlayer, Vec3 travelVector, CallbackInfo callbackInfo) {
-        if (this.isAlive()) {
-            if (this.isVehicle() && this.hasControllingPassenger() && this.isSaddled() && this.getControllingPassenger() instanceof Mob) {
+    @Inject(at = @At("HEAD"), method = "getFlyingSpeed", cancellable = true)
+    private void travel(CallbackInfoReturnable<Float> cir) {
+        var e = (LivingEntity) (Object) this;
+        if (this.isAlive() && e instanceof AbstractHorse horse) {
+            if (horse.isVehicle() && horse.hasControllingPassenger() && horse.isSaddled() && horse.getControllingPassenger() instanceof Mob) {
                 //DungeonsMobs.LOGGER.info("Forcing saddled horse to follow rider's AI!");
-                this.flyingSpeed = 0.02F;
-                super.travel(travelVector);
-                callbackInfo.cancel();
+                cir.setReturnValue(0.02F);
+                cir.cancel();
             }
         }
     }
-
-    @Shadow
-    public abstract boolean isSaddled();
 }

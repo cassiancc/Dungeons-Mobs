@@ -144,7 +144,7 @@ dependencies {
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
     runtimeOnly    fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     compileOnly    fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
-
+    implementation "com.eliotlash.mclib:mclib:20"
     //Extras
     runtimeOnly    fg.deobf("dungeons_gear:dungeons_gear:${dungeons_gear_version}")
 //    runtimeOnly    fg.deobf("curse.maven:illagersweararmor-407488:${illagers_wear_armor_version}")
