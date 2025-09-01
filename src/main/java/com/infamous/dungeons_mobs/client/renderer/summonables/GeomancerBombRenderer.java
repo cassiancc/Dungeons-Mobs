@@ -10,29 +10,32 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class GeomancerBombRenderer extends GeoEntityRenderer<GeomancerBombEntity> {
+public class GeomancerBombRenderer extends GeoEntityRenderer {
     public GeomancerBombRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeomancerConstructModel());
         this.addRenderLayer(new PulsatingGlowLayer<GeomancerBombEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png"), 0.5F, 0.6F, 0.2F) {
             @Override
-            public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                               GeomancerBombEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-                               float ageInTicks, float netHeadYaw, float headPitch) {
+            public void render(PoseStack matrixStackIn, GeomancerBombEntity entity, BakedGeoModel model, RenderType type, MultiBufferSource bufferIn, VertexConsumer vertexConsumer, float limbSwing, int i, int i2) {
 
-                if (entitylivingbaseIn.getLifeTicks() < 60 && entitylivingbaseIn.getLifeTicks() >= 30) {
+                if (entity.getLifeTicks() < 60 && entity.getLifeTicks() >= 30) {
                     textureLocation = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb_eyes_1.png");
-                    super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks,
-                            ageInTicks, netHeadYaw, headPitch);
-                } else if (entitylivingbaseIn.getLifeTicks() < 30 && entitylivingbaseIn.getLifeTicks() >= 0) {
+                    super.render(matrixStackIn, entity, model, type, bufferIn, vertexConsumer, limbSwing, i, i2);
+                } else if (entity.getLifeTicks() < 30 && entity.getLifeTicks() >= 0) {
                     pulseSpeed = 0.8F;
                     textureLocation = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb_eyes_2.png");
-                    super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks,
-                            ageInTicks, netHeadYaw, headPitch);
+                    super.render(matrixStackIn, entity, model, type, bufferIn, vertexConsumer, limbSwing, i, i2);
                 }
             }
         });
+    }
+
+    @Override
+    public Entity getAnimatable() {
+        return this.animatable;
     }
 
     protected void applyRotations(GeomancerBombEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
@@ -41,7 +44,8 @@ public class GeomancerBombRenderer extends GeoEntityRenderer<GeomancerBombEntity
         super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
     }
 
-    @Override
+    //FIXME
+//    @Override
     public RenderType getRenderType(GeomancerBombEntity animatable, float partialTicks, PoseStack stack,
                                     MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                                     ResourceLocation textureLocation) {

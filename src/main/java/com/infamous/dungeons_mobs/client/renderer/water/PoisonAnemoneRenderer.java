@@ -7,13 +7,14 @@ import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
 import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 @OnlyIn(Dist.CLIENT)
-public class PoisonAnemoneRenderer extends AbstractVineRenderer {
+public class PoisonAnemoneRenderer extends AbstractVineRenderer<PoisonQuillVineModel> {
 
     private static final ResourceLocation POISON_ANEMONE_TEXTURE = new ResourceLocation(MODID, "textures/entity/ocean/poison_anemone.png");
 
