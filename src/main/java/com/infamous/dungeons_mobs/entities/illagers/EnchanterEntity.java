@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.entities.illagers;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.infamous.dungeons_libraries.utils.AreaOfEffectHelper;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
@@ -163,10 +164,10 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
     }
 
     private void clearEntityMobEnchantments(Monster entity) {
-        entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(enchantableCapability -> {
-            enchantableCapability.removeAllMobEnchant(entity);
+        if (entity instanceof IEnchantCap enchantCap) {
+            enchantCap.getEnchantCap().removeAllMobEnchant(entity);
             entity.refreshDimensions();
-        });
+        }
     }
 
     private boolean isValidEnchantmentTarget(Monster monsterEntity) {
@@ -280,8 +281,8 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
                 return false;
             } else {
                 List<LivingEntity> list = AreaOfEffectHelper.getNearbyEnemies(EnchanterEntity.this, 16, EnchanterEntity.this.level(), livingEntity -> {
-                    if (livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).isPresent()) {
-                        MobEnchantCapability mobEnchantCapability = livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).resolve().get();
+                    if (livingEntity instanceof IEnchantCap enchantCap) {
+                        MobEnchantCapability mobEnchantCapability = enchantCap.getEnchantCap();
                         return !mobEnchantCapability.hasEnchant() && livingEntity instanceof Monster;
                     } else {
                         return false;
@@ -309,11 +310,12 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
         protected void performSpellCasting() {
             Monster selectedMonsterEntity = EnchanterEntity.this.getEnchantmentTarget();
             if (selectedMonsterEntity != null && selectedMonsterEntity.isAlive()) {
-                selectedMonsterEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
+                if (selectedMonsterEntity instanceof IEnchantCap enchantCap) {
+                    MobEnchantCapability cap = enchantCap.getEnchantCap();
                     cap.addMobEnchant(selectedMonsterEntity, STRONG.get(), 2);
                     cap.addMobEnchant(selectedMonsterEntity, PROTECTION.get(), 2);
                     selectedMonsterEntity.refreshDimensions();
-                });
+                }
                 EnchanterEntity.this.addEnchantmentTarget(selectedMonsterEntity);
             }
         }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import baguchan.enchantwithmob.api.IEnchantCap;
 import com.infamous.dungeons_libraries.data.util.MergeableCodecDataManager;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 
@@ -60,12 +61,13 @@ public class AncientDataHelper {
     public static String getAncientName(LivingEntity entity) {
         Set<String> adjectives = new HashSet<>();
         Set<String> nouns = new HashSet<>();
-        MobEnchantCapability enchantCap = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).orElse(new MobEnchantCapability());
-        enchantCap.getMobEnchants().forEach(mobEnchantment -> {
-            MobEnchantmentAncientData mobEnchantmentAncientData = getMobEnchantmentAncientData(MobEnchants.MOB_ENCHANT_REGISTRY.getKey(mobEnchantment.getMobEnchant()));
-            adjectives.addAll(mobEnchantmentAncientData.getAdjectives());
-            nouns.addAll(mobEnchantmentAncientData.getNouns());
-        });
+        if (entity instanceof IEnchantCap enchantCap) {
+            enchantCap.getEnchantCap().getMobEnchants().forEach(mobEnchantment -> {
+                MobEnchantmentAncientData mobEnchantmentAncientData = getMobEnchantmentAncientData(MobEnchants.getRegistry().get().getKey(mobEnchantment.getMobEnchant()));
+                adjectives.addAll(mobEnchantmentAncientData.getAdjectives());
+                nouns.addAll(mobEnchantmentAncientData.getNouns());
+            });
+        }
         MobAncientData mobAncientData = getMobAncientData(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
         adjectives.addAll(mobAncientData.getAdjectives());
         nouns.addAll(mobAncientData.getNouns());

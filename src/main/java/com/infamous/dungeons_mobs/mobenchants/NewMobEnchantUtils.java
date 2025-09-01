@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.mobenchants;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -12,14 +13,12 @@ public class NewMobEnchantUtils {
 
     public static void executeIfPresentWithLevel(LivingEntity entity, MobEnchant mobEnchantment, Consumer<Integer> consumer) {
         if (entity != null) {
-            entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent((cap) -> {
-                int level = getMobEnchantLevelFromHandler(cap.getMobEnchants(), mobEnchantment);
+            if (entity instanceof IEnchantCap enchantCap) {
+                int level = getMobEnchantLevelFromHandler(enchantCap.getEnchantCap().getMobEnchants(), mobEnchantment);
                 if (level > 0) {
                     consumer.accept(level);
                 }
-
-            });
+            }
         }
-
     }
 }
