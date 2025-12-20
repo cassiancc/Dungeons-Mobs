@@ -45,7 +45,11 @@ public class DungeonsMobsStructureModifiers {
                     StructureSettingsBuilder.StructureSpawnOverrideBuilder spawnOverrides = structureSettings.getSpawnOverrides(mobCategory);
                     if(spawnOverrides != null){
                         List<MobSpawnSettings.SpawnerData> spawns = spawnOverrides.getSpawns();
-                        spawns.removeIf(spawnerData -> this.entityTypes.contains(ForgeRegistries.ENTITY_TYPES.getHolder(spawnerData.type).get()));
+                        spawns.forEach(spawnerData -> {
+                            if (this.entityTypes.contains(ForgeRegistries.ENTITY_TYPES.getHolder(spawnerData.type).get())) {
+                                spawnOverrides.removeSpawn(spawnerData);
+                            }
+                        });
                     }
                 }
             }
