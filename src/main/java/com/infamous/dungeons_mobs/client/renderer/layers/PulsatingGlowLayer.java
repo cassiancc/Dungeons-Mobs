@@ -43,12 +43,12 @@ public class PulsatingGlowLayer<T extends LivingEntity & GeoAnimatable> extends 
         // original amount: 0.25F
 
         float glow = Math.max(minimumPulseAmount, Mth.cos(animatable.tickCount * pulseSpeed) * pulseAmount);
-        renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
+//        renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, glow, glow, glow);
     }
 
-    @Override
-    public RenderType getRenderType(ResourceLocation textureLocation) {
-        return RenderType.eyes(textureLocation);
-    }
+//    @Override
+//    public RenderType getRenderType(ResourceLocation textureLocation) {
+//        return RenderType.eyes(textureLocation);
+//    }
 
 }
