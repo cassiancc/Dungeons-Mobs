@@ -1,226 +1,134 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        jcenter()
-        mavenCentral()
-        maven { url = 'https://dist.creeper.host/Sponge/maven' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-    }
-    dependencies {
-        classpath(group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true) { exclude group: 'org.apache.logging.log4j' }
-        classpath 'org.parchmentmc:librarian:1.+'
-        classpath 'org.apache.logging.log4j:log4j-api:2.11.2'
-        classpath 'org.apache.logging.log4j:log4j-core:2.11.2'
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
+plugins {
+    id 'dev.architectury.loom' version '1.11-SNAPSHOT'
+    id 'maven-publish'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle'
+group = project.maven_group
+version = project.mod_version
 
-version = "${mc_version}-${mod_version}"
-group = 'com.infamous.dungeons_mobs' 
-archivesBaseName = "${modid}"
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-minecraft {
-    mappings channel: "parchment", version:"${parchment_version}"
-//  makeObfSourceJar = false
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            arg "-mixin.config=dungeons_mobs.mixins.json"
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            mods {
-                dungeons_mobs {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            arg "-mixin.config=dungeons_mobs.mixins.json"
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            mods {
-                dungeons_mobs {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            properties 'mixin.env.remapRefMap': 'true'
-            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
-
-            args '--mod', 'dungeons_mobs', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                dungeons_mobs {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+base {
+    archivesName = project.archives_name
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+loom {
+    silentMojangMappingsLicense()
 
-mixin {
-	add sourceSets.main, 'dungeons_mobs.refmap.json'
-	config 'dungeons_mobs.mixins.json'
-
-	debug.export = true
+    forge {
+        mixinConfig 'dungeons_mobs.mixins.json'
+        mixinConfig 'dungeons_libraries.mixins.json'
+    }
 }
 
 repositories {
-    maven {
-        name = "CurseForge Maven" //Base
-		url = "https://www.cursemaven.com"
-        content {
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Illusive Soulworks maven"
+                url = "https://maven.theillusivec4.top/"
+            }
+        }
+        filter {
+            includeGroup("top.theillusivec4.curios")
+        }
+    }
+    // GeckoLib
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'GeckoLib'
+                url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            }
+        }
+        filter {
+            includeGroup("software.bernie.geckolib")
+            includeGroup("com.eliotlash.mclib")
+        }
+    }
+    // Parchment Mappings
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'ParchmentMC'
+                url = 'https://maven.parchmentmc.org'
+            }
+        }
+        filter {
+            includeGroup("org.parchmentmc.data")
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
             includeGroup "curse.maven"
         }
-	}
-    maven { 
-	    name = "Shedaniel Maven" //REI + Cloth Config
-	    url "https://maven.shedaniel.me/" 
-	}
-	maven {
-	    name = "Architectury Maven" //Architectury
-	    url "https://maven.architectury.dev/" 
-	}
-   	maven {
-		name = "GeckoLib Maven" //Geckolib
-		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-	}
-    maven { 
-        name = "IllusiveC4 Maven" //Curios
-        url = "https://maven.theillusivec4.top/" 
-    }
-    maven {
-        // location of the maven that hosts JEI files since January 2023
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
-    flatDir {
-        dirs 'mods'
     }
 }
 
 dependencies {
-    //Base
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
-    //Libraries
-    implementation fg.deobf("dungeons_libraries:dungeons_libraries:${mc_version}-${libraries_version}")
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
-    runtimeOnly    fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
-    compileOnly    fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
-    implementation "com.eliotlash.mclib:mclib:20"
-    //Extras
-//    runtimeOnly    fg.deobf("dungeons_gear:dungeons_gear:${dungeons_gear_version}")
-//    runtimeOnly    fg.deobf("curse.maven:illagersweararmor-407488:${illagers_wear_armor_version}")
-
-    implementation fg.deobf("curse.maven:enchantwithmob-913523:${enchant_with_mob_version}")
-    implementation fg.deobf("curse.maven:bagus-lib-866533:6944371")
-
-    implementation fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-    implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:${jer_version}")
-	implementation fg.deobf("curse.maven:just-enough-effect-descriptions-jeed-532286:${jeed_version}")
-
-    implementation fg.deobf("curse.maven:appleskin-248787:${appleskin_version}")
-
-    implementation fg.deobf("curse.maven:configured-457570:${configured_version}")
-    implementation fg.deobf("curse.maven:catalogue-459701:${catalogue_version}")
-
-    runtimeOnly fg.deobf("curse.maven:mob-battle-mod-version-268746:${mob_battle_version}")
-
-    runtimeOnly fg.deobf("curse.maven:spark-361579:${spark_version}")
-
-//    implementation fg.deobf("curse.maven:feathers-699933:4355018")
-
-//  implementation  fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rei_version}")
-//  implementation  fg.deobf("curse.maven:roughly-enough-resources-325625:${rer_version}")
-
-//  implementation  fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
-//  implementation  fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
-
-//  implementation fg.deobf("mutantmore-test:mutantmore-test:11")
-
-//  runtimeOnly    fg.deobf("curse.maven:blame-406201:3440093")
-//  runtimeOnly    fg.deobf("curse.maven:neat-238372:3182258")
-
-//  runtimeOnly    fg.deobf("rubidium:rubidium:0.2.10")
-//  runtimeOnly    fg.deobf("oculus:oculus:1.2.6")
-
-//  runtimeOnly    fg.deobf("curse.maven:dungeonsgear-401247:3889856")
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
-        jarJar.ranged(it, "[0.5.0,)")
+    minecraft "net.minecraft:minecraft:$project.minecraft_version"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
     }
-}
+    forge "net.minecraftforge:forge:$project.forge_version"
+    modImplementation("top.theillusivec4.curios:curios-forge:${curios_version}")
+    modImplementation("software.bernie.geckolib:geckolib-forge-1.20.1:$geckolib_version")
+    implementation("com.eliotlash.mclib:mclib:20")
+    forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
+    modImplementation("curse.maven:enchantwithmob-913523:${enchant_with_mob_version}")
+    modImplementation("curse.maven:bagus-lib-866533:6944371")
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title": project.name,
-                "Specification-Vendor": "Infamous Mods",
-                "Specification-Version": "1", 
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"Infamous Mods",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "dungeons_mobs.mixins.json"
-        ])
-    }
+    modImplementation("curse.maven:configured-457570:${configured_version}")
+    modImplementation("curse.maven:catalogue-459701:${catalogue_version}")
+    // MixinExtras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
 }
 
 processResources {
-	exclude '**/.cache/'
+    inputs.property 'version', project.version
 
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    filesMatching('META-INF/mods.toml') {
+        expand version: inputs.properties.version
+    }
 }
 
-jar.finalizedBy('reobfJar')
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
 
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+}
+
+// Configure Maven publishing.
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
+            from components.java
         }
     }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
 }

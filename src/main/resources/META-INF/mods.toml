@@ -1,19 +1,28 @@
 modLoader="javafml" 
 loaderVersion="[43,)" 
 license="MIT License"
-issueTrackerURL="http://my.issue.tracker/"
+issueTrackerURL="https://github.com/cassiancc/Dungeons-Mobs"
 
 [[mods]]
 modId="dungeons_mobs"
-version="${file.jarVersion}" 
-displayName="Dungeons Mobs" 
+version="${version}"
+displayName="Dungeons Mobs: Legacy"
 # updateJSONURL="http://myurl.me/" 
 # displayURL="http://example.com/"
-logoFile="examplemod.png" 
-credits="Infamous Mods" 
-authors="the_infamous_1" # TODO maybe replace it with the dev names here(?)
+logoFile="logo.png"
+credits="Infamous Mods"
+authors="the_infamous_1, cassiancc"
 description='''
+A port of Minecraft: Dungeons mobs to Minecraft: Java Edition, updated to 1.20.1.
 '''
+[[mods]]
+modId="dungeons_libraries" #mandatory
+version="${version}" #mandatory
+displayName="Dungeons Libraries" #mandatory
+logoFile="logo.png"
+credits="" #optional
+authors="the_infamous_1, Patrigan, cassiancc" #optional
+description='''Library mod for the Dungeons Suite. Brings a lot of tools for modmakers to spice up their combat.'''
 
 [[dependencies.dungeons_mobs]] 
     modId="forge"
@@ -40,13 +49,6 @@ description='''
     modId="curios"
     mandatory=false
     versionRange="[1.19.2-5.1.1.0,)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.dungeons_mobs]] 
-    modId="dungeons_libraries" 
-    mandatory=true 
-    versionRange="[1.19.2-3.0.10-beta,)"
     ordering="NONE"
     side="BOTH"
 

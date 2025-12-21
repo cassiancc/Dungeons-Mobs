@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "package": "com.infamous.dungeons_libraries.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8.4",
+  "refmap": "dungeons_libraries.refmap.json",
+  "mixins": [
+    "AbstractSkeletonMixin",
+    "ArmorItemAccessor",
+    "ArmorMaterialsAccessor",
+    "AxeItemAccessor",
+    "BeeMixin",
+    "BowItemMixin",
+    "BrainAccessor",
+    "CooldownAccessor",
+    "CrossbowItemInvoker",
+    "CrossbowItemMixin",
+    "EnchantmentHelperMixin",
+    "ItemAccessor",
+    "LivingEntityMixin",
+    "MobInvoker",
+    "MobMixin",
+    "NearestAttackableTargetGoalAccessor",
+    "PiglinMixin",
+    "TargetingConditionsAccessor",
+    "TieredItemAccessor"
+  ],
+  "client": [
+    "AbstractClientPlayerMixin",
+    "GeoEntityRendererMixin",
+    "ItemInHandRendererMixin",
+    "LivingRendererMixin",
+    "MinecraftMixin",
+    "SkeletonModelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
