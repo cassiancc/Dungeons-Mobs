@@ -14,6 +14,7 @@ import com.infamous.dungeons_mobs.tags.EntityTags;
 import com.infamous.dungeons_mobs.worldgen.EntitySpawnPlacements;
 import com.infamous.dungeons_mobs.worldgen.RaidEntries;
 import com.infamous.dungeons_mobs.worldgen.SensorMapModifier;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -29,6 +30,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,12 +45,13 @@ public class DungeonsMobs {
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "dungeons_mobs";
-    public static final CreativeModeTab DUNGEONS_MOBS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobs")).displayItems(((pParameters, pOutput) -> {
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final CreativeModeTab DUNGEONS_MOBS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobs")).icon(()-> SPAWN_EGGS.getEntries().iterator().next().get().getDefaultInstance()).displayItems(((pParameters, pOutput) -> {
         for (RegistryObject<Item> entry : SPAWN_EGGS.getEntries()) {
             pOutput.accept(entry.get());
         }
     })).build();
-    public static final CreativeModeTab DUNGEONS_MOBS_ITEMS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobsItems")).displayItems(((pParameters, pOutput) -> {
+    public static final CreativeModeTab DUNGEONS_MOBS_ITEMS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobsItems")).icon(()-> ModItems.ITEMS.getEntries().iterator().next().get().getDefaultInstance()).displayItems(((pParameters, pOutput) -> {
         for (RegistryObject<Item> entry : ModItems.ITEMS.getEntries()) {
             pOutput.accept(entry.get());
         }
@@ -59,10 +63,12 @@ public class DungeonsMobs {
     	GeckoLib.initialize();
         // Register the setup method for modloading
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext fmlJavaModLoadingContext = FMLJavaModLoadingContext.get();
+        final IEventBus modEventBus = fmlJavaModLoadingContext.getModEventBus();
+        fmlJavaModLoadingContext.getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
+        fmlJavaModLoadingContext.getModEventBus().addListener(this::doClientStuff);
+        fmlJavaModLoadingContext.getModEventBus().addListener(this::onLoadComplete);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -71,7 +77,11 @@ public class DungeonsMobs {
         EntityTags.register();
         BiomeTags.register();
 
-        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        CREATIVE_TABS.register("mobs", ()-> DUNGEONS_MOBS);
+        CREATIVE_TABS.register("items", ()->DUNGEONS_MOBS_ITEMS);
+        CREATIVE_TABS.register(modEventBus);
+
+
         ModSoundEvents.SOUNDS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);

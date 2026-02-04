@@ -88,7 +88,6 @@ dependencies {
     modImplementation("curse.maven:bagus-lib-866533:6944371")
 
     modImplementation("curse.maven:configured-457570:${configured_version}")
-    modImplementation("curse.maven:catalogue-459701:${catalogue_version}")
     // MixinExtras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))

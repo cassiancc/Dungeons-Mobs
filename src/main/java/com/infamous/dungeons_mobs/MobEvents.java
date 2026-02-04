@@ -70,7 +70,7 @@ public class MobEvents {
         LivingEntity livingEntity = event.getEntity();
         if (livingEntity instanceof Mob && ConvertibleHelper.convertsInWater((Mob) livingEntity)) {
             Mob mob = (Mob) livingEntity;
-            if (!mob.level().isClientSide && mob.isAlive() && !mob.isNoAi()) {
+            if (!mob.level().isClientSide() && mob.isAlive() && !mob.isNoAi()) {
                 Convertible convertibleCap = ConvertibleHelper.getConvertibleCapability(mob);
                 if (convertibleCap == null) return;
 
