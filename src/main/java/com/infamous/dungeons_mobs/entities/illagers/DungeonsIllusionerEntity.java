@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.entities.illagers;
 
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper;
 import com.infamous.dungeons_mobs.entities.summonables.SummonSpotEntity;
 import com.infamous.dungeons_mobs.goals.ApproachTargetGoal;
@@ -218,7 +219,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
         super.populateDefaultEquipmentSlots(random, p_180481_1_);
         equipArmorSet(ModItems.ILLUSIONER_ARMOR, this);
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item SHORTBOW = ForgeRegistries.ITEMS.getValue(new ResourceLocation("dungeons_gear", "shortbow"));
+            Item SHORTBOW = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("shortbow"));
 
             SpawnEquipmentHelper.equipMainhand(SHORTBOW.getDefaultInstance(), this);
         } else {

@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.client.models.projectile;
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.projectiles.NecromancerOrbEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,17 +22,17 @@ public class OrbProjectileModel extends GeoModel<NecromancerOrbEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(NecromancerOrbEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/necromancer_orb.animation.json");
+        return GeneralUtil.mobsLoc( "animations/necromancer_orb.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(NecromancerOrbEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/necromancer_orb.geo.json");
+        return GeneralUtil.mobsLoc( "geo/necromancer_orb.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(NecromancerOrbEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/projectile/orb_projectile_" + entity.textureChange % 3 + ".png");
+        return GeneralUtil.mobsLoc( "textures/entity/projectile/orb_projectile_" + entity.textureChange % 3 + ".png");
     }
 
     @Override

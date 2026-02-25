@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.EnchanterEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -13,18 +14,18 @@ public class EnchanterModel extends GeoModel<EnchanterEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(EnchanterEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/enchanter.animation.json");
+        return GeneralUtil.mobsLoc( "animations/enchanter.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(EnchanterEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/enchanter.geo.json");
+        return GeneralUtil.mobsLoc( "geo/enchanter.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(EnchanterEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/enchanter/enchanter.png");
+        return GeneralUtil.mobsLoc( "textures/entity/enchanter/enchanter.png");
     }
 
     @Override

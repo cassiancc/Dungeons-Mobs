@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.jungle.WhispererEntity;
@@ -22,17 +23,17 @@ public class WhispererModel<T extends WhispererEntity> extends GeoModel<T> {
 
     @Override
     public ResourceLocation getAnimationResource(T entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/whisperer.animation.json");
+        return GeneralUtil.mobsLoc( "animations/whisperer.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(T entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/whisperer.geo.json");
+        return GeneralUtil.mobsLoc( "geo/whisperer.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(T entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/whisperer.png");
+        return GeneralUtil.mobsLoc( "textures/entity/jungle/whisperer.png");
     }
 
     @Override

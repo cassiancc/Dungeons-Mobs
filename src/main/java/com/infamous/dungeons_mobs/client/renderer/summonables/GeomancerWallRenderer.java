@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class GeomancerWallRenderer extends GeoEntityRenderer<GeomancerWallEntity> {
     public GeomancerWallRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeomancerConstructModel());
-        //this.addLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/enchanter/enchanter_eyes.png")));
+        //this.addLayer(new GeoEyeLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/enchanter/enchanter_eyes.png")));
         //this.addLayer(new GeoHeldItemLayer<>(this, 0.0, 0.0, 0.5));
     }
 

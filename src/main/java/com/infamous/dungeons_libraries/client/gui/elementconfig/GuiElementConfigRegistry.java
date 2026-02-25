@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.client.gui.elementconfig;
 
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -10,7 +11,7 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 //@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GuiElementConfigRegistry {
-    public static final ResourceLocation ELEMENT_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gui/element");
+    public static final ResourceLocation ELEMENT_CONFIG_BUILTIN_RESOURCELOCATION = GeneralUtil.loc(MODID, "gui/element");
 
     public static final CodecJsonDataManager<GuiElementConfig> GUI_ELEMENT_CONFIGS = new CodecJsonDataManager<>("gui/element", GuiElementConfig.CODEC);
 

@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
 import com.infamous.dungeons_libraries.summon.SummonHelper;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
 import com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper;
 import com.infamous.dungeons_mobs.entities.projectiles.DrownedNecromancerOrbEntity;
@@ -540,7 +541,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
 
                 int randomIndex = mob.getRandom().nextInt(necromancerMobSummons.size());
                 String randomMobID = necromancerMobSummons.get(randomIndex);
-                entityType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(randomMobID));
+                entityType = ForgeRegistries.ENTITY_TYPES.getValue(GeneralUtil.parse(randomMobID));
             }
             if (entityType == null) {
                 entityType = EntityType.DROWNED;
@@ -877,7 +878,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
 
                 int randomIndex = mob.getRandom().nextInt(necromancerMobSummons.size());
                 String randomMobID = necromancerMobSummons.get(randomIndex);
-                entityType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(randomMobID));
+                entityType = ForgeRegistries.ENTITY_TYPES.getValue(GeneralUtil.parse(randomMobID));
             }
             if (entityType == null) {
                 entityType = EntityType.DROWNED;

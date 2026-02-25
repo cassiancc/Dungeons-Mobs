@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.jungle.QuickGrowingVineModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -14,6 +15,6 @@ public class QuickGrowingVineRenderer extends AbstractVineRenderer<QuickGrowingV
     @SuppressWarnings("unchecked")
     public QuickGrowingVineRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new QuickGrowingVineModel());
-        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/quick_growing_vine_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, GeneralUtil.mobsLoc( "textures/entity/jungle/quick_growing_vine_glow.png")));
     }
 }

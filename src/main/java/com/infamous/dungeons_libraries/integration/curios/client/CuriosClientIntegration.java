@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.*;
 
-@Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CuriosClientIntegration {
 
     @SubscribeEvent

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.items.shield;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.armor.VanguardShieldModel;
 import com.infamous.dungeons_mobs.items.ColoredTridentItem;
@@ -99,12 +100,12 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
 
     public static ResourceLocation getTridentTexture(DyeColor dyeColor) {
         String path = String.format("textures/entity/%s_trident.png", dyeColor.getName());
-        return new ResourceLocation(DungeonsMobs.MODID, path);
+        return GeneralUtil.mobsLoc( path);
     }
 
     public static ModelResourceLocation getTridentMRL(DyeColor dyeColor, boolean inHand) {
         String path = String.format("%s_trident%s", dyeColor.getName(), inHand ? "_in_hand" : "");
-        ResourceLocation resourceLoc = new ResourceLocation(DungeonsMobs.MODID, path);
+        ResourceLocation resourceLoc = GeneralUtil.mobsLoc( path);
         return new ModelResourceLocation(resourceLoc, "inventory");
     }
 

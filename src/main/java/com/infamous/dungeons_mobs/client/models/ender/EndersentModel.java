@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.ender;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.ender.EndersentEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -14,17 +15,17 @@ public class EndersentModel extends GeoModel<EndersentEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(EndersentEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/endersent.animation.json");
+        return GeneralUtil.mobsLoc( "animations/endersent.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(EndersentEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/endersent.geo.json");
+        return GeneralUtil.mobsLoc( "geo/endersent.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(EndersentEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/endersent.png");
+        return GeneralUtil.mobsLoc( "textures/entity/ender/endersent.png");
     }
 
     @Override

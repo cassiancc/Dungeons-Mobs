@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.undead;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.undead.NecromancerModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.PulsatingGlowLayer;
@@ -15,7 +16,7 @@ public class NecromancerRenderer extends DynamicGeoEntityRenderer<NecromancerEnt
     @SuppressWarnings("unchecked")
     public NecromancerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new NecromancerModel());
-        this.addRenderLayer(new PulsatingGlowLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/skeleton/necromancer_eyes.png"), 0.2F, 1.0F, 0.5F));
+        this.addRenderLayer(new PulsatingGlowLayer(this, GeneralUtil.mobsLoc( "textures/entity/skeleton/necromancer_eyes.png"), 0.2F, 1.0F, 0.5F));
     }
 
     @Override

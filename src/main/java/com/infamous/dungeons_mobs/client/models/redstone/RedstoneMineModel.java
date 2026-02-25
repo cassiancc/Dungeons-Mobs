@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.client.models.redstone;// Made with Blockbenc
 // Paste this class into your mod and generate all required imports
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.redstone.RedstoneMineEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -14,17 +15,17 @@ public class RedstoneMineModel extends GeoModel<RedstoneMineEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(RedstoneMineEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/redstone_mine.animation.json");
+        return GeneralUtil.mobsLoc( "animations/redstone_mine.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(RedstoneMineEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/redstone_mine.geo.json");
+        return GeneralUtil.mobsLoc( "geo/redstone_mine.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(RedstoneMineEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_mine.png");
+        return GeneralUtil.mobsLoc( "textures/entity/redstone/redstone_mine.png");
     }
 
     @Override

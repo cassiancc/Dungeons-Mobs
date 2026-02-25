@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.MountaineerEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -18,17 +19,17 @@ public class MountaineerModel extends GeoModel<MountaineerEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(MountaineerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/vindicator.animation.json");
+        return GeneralUtil.mobsLoc( "animations/vindicator.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(MountaineerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geo_illager.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geo_illager.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MountaineerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/mountaineer.png");
+        return GeneralUtil.mobsLoc( "textures/entity/illager/mountaineer.png");
     }
 
     @Override

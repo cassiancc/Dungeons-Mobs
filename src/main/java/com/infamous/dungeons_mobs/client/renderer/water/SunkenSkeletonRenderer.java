@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.water;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.undead.SunkenSkeletonModel;
 import com.infamous.dungeons_mobs.entities.water.SunkenSkeletonEntity;
@@ -22,9 +23,9 @@ import static net.minecraft.client.model.geom.ModelLayers.SKELETON_OUTER_ARMOR;
 
 @OnlyIn(Dist.CLIENT)
 public class SunkenSkeletonRenderer<T extends SunkenSkeletonEntity> extends HumanoidMobRenderer<T, SunkenSkeletonModel<T>> {
-    private static final ResourceLocation SUNKEN_SKELETON_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/sunken_skeleton.png");
-    private static final ResourceLocation RED_CORAL_ARMORED_SUNKEN_SKELETON_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/red_coral_armored_sunken_skeleton.png");
-    private static final ResourceLocation YELLOW_CORAL_ARMORED_SUNKEN_SKELETON_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/yellow_coral_armored_sunken_skeleton.png");
+    private static final ResourceLocation SUNKEN_SKELETON_LOCATION = GeneralUtil.mobsLoc( "textures/entity/ocean/sunken_skeleton.png");
+    private static final ResourceLocation RED_CORAL_ARMORED_SUNKEN_SKELETON_LOCATION = GeneralUtil.mobsLoc( "textures/entity/ocean/red_coral_armored_sunken_skeleton.png");
+    private static final ResourceLocation YELLOW_CORAL_ARMORED_SUNKEN_SKELETON_LOCATION = GeneralUtil.mobsLoc( "textures/entity/ocean/yellow_coral_armored_sunken_skeleton.png");
     private static final List<ResourceLocation> ARMORED_SKELETON_LOCATIONS = Arrays.asList(RED_CORAL_ARMORED_SUNKEN_SKELETON_LOCATION, YELLOW_CORAL_ARMORED_SUNKEN_SKELETON_LOCATION);
 
     public SunkenSkeletonRenderer(EntityRendererProvider.Context renderContext) {

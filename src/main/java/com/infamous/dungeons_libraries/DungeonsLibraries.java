@@ -4,8 +4,12 @@ import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import com.infamous.dungeons_libraries.integration.curios.CuriosIntegration;
+import com.infamous.dungeons_libraries.integration.curios.client.CuriosClientIntegration;
+import com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings;
 import com.infamous.dungeons_libraries.items.ItemTagWrappers;
 import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
+import com.infamous.dungeons_libraries.items.artifacts.ArtifactEvents;
 import com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry;
@@ -14,10 +18,12 @@ import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -49,13 +55,14 @@ public class DungeonsLibraries {
         });
         // Register the setup method for modloading
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext fmlJavaModLoadingContext = FMLJavaModLoadingContext.get();
+        fmlJavaModLoadingContext.getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        fmlJavaModLoadingContext.getModEventBus().addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
-        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        final IEventBus modEventBus = fmlJavaModLoadingContext.getModEventBus();
         ItemTagWrappers.init();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
@@ -69,6 +76,13 @@ public class DungeonsLibraries {
         WEAPON_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, WeaponMaterials::toPacket);
         ARMOR_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, DungeonsArmorMaterials::toPacket);
         ARTIFACT_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArtifactGearConfigRegistry::toPacket);
+
+        if (ModList.get().isLoaded("curios")) {
+            MinecraftForge.EVENT_BUS.register(ArtifactEvents.class);
+            MinecraftForge.EVENT_BUS.register(CuriosKeyBindings.class);
+            modEventBus.register(CuriosIntegration.class);
+            modEventBus.register(CuriosClientIntegration.class);
+        }
 
         ModCapabilities.setupCapabilities();
     }

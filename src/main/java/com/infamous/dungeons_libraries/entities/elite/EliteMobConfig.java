@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.entities.elite;
 
 import com.infamous.dungeons_libraries.items.gearconfig.GearConfigAttributeModifier;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class EliteMobConfig implements WeightedEntry {
 
-    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation("empty");
+    public static final ResourceLocation EMPTY_TEXTURE = GeneralUtil.mcLoc("empty");
     public static final EliteMobConfig DEFAULT = new EliteMobConfig(Weight.of(0), null, null, null, null, null, null, new ArrayList<>(), EMPTY_TEXTURE);
 
     public static final Codec<EliteMobConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
 import com.infamous.dungeons_mobs.entities.illagers.WindcallerEntity;
@@ -15,20 +16,20 @@ public class WindcallerModel extends GeoModel<WindcallerEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WindcallerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/windcaller.animation.json");
+        return GeneralUtil.mobsLoc( "animations/windcaller.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(WindcallerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/windcaller.geo.json");
+        return GeneralUtil.mobsLoc( "geo/windcaller.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WindcallerEntity entity) {
         if(DungeonsMobsConfig.COMMON.ENABLE_3D_SLEEVES.get()){
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/windcaller.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/windcaller.png");
         }else{
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/windcaller_sleeved.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/windcaller_sleeved.png");
         }
     }
 

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.mixin;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +39,7 @@ public abstract class MansionTemplateMixin extends TemplateStructurePiece {
     @Inject(at = @At("HEAD"), method = "handleDataMarker", cancellable = true)
     private void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, RandomSource rand, BoundingBox sbb, CallbackInfo callbackInfo) {
         if (!function.startsWith("Chest") && !function.equals("Warrior") && !function.equals("Mage")) {
-            ResourceLocation entityResourceLocation = new ResourceLocation(function);
+            ResourceLocation entityResourceLocation = GeneralUtil.loc(function);
             EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(entityResourceLocation);
             if (entityType != null) {
                 Entity entity = entityType.create(worldIn.getLevel());

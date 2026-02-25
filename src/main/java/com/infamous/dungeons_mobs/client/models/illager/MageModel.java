@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
 import com.infamous.dungeons_mobs.entities.illagers.MageEntity;
@@ -20,20 +21,20 @@ public class MageModel extends GeoModel<MageEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(MageEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/mage.animation.json");
+        return GeneralUtil.mobsLoc( "animations/mage.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(MageEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geo_illager.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geo_illager.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MageEntity entity) {
         if(DungeonsMobsConfig.COMMON.ENABLE_3D_SLEEVES.get()){
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/mage.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/mage.png");
         }else{
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/mage_sleeved.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/mage_sleeved.png");
         }
     }
 

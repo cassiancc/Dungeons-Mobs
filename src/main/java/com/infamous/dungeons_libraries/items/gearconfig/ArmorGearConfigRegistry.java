@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
 import com.infamous.dungeons_libraries.network.gearconfig.ArmorGearConfigSyncPacket;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 public class ArmorGearConfigRegistry {
-    public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gear_config");
+    public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = GeneralUtil.librariesLoc("gear_config");
 
     public static final CodecJsonDataManager<ArmorGearConfig> ARMOR_GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig/armor", ArmorGearConfig.CODEC);
 

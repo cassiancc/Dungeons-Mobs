@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,7 @@ public class AttacherBuiltInEnchantments {
 
     private static class BuiltInEnchantmentsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "built_in_enchantments");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.librariesLoc("built_in_enchantments");
         private final BuiltInEnchantments backend;
         private final LazyOptional<BuiltInEnchantments> optionalData;
 

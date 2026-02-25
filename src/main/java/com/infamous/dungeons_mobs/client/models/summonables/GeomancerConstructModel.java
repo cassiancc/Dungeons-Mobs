@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.client.models.summonables;// Made with Blockb
 // Paste this class into your mod and generate all required imports
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.GeomancerEntity;
 import com.infamous.dungeons_mobs.entities.summonables.ConstructEntity;
@@ -22,18 +23,18 @@ public class GeomancerConstructModel extends GeoModel {
 
     @Override
     public ResourceLocation getAnimationResource(GeoAnimatable entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/geomancer_pillar.animation.json");
+        return GeneralUtil.mobsLoc( "animations/geomancer_pillar.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(GeoAnimatable entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geomancer_pillar.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geomancer_pillar.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GeoAnimatable entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
-        return entity instanceof GeomancerBombEntity ? new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png") : new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_wall.png");
+        return entity instanceof GeomancerBombEntity ? GeneralUtil.mobsLoc( "textures/entity/constructs/geomancer_bomb.png") : GeneralUtil.mobsLoc( "textures/entity/constructs/geomancer_wall.png");
     }
 
     @Override

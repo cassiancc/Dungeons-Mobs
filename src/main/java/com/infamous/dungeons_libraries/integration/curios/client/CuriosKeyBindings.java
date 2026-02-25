@@ -28,7 +28,6 @@ import java.util.Optional;
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
 
-@Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class CuriosKeyBindings {
 
     private static final double RAYTRACE_DISTANCE = 30;

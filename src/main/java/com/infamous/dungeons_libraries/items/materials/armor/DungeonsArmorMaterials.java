@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.items.materials.armor;
 
 import com.infamous.dungeons_libraries.data.util.DefaultsCodecJsonDataManager;
 import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
@@ -20,13 +21,13 @@ public class DungeonsArmorMaterials {
     public static final Map<ArmorMaterial, ArmorMaterialBaseType> baseArmorMaterials = new HashMap<>();
 
     public static void setupVanillaMaterials() {
-        addDefaultArmorMaterial(LEATHER, ArmorMaterialBaseType.LEATHER, new ResourceLocation("minecraft:leather"));
-        addDefaultArmorMaterial(CHAIN, ArmorMaterialBaseType.METAL, new ResourceLocation("minecraft:chainmail"));
-        addDefaultArmorMaterial(IRON, ArmorMaterialBaseType.METAL, new ResourceLocation("minecraft:iron"));
-        addDefaultArmorMaterial(GOLD, ArmorMaterialBaseType.METAL, new ResourceLocation("minecraft:gold"));
-        addDefaultArmorMaterial(DIAMOND, ArmorMaterialBaseType.GEM, new ResourceLocation("minecraft:diamond"));
-        addDefaultArmorMaterial(TURTLE, ArmorMaterialBaseType.LEATHER, new ResourceLocation("minecraft:turtle"));
-        addDefaultArmorMaterial(NETHERITE, ArmorMaterialBaseType.METAL, new ResourceLocation("minecraft:netherite"));
+        addDefaultArmorMaterial(LEATHER, ArmorMaterialBaseType.LEATHER, GeneralUtil.parse("minecraft:leather"));
+        addDefaultArmorMaterial(CHAIN, ArmorMaterialBaseType.METAL, GeneralUtil.parse("minecraft:chainmail"));
+        addDefaultArmorMaterial(IRON, ArmorMaterialBaseType.METAL, GeneralUtil.parse("minecraft:iron"));
+        addDefaultArmorMaterial(GOLD, ArmorMaterialBaseType.METAL, GeneralUtil.parse("minecraft:gold"));
+        addDefaultArmorMaterial(DIAMOND, ArmorMaterialBaseType.GEM, GeneralUtil.parse("minecraft:diamond"));
+        addDefaultArmorMaterial(TURTLE, ArmorMaterialBaseType.LEATHER, GeneralUtil.parse("minecraft:turtle"));
+        addDefaultArmorMaterial(NETHERITE, ArmorMaterialBaseType.METAL, GeneralUtil.parse("minecraft:netherite"));
     }
 
     public static void addDefaultArmorMaterial(ArmorMaterials material, ArmorMaterialBaseType baseType, ResourceLocation resourceLocation) {

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.elite;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
@@ -48,7 +49,7 @@ public class EliteMob {
         isElite = tag.getBoolean("isElite");
         hasSpawned = tag.getBoolean("hasSpawned");
         if (tag.contains("texture")) {
-            texture = new ResourceLocation(tag.getString("texture"));
+            texture = GeneralUtil.mcLoc(tag.getString("texture"));
         } else {
             texture = EMPTY_TEXTURE;
         }

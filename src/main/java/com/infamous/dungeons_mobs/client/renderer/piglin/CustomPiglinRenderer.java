@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.piglin;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.FungusSackModel;
 import com.infamous.dungeons_mobs.client.models.geom.ModModelLayers;
@@ -46,7 +47,7 @@ public class CustomPiglinRenderer extends PiglinRenderer {
         String skinVariantName = this.getSkinVariantName(mobEntity);
         return RESOURCE_LOCATION_MAP
                 .computeIfAbsent(mobEntity.getType(), type -> new HashMap<>())
-                .computeIfAbsent(skinVariantName, s -> new ResourceLocation(DungeonsMobs.MODID, this.getPath(skinVariantName)));
+                .computeIfAbsent(skinVariantName, s -> GeneralUtil.mobsLoc( this.getPath(skinVariantName)));
     }
 
     private String getPath(String skinVariantName) {

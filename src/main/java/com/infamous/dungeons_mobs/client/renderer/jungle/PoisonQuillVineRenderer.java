@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.jungle.PoisonQuillVineModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -14,6 +15,6 @@ public class PoisonQuillVineRenderer extends AbstractVineRenderer<PoisonQuillVin
     @SuppressWarnings("unchecked")
     public PoisonQuillVineRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PoisonQuillVineModel());
-        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/poison_quill_vine_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, GeneralUtil.mobsLoc( "textures/entity/jungle/poison_quill_vine_glow.png")));
     }
 }

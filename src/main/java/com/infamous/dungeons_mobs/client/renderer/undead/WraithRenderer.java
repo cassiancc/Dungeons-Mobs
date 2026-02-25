@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.undead;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.undead.WraithModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.PulsatingGlowLayer;
@@ -24,7 +25,7 @@ public class WraithRenderer extends DynamicGeoEntityRenderer<WraithEntity> {
 
     public WraithRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WraithModel());
-        this.addRenderLayer(new PulsatingGlowLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/wraith/wraith_glow.png"), 0.1F, 1.0F, 0.25F));
+        this.addRenderLayer(new PulsatingGlowLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/wraith/wraith_glow.png"), 0.1F, 1.0F, 0.25F));
     }
 
     @Override

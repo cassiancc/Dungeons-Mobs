@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
 import com.infamous.dungeons_mobs.entities.illagers.IceologerEntity;
@@ -18,20 +19,20 @@ public class IceologerModel extends GeoModel<IceologerEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(IceologerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/iceologer.animation.json");
+        return GeneralUtil.mobsLoc( "animations/iceologer.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(IceologerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geo_illager.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geo_illager.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(IceologerEntity entity) {
         if(DungeonsMobsConfig.COMMON.ENABLE_3D_SLEEVES.get()){
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/iceologer.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/iceologer.png");
         }else{
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/iceologer_sleeved.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/iceologer_sleeved.png");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -145,7 +146,7 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
             this.setLeaderUUID(tag.getUUID(LEADER_KEY));
         }
         if (tag.contains(LEVEL_KEY)) {
-            this.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
+            this.setLevelOnLoad(GeneralUtil.parse(tag.getString(LEVEL_KEY)));
         }
         if (tag.contains(SUMMON_FLAG_KEY)) {
             this.setSummon(tag.getBoolean(SUMMON_FLAG_KEY));
@@ -161,7 +162,7 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
         }
     }
 
-    // Methods deprectated after 1.20.0
+    // Methods deprecated after 1.20.0
     @Deprecated(forRemoval = true)
     @Override
     public @Nullable LivingEntity getMaster() {

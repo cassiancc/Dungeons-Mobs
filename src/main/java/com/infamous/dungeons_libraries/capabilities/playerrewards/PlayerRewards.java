@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.playerrewards;
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -72,7 +73,7 @@ public class PlayerRewards implements INBTSerializable<CompoundTag> {
         for (Tag inbt : listNBT) {
             if (inbt instanceof CompoundTag) {
                 CompoundTag compoundNBT1 = (CompoundTag) inbt;
-                ResourceLocation resourceLocation = new ResourceLocation(compoundNBT1.getString("source"));
+                ResourceLocation resourceLocation = GeneralUtil.parse(compoundNBT1.getString("source"));
                 Integer amount = compoundNBT1.getInt("amount");
                 this.setPlayerRewards(resourceLocation, amount);
             }

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.blaze;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.blaze.WildfireModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.PulsatingGlowLayer;
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
 public class WildfireRenderer extends DynamicGeoEntityRenderer<WildfireEntity> {
     public WildfireRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WildfireModel());
-        this.addRenderLayer(new PulsatingGlowLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/blaze/wildfire.png"), 0.1F, 1.0F, 0.25F));
+        this.addRenderLayer(new PulsatingGlowLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/blaze/wildfire.png"), 0.1F, 1.0F, 0.25F));
     }
 
     @Override

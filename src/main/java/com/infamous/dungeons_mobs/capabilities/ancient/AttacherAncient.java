@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.capabilities.ancient;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +20,7 @@ public class AttacherAncient {
 
     private static class AncientProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "ancient");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.mobsLoc("ancient");
         private final Ancient backend = new Ancient();
         private final LazyOptional<Ancient> optionalData = LazyOptional.of(() -> backend);
 

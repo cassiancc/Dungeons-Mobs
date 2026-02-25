@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.entities.illagers;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +30,7 @@ public class IllagerArmsUtil {
             s1 = s1.replace(".png", "_crossed.png");
         }
 
-        return new ResourceLocation(s1);
+        return GeneralUtil.loc(s1);
     }
 
     public static boolean resourceExists(ResourceLocation resourceLocation) {

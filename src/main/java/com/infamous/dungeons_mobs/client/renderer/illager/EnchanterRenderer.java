@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.illager.EnchanterModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -15,7 +16,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class EnchanterRenderer extends GeoEntityRenderer<EnchanterEntity> {
     public EnchanterRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new EnchanterModel());
-        this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/enchanter/enchanter_eyes.png")));
+        this.addRenderLayer(new GeoEyeLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/enchanter/enchanter_eyes.png")));
         //this.addLayer(new GeoHeldItemLayer<>(this, 0.0, 0.0, 0.5));
     }
 

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.capabilities.convertible;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +20,7 @@ public class AttacherConvertible {
 
     private static class ConvertibleProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "convertible");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.loc(MODID, "convertible");
         private final Convertible backend = new Convertible();
         private final LazyOptional<Convertible> optionalData = LazyOptional.of(() -> backend);
 

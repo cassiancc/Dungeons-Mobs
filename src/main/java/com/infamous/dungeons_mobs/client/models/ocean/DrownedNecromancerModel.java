@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.client.models.ocean;// Made with Blockbench 3
 // Paste this class into your mod and generate all required imports
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.water.DrownedNecromancerEntity;
@@ -30,17 +31,17 @@ public class DrownedNecromancerModel extends GeoModel<DrownedNecromancerEntity> 
 
     @Override
     public ResourceLocation getAnimationResource(DrownedNecromancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/drowned_necromancer.animation.json");
+        return GeneralUtil.mobsLoc( "animations/drowned_necromancer.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(DrownedNecromancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/drowned_necromancer.geo.json");
+        return GeneralUtil.mobsLoc( "geo/drowned_necromancer.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(DrownedNecromancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/drowned_necromancer.png");
+        return GeneralUtil.mobsLoc( "textures/entity/ocean/drowned_necromancer.png");
     }
 
     @Override

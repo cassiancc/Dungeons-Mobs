@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.ender;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.ender.AbstractEnderlingEntity;
 import com.infamous.dungeons_mobs.entities.ender.BlastlingEntity;
@@ -18,17 +19,17 @@ public class BlastlingModel extends GeoModel<BlastlingEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(BlastlingEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/blastling.animation.json");
+        return GeneralUtil.mobsLoc( "animations/blastling.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(BlastlingEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/blastling.geo.json");
+        return GeneralUtil.mobsLoc( "geo/blastling.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BlastlingEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entity).flameTicks) % 3) + ".png");
+        return GeneralUtil.mobsLoc( "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entity).flameTicks) % 3) + ".png");
     }
 
     @Override

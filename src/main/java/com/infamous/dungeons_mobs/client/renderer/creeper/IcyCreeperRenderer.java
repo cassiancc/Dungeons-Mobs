@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.creeper;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.client.renderer.layers.IcyCreeperChargeLayer;
 import com.infamous.dungeons_mobs.entities.creepers.IcyCreeperEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,7 +17,7 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 @OnlyIn(Dist.CLIENT)
 public class IcyCreeperRenderer extends MobRenderer<IcyCreeperEntity, CreeperModel<IcyCreeperEntity>> {
-    private static final ResourceLocation ICY_CREEPER_TEXTURE = new ResourceLocation(MODID, "textures/entity/creeper/icy_creeper.png");
+    private static final ResourceLocation ICY_CREEPER_TEXTURE = GeneralUtil.loc(MODID, "textures/entity/creeper/icy_creeper.png");
 
     public IcyCreeperRenderer(EntityRendererProvider.Context p_i46186_1_) {
         super(p_i46186_1_, new CreeperModel<>(p_i46186_1_.bakeLayer(ModelLayers.CREEPER)), 0.5F);

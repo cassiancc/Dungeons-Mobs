@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.entities.undead;
 
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.entities.AnimatableMeleeAttackMob;
 import com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper;
 import com.infamous.dungeons_mobs.goals.ApproachTargetGoal;
@@ -113,7 +114,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
 
         if (ModList.get().isLoaded("dungeons_gear")) {
 
-            Item GLAIVE = ForgeRegistries.ITEMS.getValue(new ResourceLocation("dungeons_gear", "glaive"));
+            Item GLAIVE = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("glaive"));
             ItemStack glaive = new ItemStack(GLAIVE);
 
             SpawnEquipmentHelper.equipMainhand(glaive, this);

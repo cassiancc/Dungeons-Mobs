@@ -25,8 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +34,7 @@ import static com.infamous.dungeons_libraries.items.ItemTagWrappers.ARTIFACT_REP
 import static java.util.UUID.randomUUID;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public abstract class ArtifactItem extends Item implements ICurioItem, IReloadableGear {
+public abstract class ArtifactItem extends Item implements IReloadableGear {
     protected final UUID SLOT0_UUID = UUID.fromString("7037798e-ac2c-4711-aa72-ba73589f1411");
     protected final UUID SLOT1_UUID = UUID.fromString("1906bae9-9f26-4194-bb8a-ef95b8cad134");
     protected final UUID SLOT2_UUID = UUID.fromString("b99aa930-03d0-4b2d-aa69-7b5d943dd75c");
@@ -63,11 +61,6 @@ public abstract class ArtifactItem extends Item implements ICurioItem, IReloadab
             }
         });
         this.defaultModifiers = builder.build();
-    }
-
-    @Override
-    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
-        return true;
     }
 
     public static void putArtifactOnCooldown(Player playerIn, Item item) {

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.jungle.LeapleafEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,17 +20,17 @@ public class LeapleafModel extends GeoModel<LeapleafEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(LeapleafEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/leapleaf.animation.json");
+        return GeneralUtil.mobsLoc( "animations/leapleaf.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(LeapleafEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/leapleaf.geo.json");
+        return GeneralUtil.mobsLoc( "geo/leapleaf.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(LeapleafEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/leapleaf.png");
+        return GeneralUtil.mobsLoc( "textures/entity/jungle/leapleaf.png");
     }
 
     @Override

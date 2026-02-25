@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
 import com.infamous.dungeons_mobs.entities.illagers.DungeonsIllusionerEntity;
@@ -18,20 +19,20 @@ public class DungeonsIllusionerModel extends GeoModel<DungeonsIllusionerEntity> 
 
     @Override
     public ResourceLocation getAnimationResource(DungeonsIllusionerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/illusioner.animation.json");
+        return GeneralUtil.mobsLoc( "animations/illusioner.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(DungeonsIllusionerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geo_illager.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geo_illager.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(DungeonsIllusionerEntity entity) {
         if(DungeonsMobsConfig.COMMON.ENABLE_3D_SLEEVES.get()){
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/illusioner.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/illusioner.png");
         }else{
-            return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/illusioner_sleeved.png");
+            return GeneralUtil.mobsLoc( "textures/entity/illager/illusioner_sleeved.png");
         }
     }
 

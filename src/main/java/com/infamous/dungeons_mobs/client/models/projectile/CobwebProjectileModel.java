@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.client.models.projectile;
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.projectiles.CobwebProjectileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,17 +16,17 @@ public class CobwebProjectileModel extends GeoModel<CobwebProjectileEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(CobwebProjectileEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/web_projectile.animation.json");
+        return GeneralUtil.mobsLoc( "animations/web_projectile.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(CobwebProjectileEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/web_projectile.geo.json");
+        return GeneralUtil.mobsLoc( "geo/web_projectile.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CobwebProjectileEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/projectile/web_projectile.png");
+        return GeneralUtil.mobsLoc( "textures/entity/projectile/web_projectile.png");
     }
 
     @Override

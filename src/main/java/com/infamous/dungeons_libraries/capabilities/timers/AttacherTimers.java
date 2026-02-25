@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.timers;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class AttacherTimers {
 
     private static class TimersProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "timers");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.loc(MODID, "timers");
         private final Timers backend = new Timers();
         private final LazyOptional<Timers> optionalData = LazyOptional.of(() -> backend);
 

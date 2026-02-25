@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.ender;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.ender.EndersentModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -16,7 +17,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class EndersentRenderer extends GeoEntityRenderer<EndersentEntity> {
     public EndersentRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new EndersentModel());
-        this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/endersent_eyes.png")));
+        this.addRenderLayer(new GeoEyeLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/ender/endersent_eyes.png")));
     }
 
     protected float getDeathMaxRotation(AbstractEnderlingEntity p_77037_1_) {

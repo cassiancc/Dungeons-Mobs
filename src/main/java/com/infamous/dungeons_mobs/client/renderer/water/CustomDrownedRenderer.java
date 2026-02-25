@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs.client.renderer.water;
 
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMobHelper;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -18,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CustomDrownedRenderer extends AbstractZombieRenderer<Drowned, DrownedModel<Drowned>> {
-    private static final ResourceLocation DROWNED_LOCATION = new ResourceLocation("textures/entity/zombie/drowned.png");
-    private static final ResourceLocation SEAWEED_ARMORED_DROWNED_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/seaweed_armored_drowned.png");
-    private static final ResourceLocation PALE_ARMORED_DROWNED_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/pale_armored_drowned.png");
+    private static final ResourceLocation DROWNED_LOCATION = GeneralUtil.loc("textures/entity/zombie/drowned.png");
+    private static final ResourceLocation SEAWEED_ARMORED_DROWNED_LOCATION = GeneralUtil.mobsLoc( "textures/entity/ocean/seaweed_armored_drowned.png");
+    private static final ResourceLocation PALE_ARMORED_DROWNED_LOCATION = GeneralUtil.mobsLoc( "textures/entity/ocean/pale_armored_drowned.png");
     private static final List<ResourceLocation> ARMORED_DROWNED_LOCATIONS = Arrays.asList(SEAWEED_ARMORED_DROWNED_LOCATION, PALE_ARMORED_DROWNED_LOCATION);
 
     public CustomDrownedRenderer(EntityRendererProvider.Context rendererContext) {

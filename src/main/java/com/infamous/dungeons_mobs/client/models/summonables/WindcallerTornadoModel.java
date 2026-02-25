@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.client.models.summonables;// Made with Blockb
 // Paste this class into your mod and generate all required imports
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.summonables.WindcallerTornadoEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,17 +20,17 @@ public class WindcallerTornadoModel extends GeoModel<WindcallerTornadoEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WindcallerTornadoEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/windcaller_tornado.animation.json");
+        return GeneralUtil.mobsLoc( "animations/windcaller_tornado.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(WindcallerTornadoEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/windcaller_tornado.geo.json");
+        return GeneralUtil.mobsLoc( "geo/windcaller_tornado.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WindcallerTornadoEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/windcaller_tornado.png");
+        return GeneralUtil.mobsLoc( "textures/entity/windcaller_tornado.png");
     }
 
     @Override

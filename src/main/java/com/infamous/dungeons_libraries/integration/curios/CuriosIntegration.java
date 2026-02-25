@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.integration.curios;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -17,10 +18,9 @@ import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CuriosIntegration {
 
-    public static final ResourceLocation CURIOS_ICON_TEXTURE = new ResourceLocation(MODID, "icon/empty_artifact_slot");
+    public static final ResourceLocation CURIOS_ICON_TEXTURE = GeneralUtil.librariesLoc("icon/empty_artifact_slot");
 
     public static final String ARTIFACT_IDENTIFIER = "artifact";
 

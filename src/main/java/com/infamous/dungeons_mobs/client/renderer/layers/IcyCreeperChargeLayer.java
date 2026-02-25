@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.layers;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.entities.creepers.IcyCreeperEntity;
 import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.EntityModel;
@@ -11,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class IcyCreeperChargeLayer extends EnergySwirlLayer<IcyCreeperEntity, CreeperModel<IcyCreeperEntity>> {
-    private static final ResourceLocation POWER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
+    private static final ResourceLocation POWER_LOCATION = GeneralUtil.mcLoc("textures/entity/creeper/creeper_armor.png");
     private final EntityModel<IcyCreeperEntity> model;
 
     public IcyCreeperChargeLayer(RenderLayerParent<IcyCreeperEntity, CreeperModel<IcyCreeperEntity>> p_i50947_1_, CreeperModel<IcyCreeperEntity> model) {

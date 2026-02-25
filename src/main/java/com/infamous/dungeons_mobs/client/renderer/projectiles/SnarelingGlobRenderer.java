@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.projectiles;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.projectile.SnarelingGlobModel;
 import com.infamous.dungeons_mobs.entities.projectiles.SnarelingGlobEntity;
@@ -21,7 +22,7 @@ import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.SNARE
 
 @OnlyIn(Dist.CLIENT)
 public class SnarelingGlobRenderer extends EntityRenderer<SnarelingGlobEntity> {
-    private static final ResourceLocation LLAMA_SPIT_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/snareling_glob.png");
+    private static final ResourceLocation LLAMA_SPIT_LOCATION = GeneralUtil.mobsLoc( "textures/entity/snareling_glob.png");
     private final SnarelingGlobModel<SnarelingGlobEntity> model;
 
     public SnarelingGlobRenderer(EntityRendererProvider.Context renderContext) {

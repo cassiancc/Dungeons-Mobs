@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.summonables;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.summonables.GeomancerConstructModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.PulsatingGlowLayer;
@@ -17,16 +18,16 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class GeomancerBombRenderer extends GeoEntityRenderer<GeomancerBombEntity> {
     public GeomancerBombRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeomancerConstructModel());
-        this.addRenderLayer(new PulsatingGlowLayer<GeomancerBombEntity>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb.png"), 0.5F, 0.6F, 0.2F) {
+        this.addRenderLayer(new PulsatingGlowLayer<GeomancerBombEntity>(this, GeneralUtil.mobsLoc( "textures/entity/constructs/geomancer_bomb.png"), 0.5F, 0.6F, 0.2F) {
             @Override
             public void render(PoseStack matrixStackIn, GeomancerBombEntity entity, BakedGeoModel model, RenderType type, MultiBufferSource bufferIn, VertexConsumer vertexConsumer, float limbSwing, int i, int i2) {
 
                 if (entity.getLifeTicks() < 60 && entity.getLifeTicks() >= 30) {
-                    textureLocation = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb_eyes_1.png");
+                    textureLocation = GeneralUtil.mobsLoc( "textures/entity/constructs/geomancer_bomb_eyes_1.png");
                     super.render(matrixStackIn, entity, model, type, bufferIn, vertexConsumer, limbSwing, i, i2);
                 } else if (entity.getLifeTicks() < 30 && entity.getLifeTicks() >= 0) {
                     pulseSpeed = 0.8F;
-                    textureLocation = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/constructs/geomancer_bomb_eyes_2.png");
+                    textureLocation = GeneralUtil.mobsLoc( "textures/entity/constructs/geomancer_bomb_eyes_2.png");
                     super.render(matrixStackIn, entity, model, type, bufferIn, vertexConsumer, limbSwing, i, i2);
                 }
             }

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.tags;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -15,11 +16,11 @@ public class BiomeTags {
     public static final TagKey<Biome> SQUALL_GOLEM_RAIDS_IN = tag("squall_golem_raids_in");
 
     private static TagKey<Biome> tag(String name) {
-        return TagKey.create(Registries.BIOME, new ResourceLocation(DungeonsMobs.MODID, name));
+        return TagKey.create(Registries.BIOME, GeneralUtil.mobsLoc( name));
     }
 
     private static TagKey<Biome> forgeTag(String name) {
-        return TagKey.create(Registries.BIOME, new ResourceLocation("forge", name));
+        return TagKey.create(Registries.BIOME, GeneralUtil.loc("forge", name));
     }
 
     public static void register() {

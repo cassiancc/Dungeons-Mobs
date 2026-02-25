@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +17,7 @@ import static com.infamous.dungeons_libraries.data.Codecs.ITEM_RARITY_CODEC;
 
 public class ArmorGearConfig {
 
-    public static final ArmorGearConfig DEFAULT = new ArmorGearConfig(new ArrayList<>(), new ArrayList<>(), new ResourceLocation("minecraft:iron"), false, Rarity.COMMON);
+    public static final ArmorGearConfig DEFAULT = new ArmorGearConfig(new ArrayList<>(), new ArrayList<>(), GeneralUtil.loc("minecraft:iron"), false, Rarity.COMMON);
 
     public static final Codec<ArmorGearConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GearConfigAttributeModifier.CODEC.listOf().optionalFieldOf("attributes", new ArrayList<>()).forGetter(ArmorGearConfig::getAttributes),

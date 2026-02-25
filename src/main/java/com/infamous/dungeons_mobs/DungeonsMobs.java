@@ -62,13 +62,13 @@ public class DungeonsMobs {
     public DungeonsMobs() {
     	GeckoLib.initialize();
         // Register the setup method for modloading
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
-        FMLJavaModLoadingContext fmlJavaModLoadingContext = FMLJavaModLoadingContext.get();
-        final IEventBus modEventBus = fmlJavaModLoadingContext.getModEventBus();
-        fmlJavaModLoadingContext.getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
+        context.registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
+        final IEventBus modEventBus = context.getModEventBus();
+        context.getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
-        fmlJavaModLoadingContext.getModEventBus().addListener(this::doClientStuff);
-        fmlJavaModLoadingContext.getModEventBus().addListener(this::onLoadComplete);
+        context.getModEventBus().addListener(this::doClientStuff);
+        context.getModEventBus().addListener(this::onLoadComplete);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

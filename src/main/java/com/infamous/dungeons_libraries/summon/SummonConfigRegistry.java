@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.summon;
 
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -10,7 +11,7 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SummonConfigRegistry {
-    public static final ResourceLocation SUMMON_RESOURCELOCATION = new ResourceLocation(MODID, "summon");
+    public static final ResourceLocation SUMMON_RESOURCELOCATION = GeneralUtil.loc(MODID, "summon");
 
     public static final CodecJsonDataManager<SummonConfig> SUMMON_CONFIGS = new CodecJsonDataManager<>("summon", SummonConfig.CODEC);
 

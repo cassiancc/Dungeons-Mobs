@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.items;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_libraries.utils.RangedAttackHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -15,9 +16,9 @@ import static com.infamous.dungeons_libraries.utils.RangedAttackHelper.getCrossb
 
 public class RangedItemModelProperties {
 
-    private static final ResourceLocation PULL_PROPERTY = new ResourceLocation("pull");
-    private static final ResourceLocation PULLING_PROPERTY = new ResourceLocation("pulling");
-    private static final ResourceLocation CHARGED_PROPERTY = new ResourceLocation("charged");
+    private static final ResourceLocation PULL_PROPERTY = GeneralUtil.mcLoc("pull");
+    private static final ResourceLocation PULLING_PROPERTY = GeneralUtil.mcLoc("pulling");
+    private static final ResourceLocation CHARGED_PROPERTY = GeneralUtil.mcLoc("charged");
 
     public static void init() {
         Map<Item, Map<ResourceLocation, ItemPropertyFunction>> itemModelsProperties = ItemProperties.PROPERTIES;

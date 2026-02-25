@@ -6,13 +6,14 @@ import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosA
 import com.infamous.dungeons_libraries.network.gearconfig.*;
 import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
 import com.infamous.dungeons_libraries.network.materials.WeaponMaterialSyncPacket;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(
-                    new ResourceLocation(DungeonsLibraries.MODID, "network"))
+                    GeneralUtil.librariesLoc("network"))
             .clientAcceptedVersions("1"::equals)
             .serverAcceptedVersions("1"::equals)
             .networkProtocolVersion(() -> "1")

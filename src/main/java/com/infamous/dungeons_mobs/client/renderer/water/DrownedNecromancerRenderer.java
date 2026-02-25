@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.water;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.ocean.DrownedNecromancerModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.PulsatingGlowLayer;
@@ -14,7 +15,7 @@ public class DrownedNecromancerRenderer extends DynamicGeoEntityRenderer<Drowned
     @SuppressWarnings("unchecked")
     public DrownedNecromancerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DrownedNecromancerModel());
-        this.addRenderLayer(new PulsatingGlowLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/drowned_necromancer_eyes.png"), 0.2F, 0.5F, 1.0F));
+        this.addRenderLayer(new PulsatingGlowLayer(this, GeneralUtil.mobsLoc( "textures/entity/ocean/drowned_necromancer_eyes.png"), 0.2F, 0.5F, 1.0F));
     }
 
     @Override

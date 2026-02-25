@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.capabilities.animatedprops;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +20,7 @@ public class AttacherAnimatedProps {
 
     private static class AnimatedPropsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "convertible");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.loc(MODID, "convertible");
         private final AnimatedProps backend = new AnimatedProps();
         private final LazyOptional<AnimatedProps> optionalData = LazyOptional.of(() -> backend);
 

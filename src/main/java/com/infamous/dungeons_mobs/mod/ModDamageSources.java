@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.mod;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,7 @@ public class ModDamageSources {
 
     private static ResourceKey<DamageType> register(String name)
     {
-        return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID, name));
+        return ResourceKey.create(Registries.DAMAGE_TYPE, GeneralUtil.loc(MODID, name));
     }
 
 }

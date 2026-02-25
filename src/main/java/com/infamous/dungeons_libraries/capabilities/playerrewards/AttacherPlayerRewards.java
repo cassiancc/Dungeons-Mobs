@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.playerrewards;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class AttacherPlayerRewards {
 
     private static class PlayerRewardsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "player_rewards");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.librariesLoc("player_rewards");
         private final PlayerRewards backend = new PlayerRewards();
         private final LazyOptional<PlayerRewards> optionalData = LazyOptional.of(() -> backend);
 

@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.client.renderer;
 
 import com.infamous.dungeons_libraries.entities.SoulOrbEntity;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -20,7 +21,7 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 
 public class SoulOrbRenderer extends EntityRenderer<SoulOrbEntity> {
-    private static final ResourceLocation SOUL_ORB_LOCATION = new ResourceLocation(MODID, "textures/entity/soul_orb.png");
+    private static final ResourceLocation SOUL_ORB_LOCATION = GeneralUtil.loc(MODID, "textures/entity/soul_orb.png");
     private static final RenderType RENDER_TYPE = RenderType.itemEntityTranslucentCull(SOUL_ORB_LOCATION);
 
     public SoulOrbRenderer(EntityRendererProvider.Context context) {

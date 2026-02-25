@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.ender;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.ender.WatchlingEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -16,17 +17,17 @@ public class WatchlingModel extends GeoModel<WatchlingEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WatchlingEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/watchling.animation.json");
+        return GeneralUtil.mobsLoc( "animations/watchling.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(WatchlingEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/watchling.geo.json");
+        return GeneralUtil.mobsLoc( "geo/watchling.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WatchlingEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/watchling.png");
+        return GeneralUtil.mobsLoc( "textures/entity/ender/watchling.png");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.summonables;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.summonables.TridentStormEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,17 +14,17 @@ public class TridentStormModel extends GeoModel<TridentStormEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(TridentStormEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/trident_storm.animation.json");
+        return GeneralUtil.mobsLoc( "animations/trident_storm.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(TridentStormEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/trident_storm.geo.json");
+        return GeneralUtil.mobsLoc( "geo/trident_storm.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TridentStormEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/trident_storm.png");
+        return GeneralUtil.mobsLoc( "textures/entity/trident_storm.png");
     }
 
     @Override

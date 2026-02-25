@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.undead;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.entities.undead.FrozenZombieEntity;
 import com.infamous.dungeons_mobs.entities.undead.JungleZombieEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,9 +14,9 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 public class CustomZombieRenderer extends ZombieRenderer {
 
-    private static final ResourceLocation JUNGLE_ZOMBIE_TEXUTRE = new ResourceLocation(MODID, "textures/entity/zombie/jungle_zombie.png");
-    private static final ResourceLocation FROZEN_ZOMBIE_TEXTURE = new ResourceLocation(MODID, "textures/entity/zombie/frozen_zombie.png");
-    private static final ResourceLocation HUSK_ZOMBIE_TEXTURE = new ResourceLocation("textures/entity/zombie/husk.png");
+    private static final ResourceLocation JUNGLE_ZOMBIE_TEXUTRE = GeneralUtil.mobsLoc("textures/entity/zombie/jungle_zombie.png");
+    private static final ResourceLocation FROZEN_ZOMBIE_TEXTURE = GeneralUtil.mobsLoc("textures/entity/zombie/frozen_zombie.png");
+    private static final ResourceLocation HUSK_ZOMBIE_TEXTURE = GeneralUtil.mcLoc("textures/entity/zombie/husk.png");
 
     public CustomZombieRenderer(EntityRendererProvider.Context renderContext) {
         super(renderContext);

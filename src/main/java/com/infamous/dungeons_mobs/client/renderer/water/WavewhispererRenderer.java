@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.water;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.renderer.jungle.WhispererRenderer;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -12,12 +13,12 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 public class WavewhispererRenderer extends WhispererRenderer {
 
-    private static final ResourceLocation WAVEWHISPERER_TEXTURE = new ResourceLocation(MODID, "textures/entity/ocean/wavewhisperer.png");
+    private static final ResourceLocation WAVEWHISPERER_TEXTURE = GeneralUtil.loc(MODID, "textures/entity/ocean/wavewhisperer.png");
 
     @SuppressWarnings("unchecked")
     public WavewhispererRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
-        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ocean/wavewhisperer_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, GeneralUtil.mobsLoc( "textures/entity/ocean/wavewhisperer_glow.png")));
     }
 
     public boolean isShaking(WhispererEntity p_230495_1_) {

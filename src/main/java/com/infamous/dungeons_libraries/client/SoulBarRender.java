@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
 import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfig;
 import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -23,7 +24,7 @@ import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SOUL_C
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class SoulBarRender {
-    private static final ResourceLocation SOUL_BAR_RESOURCE = new ResourceLocation(MODID, "textures/misc/soul_bar.png");
+    private static final ResourceLocation SOUL_BAR_RESOURCE = GeneralUtil.loc(MODID, "textures/misc/soul_bar.png");
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
 
     @SubscribeEvent
@@ -35,7 +36,7 @@ public class SoulBarRender {
         final Minecraft mc = Minecraft.getInstance();
 
         if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player) {
-            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "soul_bar"));
             if (guiElementConfig.isHidden()) return;
             //draw souls
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

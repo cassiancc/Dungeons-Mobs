@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.entities.illagers;
 import com.google.common.collect.Maps;
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper;
 import com.infamous.dungeons_mobs.goals.ApproachTargetGoal;
 import com.infamous.dungeons_mobs.goals.LookAtTargetGoal;
@@ -219,7 +220,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
         equipArmorSet(ModItems.ROYAL_GUARD_ARMOR, this);
 
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item MACE = ForgeRegistries.ITEMS.getValue(new ResourceLocation("dungeons_gear", "mace"));
+            Item MACE = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("mace"));
 
             ItemStack mace = new ItemStack(MACE);
             if (this.getCurrentRaid() == null) {
@@ -237,7 +238,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
     public void applyRaidBuffs(int waveAmount, boolean b) {
         ItemStack mainhandWeapon = new ItemStack(Items.IRON_AXE);
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item MACE = ForgeRegistries.ITEMS.getValue(new ResourceLocation("dungeons_gear", "mace"));
+            Item MACE = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("mace"));
 
             mainhandWeapon = new ItemStack(MACE);
         }

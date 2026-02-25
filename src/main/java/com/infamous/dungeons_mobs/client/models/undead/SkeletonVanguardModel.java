@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.undead;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.undead.SkeletonVanguardEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -16,17 +17,17 @@ public class SkeletonVanguardModel extends GeoModel<SkeletonVanguardEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SkeletonVanguardEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/skeleton_vanguard.animation.json");
+        return GeneralUtil.mobsLoc( "animations/skeleton_vanguard.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SkeletonVanguardEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geo_skeleton.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geo_skeleton.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SkeletonVanguardEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/skeleton/skeleton_vanguard.png");
+        return GeneralUtil.mobsLoc( "textures/entity/skeleton/skeleton_vanguard.png");
     }
 
     @Override

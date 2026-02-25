@@ -3,12 +3,12 @@ package com.infamous.dungeons_mobs.mod;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGear;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.items.*;
 import com.infamous.dungeons_mobs.items.armor.*;
 import com.infamous.dungeons_mobs.items.shield.RoyalGuardShieldItem;
 import com.infamous.dungeons_mobs.items.shield.VanguardShieldItem;
-import com.infamous.dungeons_mobs.utils.GeneralHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
@@ -25,7 +25,7 @@ import static net.minecraft.world.item.ArmorItem.Type.*;
 
 
 public class ModItems {
-    private static final ResourceLocation DEFAULT_ANIMATION_RESOURCE = new ResourceLocation(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
+    private static final ResourceLocation DEFAULT_ANIMATION_RESOURCE = GeneralUtil.loc(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     public static final Map<ResourceLocation, RegistryObject<Item>> ARTIFACTS = new HashMap<>();
@@ -43,26 +43,26 @@ public class ModItems {
     // HELMETS
     public static final RegistryObject<Item> GOLD_PILLAGER_HELMET = registerArmor("gold_pillager_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
-                    new ResourceLocation(MODID, "geo/armor/pillager_helmet.geo.json"),
-                    new ResourceLocation(MODID, "textures/models/armor/gold_pillager_helmet.png"),
+                    GeneralUtil.loc(MODID, "geo/armor/pillager_helmet.geo.json"),
+                    GeneralUtil.loc(MODID, "textures/models/armor/gold_pillager_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> DIAMOND_PILLAGER_HELMET = ITEMS.register("diamond_pillager_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
-                    new ResourceLocation(MODID, "geo/armor/pillager_helmet.geo.json"),
-                    new ResourceLocation(MODID, "textures/models/armor/diamond_pillager_helmet.png"),
+                    GeneralUtil.loc(MODID, "geo/armor/pillager_helmet.geo.json"),
+                    GeneralUtil.loc(MODID, "textures/models/armor/diamond_pillager_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> GOLD_VINDICATOR_HELMET = ITEMS.register("gold_vindicator_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
-                    new ResourceLocation(MODID, "geo/armor/vindicator_helmet.geo.json"),
-                    new ResourceLocation(MODID, "textures/models/armor/gold_vindicator_helmet.png"),
+                    GeneralUtil.loc(MODID, "geo/armor/vindicator_helmet.geo.json"),
+                    GeneralUtil.loc(MODID, "textures/models/armor/gold_vindicator_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> DIAMOND_VINDICATOR_HELMET = ITEMS.register("diamond_vindicator_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
-                    new ResourceLocation(MODID, "geo/armor/vindicator_helmet.geo.json"),
-                    new ResourceLocation(MODID, "textures/models/armor/diamond_vindicator_helmet.png"),
+                    GeneralUtil.loc(MODID, "geo/armor/vindicator_helmet.geo.json"),
+                    GeneralUtil.loc(MODID, "textures/models/armor/diamond_vindicator_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final RegistryObject<Item> NETHERITE_PIGLIN_HELMET = ITEMS.register("netherite_piglin_helmet",
@@ -130,10 +130,10 @@ public class ModItems {
 
 
     private static ArmorSet registerArmorSet(String armorSetId, String helmetId, String chestId, String legsId, String bootsId, boolean animated) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = animated ? new ResourceLocation(MODID, "animations/armor/" + armorSetId + ".animation.json") : DEFAULT_ANIMATION_RESOURCE;
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = animated ? GeneralUtil.loc(MODID, "animations/armor/" + armorSetId + ".animation.json") : DEFAULT_ANIMATION_RESOURCE;
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -144,9 +144,9 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSet(String armorSetId, String helmetId, String chestId, String legsId, String bootsId, ResourceLocation animationFileLocation) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -161,10 +161,10 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSetMage(String armorSetId, String helmetId, String chestId, String legsId, String bootsId) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = GeneralUtil.loc(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new MageArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -175,10 +175,10 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSetWindcaller(String armorSetId, String helmetId, String chestId, String legsId, String bootsId) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = GeneralUtil.loc(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new WindcallerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -189,10 +189,10 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSetIceologer(String armorSetId, String helmetId, String chestId, String legsId, String bootsId) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = GeneralUtil.loc(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new IceologerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -203,10 +203,10 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSetIllusioner(String armorSetId, String helmetId, String chestId, String legsId, String bootsId) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = GeneralUtil.loc(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new IllusionerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -217,10 +217,10 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSetDrownedNecromancer(String armorSetId, String helmetId, String chestId, String legsId, String bootsId) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = GeneralUtil.loc(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new DrownedNecromancerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -231,10 +231,10 @@ public class ModItems {
     }
 
     private static ArmorSet registerArmorSetNecromancerArmor(String armorSetId, String helmetId, String chestId, String legsId, String bootsId) {
-        ResourceLocation armorSet = new ResourceLocation(MODID, armorSetId);
-        ResourceLocation modelLocation = new ResourceLocation(MODID, "geo/armor/" + armorSetId + ".geo.json");
-        ResourceLocation textureLocation = new ResourceLocation(MODID, "textures/models/armor/" + armorSetId + ".png");
-        ResourceLocation animationFileLocation = new ResourceLocation(MODID, "animations/armor/cloaked_armor.animation.json");
+        ResourceLocation armorSet = GeneralUtil.loc(MODID, armorSetId);
+        ResourceLocation modelLocation = GeneralUtil.loc(MODID, "geo/armor/" + armorSetId + ".geo.json");
+        ResourceLocation textureLocation = GeneralUtil.loc(MODID, "textures/models/armor/" + armorSetId + ".png");
+        ResourceLocation animationFileLocation = GeneralUtil.loc(MODID, "animations/armor/cloaked_armor.animation.json");
         return new ArmorSet(
                 armorSet,
                 registerArmor(helmetId, () -> new NecromancerArmorGear(HELMET, ARMOR_PROPERTIES, armorSet, modelLocation, textureLocation, animationFileLocation)),
@@ -247,13 +247,13 @@ public class ModItems {
     private static RegistryObject<Item> registerArmor(String armorId, Supplier<Item> itemSupplier) {
         if (armorId == null) return null;
         RegistryObject<Item> register = ITEMS.register(armorId, itemSupplier);
-        ARMORS.put(GeneralHelper.modLoc(armorId), register);
+        ARMORS.put(GeneralUtil.mobsLoc(armorId), register);
         return register;
     }
 
     private static RegistryObject<Item> registerArtifact(String meleeWeaponId, Supplier<Item> itemSupplier) {
         RegistryObject<Item> register = ITEMS.register(meleeWeaponId, itemSupplier);
-        ARTIFACTS.put(GeneralHelper.modLoc(meleeWeaponId), register);
+        ARTIFACTS.put(GeneralUtil.mobsLoc(meleeWeaponId), register);
         return register;
     }
 }

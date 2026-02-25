@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.golem;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.golem.SquallGolemEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,18 +17,18 @@ public class SquallGolemModel extends GeoModel<SquallGolemEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SquallGolemEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/squall_golem.animation.json");
+        return GeneralUtil.mobsLoc( "animations/squall_golem.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SquallGolemEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/squall_golem.geo.json");
+        return GeneralUtil.mobsLoc( "geo/squall_golem.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SquallGolemEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/golem/squall_golem.png");
+        return GeneralUtil.mobsLoc( "textures/entity/golem/squall_golem.png");
     }
 
     @Override

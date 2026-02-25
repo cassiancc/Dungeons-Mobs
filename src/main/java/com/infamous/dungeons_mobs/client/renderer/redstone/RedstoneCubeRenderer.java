@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.redstone;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.client.models.redstone.RedstoneCubeModel;
 import com.infamous.dungeons_mobs.entities.redstone.RedstoneCubeEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,7 +18,7 @@ import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.REDST
 
 @OnlyIn(Dist.CLIENT)
 public class RedstoneCubeRenderer extends MobRenderer<RedstoneCubeEntity, RedstoneCubeModel<RedstoneCubeEntity>> {
-    private static final ResourceLocation REDSTONE_CUBE_TEXTURE = new ResourceLocation(MODID, "textures/entity/redstone/redstone_cube.png");
+    private static final ResourceLocation REDSTONE_CUBE_TEXTURE = GeneralUtil.loc(MODID, "textures/entity/redstone/redstone_cube.png");
 
     public RedstoneCubeRenderer(EntityRendererProvider.Context renderContext) {
         super(renderContext, new RedstoneCubeModel<>(renderContext.bakeLayer(REDSTONE_CUBE)), 0.25F);

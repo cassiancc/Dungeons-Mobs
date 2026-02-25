@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.datagen;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -41,6 +42,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private static ResourceLocation itemLoc(ResourceLocation resourceLocation) {
 
-        return new ResourceLocation(resourceLocation.getNamespace(), ITEM_FOLDER + "/" + resourceLocation.getPath());
+        return GeneralUtil.loc(resourceLocation.getNamespace(), ITEM_FOLDER + "/" + resourceLocation.getPath());
     }
 }

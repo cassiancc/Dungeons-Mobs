@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.network;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.network.message.AncientMessage;
 import com.infamous.dungeons_mobs.network.message.AnimatedPropsMessage;
@@ -9,7 +10,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(
-                    new ResourceLocation(DungeonsMobs.MODID, "network"))
+                    GeneralUtil.mobsLoc("network"))
             .clientAcceptedVersions("1"::equals)
             .serverAcceptedVersions("1"::equals)
             .networkProtocolVersion(() -> "1")

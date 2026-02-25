@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.RoyalGuardEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -16,17 +17,17 @@ public class RoyalGuardModel extends GeoModel<RoyalGuardEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(RoyalGuardEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/royal_guard.animation.json");
+        return GeneralUtil.mobsLoc( "animations/royal_guard.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(RoyalGuardEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geo_illager.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geo_illager.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(RoyalGuardEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/royal_guard.png");
+        return GeneralUtil.mobsLoc( "textures/entity/illager/royal_guard.png");
     }
 
     @Override

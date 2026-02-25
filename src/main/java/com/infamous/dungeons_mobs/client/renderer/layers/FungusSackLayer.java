@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.layers;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.FungusSackModel;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class FungusSackLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation SACK_LOCATION = new ResourceLocation(DungeonsMobs.MODID, "textures/entity/fungus_sack.png");
+    private static final ResourceLocation SACK_LOCATION = GeneralUtil.mobsLoc( "textures/entity/fungus_sack.png");
     private final FungusSackModel<T> fungusSackModel;
 
     public FungusSackLayer(RenderLayerParent<T, M> entityRenderer, FungusSackModel<T> fungusSackModel) {

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.redstone;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.redstone.RedstoneGolemModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -19,7 +20,7 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
     @SuppressWarnings("unchecked")
     public RedstoneGolemRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new RedstoneGolemModel());
-        this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_light.png")) {
+        this.addRenderLayer(new GeoEyeLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/redstone/redstone_golem_light.png")) {
             @Override
             public void render(PoseStack matrixStackIn, RedstoneGolemEntity entitylivingbaseIn, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
@@ -29,7 +30,7 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
                 }
             }
         });
-        this.addRenderLayer(new PulsatingGlowLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png"), 0.1F, 0.5F, 0.0F) {
+        this.addRenderLayer(new PulsatingGlowLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/redstone/redstone_golem_yellow_light.png"), 0.1F, 0.5F, 0.0F) {
             @Override
             public void render(PoseStack matrixStackIn, RedstoneGolemEntity entitylivingbaseIn, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
@@ -39,7 +40,7 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
                 }
             }
         });
-        this.addRenderLayer(new GeoEyeLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_yellow_light.png")) {
+        this.addRenderLayer(new GeoEyeLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/redstone/redstone_golem_yellow_light.png")) {
             @Override
             public void render(PoseStack matrixStackIn, RedstoneGolemEntity entitylivingbaseIn, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
@@ -49,7 +50,7 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
                 }
             }
         });
-        this.addRenderLayer(new PulsatingGlowLayer<>(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem_white_light.png"), 0.2F, 0.75F, 0.0F) {
+        this.addRenderLayer(new PulsatingGlowLayer<>(this, GeneralUtil.mobsLoc( "textures/entity/redstone/redstone_golem_white_light.png"), 0.2F, 0.75F, 0.0F) {
             @Override
             public void render(PoseStack poseStack, RedstoneGolemEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
                                MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick,

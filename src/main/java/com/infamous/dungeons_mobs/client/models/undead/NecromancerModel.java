@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.undead;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.undead.NecromancerEntity;
@@ -26,17 +27,17 @@ public class NecromancerModel extends GeoModel<NecromancerEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(NecromancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/necromancer.animation.json");
+        return GeneralUtil.mobsLoc( "animations/necromancer.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(NecromancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/necromancer.geo.json");
+        return GeneralUtil.mobsLoc( "geo/necromancer.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(NecromancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/skeleton/necromancer.png");
+        return GeneralUtil.mobsLoc( "textures/entity/skeleton/necromancer.png");
     }
 
     @Override

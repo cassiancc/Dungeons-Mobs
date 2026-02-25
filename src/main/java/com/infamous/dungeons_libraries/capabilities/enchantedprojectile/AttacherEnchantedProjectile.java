@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.enchantedprojectile;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class AttacherEnchantedProjectile {
 
     private static class EnchantedProjectileProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "enchanted_projectile");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.librariesLoc("enchanted_projectile");
         private final EnchantedProjectile backend = new EnchantedProjectile();
         private final LazyOptional<EnchantedProjectile> optionalData = LazyOptional.of(() -> backend);
 

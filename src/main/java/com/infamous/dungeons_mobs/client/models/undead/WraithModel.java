@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.undead;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.undead.WraithEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,17 +19,17 @@ public class WraithModel extends GeoModel<WraithEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WraithEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/wraith.animation.json");
+        return GeneralUtil.mobsLoc( "animations/wraith.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(WraithEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/wraith.geo.json");
+        return GeneralUtil.mobsLoc( "geo/wraith.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WraithEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/wraith/wraith.png");
+        return GeneralUtil.mobsLoc( "textures/entity/wraith/wraith.png");
     }
 
     @Override

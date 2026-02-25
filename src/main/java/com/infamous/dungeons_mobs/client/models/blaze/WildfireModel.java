@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.blaze;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.blaze.WildfireEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,17 +22,17 @@ public class WildfireModel extends GeoModel<WildfireEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(WildfireEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/wildfire.animation.json");
+        return GeneralUtil.mobsLoc( "animations/wildfire.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(WildfireEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/wildfire.geo.json");
+        return GeneralUtil.mobsLoc( "geo/wildfire.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WildfireEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/blaze/wildfire.png");
+        return GeneralUtil.mobsLoc( "textures/entity/blaze/wildfire.png");
     }
 
     @Override

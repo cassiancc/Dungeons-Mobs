@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.ender;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.ender.AbstractEnderlingEntity;
 import com.infamous.dungeons_mobs.entities.ender.SnarelingEntity;
@@ -19,17 +20,17 @@ public class SnarelingModel extends GeoModel<SnarelingEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SnarelingEntity animatable) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/snareling.animation.json");
+        return GeneralUtil.mobsLoc( "animations/snareling.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SnarelingEntity animatable) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/snareling.geo.json");
+        return GeneralUtil.mobsLoc( "geo/snareling.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SnarelingEntity animatable) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/snareling.png");
+        return GeneralUtil.mobsLoc( "textures/entity/ender/snareling.png");
     }
 
     @Override

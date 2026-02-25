@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.illager;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.illagers.GeomancerEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -16,17 +17,17 @@ public class GeomancerModel extends GeoModel<GeomancerEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(GeomancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/geomancer.animation.json");
+        return GeneralUtil.mobsLoc( "animations/geomancer.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(GeomancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/geomancer.geo.json");
+        return GeneralUtil.mobsLoc( "geo/geomancer.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(GeomancerEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/illager/geomancer.png");
+        return GeneralUtil.mobsLoc( "textures/entity/illager/geomancer.png");
     }
 
     @Override

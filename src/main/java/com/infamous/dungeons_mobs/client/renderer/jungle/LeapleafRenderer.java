@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.renderer.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.client.models.jungle.LeapleafModel;
 import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
@@ -16,7 +17,7 @@ public class LeapleafRenderer extends GeoEntityRenderer<LeapleafEntity> {
     @SuppressWarnings("unchecked")
     public LeapleafRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new LeapleafModel());
-        this.addRenderLayer(new GeoEyeLayer(this, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/leapleaf_glow.png")));
+        this.addRenderLayer(new GeoEyeLayer(this, GeneralUtil.mobsLoc( "textures/entity/jungle/leapleaf_glow.png")));
     }
 
     protected void applyRotations(LeapleafEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,

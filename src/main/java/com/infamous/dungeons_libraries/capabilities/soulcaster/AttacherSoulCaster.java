@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.soulcaster;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class AttacherSoulCaster {
 
     private static class SoulCasterProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "soul_caster");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.librariesLoc("soul_caster");
         private final SoulCaster backend = new SoulCaster();
         private final LazyOptional<SoulCaster> optionalData = LazyOptional.of(() -> backend);
 

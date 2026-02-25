@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -143,7 +144,7 @@ public class Leader implements INBTSerializable<CompoundTag>, Master {
             minionUUIDs.add(compoundnbt.getUUID("uuid"));
         }
         if (tag.contains(LEVEL_KEY)) {
-            this.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
+            this.setLevelOnLoad(GeneralUtil.parse(tag.getString(LEVEL_KEY)));
         }
     }
 

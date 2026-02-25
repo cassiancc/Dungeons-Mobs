@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.artifact;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class AttacherArtifactUsage {
 
     private static class ArtifactUsageProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "artifact_usage");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.librariesLoc("artifact_usage");
         private final ArtifactUsage backend = new ArtifactUsage();
         private final LazyOptional<ArtifactUsage> optionalData = LazyOptional.of(() -> backend);
 

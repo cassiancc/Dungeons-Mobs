@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.client.models.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -10,17 +11,17 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class PoisonQuillVineModel extends AbstractVineModel {
     @Override
     public ResourceLocation getAnimationResource(AbstractVineEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/poison_quill_vine.animation.json");
+        return GeneralUtil.mobsLoc( "animations/poison_quill_vine.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(AbstractVineEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/poison_quill_vine.geo.json");
+        return GeneralUtil.mobsLoc( "geo/poison_quill_vine.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AbstractVineEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/jungle/poison_quill_vine.png");
+        return GeneralUtil.mobsLoc( "textures/entity/jungle/poison_quill_vine.png");
     }
 
     @Override

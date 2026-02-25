@@ -3,6 +3,7 @@ package com.infamous.dungeons_mobs.client.models.redstone;// Made with Blockbenc
 // Paste this class into your mod and generate all required imports
 
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.redstone.RedstoneGolemEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,18 +20,18 @@ public class RedstoneGolemModel extends GeoModel<RedstoneGolemEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(RedstoneGolemEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "animations/redstone_golem.animation.json");
+        return GeneralUtil.mobsLoc( "animations/redstone_golem.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(RedstoneGolemEntity entity) {
-        return new ResourceLocation(DungeonsMobs.MODID, "geo/redstone_golem.geo.json");
+        return GeneralUtil.mobsLoc( "geo/redstone_golem.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(RedstoneGolemEntity entity) {
         //ChorusGormandizerEntity entityIn = (ChorusGormandizerEntity) entity;
-        return new ResourceLocation(DungeonsMobs.MODID, "textures/entity/redstone/redstone_golem.png");
+        return GeneralUtil.mobsLoc( "textures/entity/redstone/redstone_golem.png");
     }
 
     @Override

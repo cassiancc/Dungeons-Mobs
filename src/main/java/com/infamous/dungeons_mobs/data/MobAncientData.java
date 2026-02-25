@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.data;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -56,6 +57,6 @@ public class MobAncientData {
     }
 
     private static ResourceLocation mcLoc(String path) {
-        return new ResourceLocation(path);
+        return GeneralUtil.loc(path);
     }
 }

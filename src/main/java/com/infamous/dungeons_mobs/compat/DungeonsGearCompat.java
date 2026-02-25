@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.compat;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -90,6 +91,6 @@ public class DungeonsGearCompat {
     }
 
     private static ResourceLocation getDungeonsGearResource(String itemId) {
-        return new ResourceLocation(DUNGEONS_GEAR_MOD_ID, itemId);
+        return GeneralUtil.loc(DUNGEONS_GEAR_MOD_ID, itemId);
     }
 }

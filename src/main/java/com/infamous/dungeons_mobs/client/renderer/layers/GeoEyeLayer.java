@@ -33,7 +33,7 @@ public class GeoEyeLayer<T extends LivingEntity & GeoAnimatable> extends GeoRend
 
         GeoModel<T> geomodel = this.getGeoModel();
 //        if (animatable instanceof BlastlingEntity) {
-//            renderModel(geomodel, new ResourceLocation(DungeonsMobs.MODID, "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entitylivingbaseIn).flameTicks) % 3) + "_eyes.png"), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 1.0F, 1.0F, 1.0F);
+//            renderModel(geomodel, GeneralUtil.mobsLoc( "textures/entity/ender/blastling" + (1 + ((int) ((BlastlingEntity) entitylivingbaseIn).flameTicks) % 3) + "_eyes.png"), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 1.0F, 1.0F, 1.0F);
 //        } else {
 //            renderModel(geomodel, textureLocation, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 0.8F, 0.8F, 0.8F);
 //        }

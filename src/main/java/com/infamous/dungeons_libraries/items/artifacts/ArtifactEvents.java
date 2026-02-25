@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID)
 public class ArtifactEvents {
     @SubscribeEvent
     public static void onCurioChange(CurioChangeEvent event) {

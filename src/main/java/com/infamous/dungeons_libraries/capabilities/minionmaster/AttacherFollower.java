@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class AttacherFollower {
 
     private static class FollowerProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "minion");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.librariesLoc("minion");
         private final Follower backend = new Follower();
         private final LazyOptional<Follower> optionalData = LazyOptional.of(() -> backend);
 

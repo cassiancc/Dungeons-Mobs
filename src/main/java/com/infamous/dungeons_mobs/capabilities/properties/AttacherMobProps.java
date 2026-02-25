@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.capabilities.properties;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +20,7 @@ public class AttacherMobProps {
 
     private static class MobPropsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "mob_props");
+        public static final ResourceLocation IDENTIFIER = GeneralUtil.loc(MODID, "mob_props");
         private final MobProps backend = new MobProps();
         private final LazyOptional<MobProps> optionalData = LazyOptional.of(() -> backend);
 

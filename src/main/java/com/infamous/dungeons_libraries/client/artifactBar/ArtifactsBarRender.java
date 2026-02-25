@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfig
 import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,7 +31,7 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class ArtifactsBarRender {
-    private static final ResourceLocation ARTIFACT_BAR_RESOURCE = new ResourceLocation(MODID, "textures/gui/artifact_bar.png");
+    private static final ResourceLocation ARTIFACT_BAR_RESOURCE = GeneralUtil.loc(MODID, "textures/gui/artifact_bar.png");
 
     @SubscribeEvent
     public static void displayArtifactBar(RenderGuiOverlayEvent.Post event) {
@@ -39,7 +40,7 @@ public class ArtifactsBarRender {
 
         if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player renderPlayer) {
             if (renderPlayer == null) return;
-            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "artifact_bar"));
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "artifact_bar"));
             if (guiElementConfig.isHidden()) return;
 
 

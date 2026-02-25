@@ -29,6 +29,7 @@ package com.infamous.dungeons_libraries.data.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
@@ -120,7 +121,7 @@ public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReload
             List<RAW> raws = new ArrayList<>();
             ResourceLocation fullId = entry.getKey();
             String fullPath = fullId.getPath(); // includes folderName/ and .json
-            ResourceLocation id = new ResourceLocation(
+            ResourceLocation id = GeneralUtil.loc(
                     fullId.getNamespace(),
                     fullPath.substring(this.folderName.length() + 1, fullPath.length() - JSON_EXTENSION_LENGTH));
 
