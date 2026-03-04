@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries;
 
 import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.client.artifactBar.ArtifactsBarRender;
 import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.integration.curios.CuriosIntegration;
@@ -82,6 +83,7 @@ public class DungeonsLibraries {
             MinecraftForge.EVENT_BUS.register(CuriosKeyBindings.class);
             modEventBus.register(CuriosIntegration.class);
             modEventBus.register(CuriosClientIntegration.class);
+            modEventBus.register(ArtifactsBarRender.class);
         }
 
         ModCapabilities.setupCapabilities();

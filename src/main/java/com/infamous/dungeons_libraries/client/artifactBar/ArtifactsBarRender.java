@@ -29,7 +29,6 @@ import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class ArtifactsBarRender {
     private static final ResourceLocation ARTIFACT_BAR_RESOURCE = GeneralUtil.loc(MODID, "textures/gui/artifact_bar.png");
 

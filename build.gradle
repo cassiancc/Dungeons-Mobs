@@ -80,7 +80,7 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
     }
     forge "net.minecraftforge:forge:$project.forge_version"
-    modImplementation("top.theillusivec4.curios:curios-forge:${curios_version}")
+    modCompileOnly("top.theillusivec4.curios:curios-forge:${curios_version}")
     modImplementation("software.bernie.geckolib:geckolib-forge-1.20.1:$geckolib_version")
     implementation("com.eliotlash.mclib:mclib:20")
     forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
