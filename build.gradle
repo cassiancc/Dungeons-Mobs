@@ -12,11 +12,6 @@ base {
 
 loom {
     silentMojangMappingsLicense()
-
-    forge {
-        mixinConfig 'dungeons_mobs.mixins.json'
-        mixinConfig 'dungeons_libraries.mixins.json'
-    }
 }
 
 repositories {
@@ -71,17 +66,21 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
 }
 
 dependencies {
     minecraft "net.minecraft:minecraft:$project.minecraft_version"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+        parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
     }
-    forge "net.minecraftforge:forge:$project.forge_version"
-    modCompileOnly("top.theillusivec4.curios:curios-forge:${curios_version}")
-    modImplementation("software.bernie.geckolib:geckolib-forge-1.20.1:$geckolib_version")
+    neoForge "net.neoforged:neoforge:$project.neoforge_version"
+    modCompileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}")
+    modImplementation("software.bernie.geckolib:geckolib-neoforge-1.21.1:$geckolib_version")
     implementation("com.eliotlash.mclib:mclib:20")
     forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
     modImplementation("curse.maven:enchantwithmob-913523:${enchant_with_mob_version}")
@@ -107,12 +106,12 @@ java {
     // If you remove this line, sources will not be generated.
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release = 21
 }
 
 // Configure Maven publishing.

@@ -15,11 +15,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -33,28 +31,30 @@ public class ArtifactsBarRender {
     private static final ResourceLocation ARTIFACT_BAR_RESOURCE = GeneralUtil.loc(MODID, "textures/gui/artifact_bar.png");
 
     @SubscribeEvent
-    public static void displayArtifactBar(RenderGuiOverlayEvent.Post event) {
+    public static void displayArtifactBar(RegisterGuiLayersEvent event) {
         final Minecraft mc = Minecraft.getInstance();
-//        if(mc != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
+//        if(mc != null && BuiltInRegistries.ITEM.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
 
-        if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player renderPlayer) {
-            if (renderPlayer == null) return;
-            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "artifact_bar"));
-            if (guiElementConfig.isHidden()) return;
+        event.wrapLayer(GeneralUtil.librariesLoc("artifact"), (arg, arg2) -> {
+            if (mc.getCameraEntity() instanceof Player renderPlayer) {
+                if (renderPlayer == null) return;
+                GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "artifact_bar"));
+                if (guiElementConfig.isHidden()) return;
 
 
-            Window sr = event.getWindow();
-            int scaledWidth = sr.getGuiScaledWidth();
-            int scaledHeight = sr.getGuiScaledHeight();
+                Window sr = Minecraft.getInstance().getWindow();
+                int scaledWidth = sr.getGuiScaledWidth();
+                int scaledHeight = sr.getGuiScaledHeight();
 
-            int x = guiElementConfig.getXPosition(scaledWidth);
-            int y = guiElementConfig.getYPosition(scaledHeight);
+                int x = guiElementConfig.getXPosition(scaledWidth);
+                int y = guiElementConfig.getYPosition(scaledHeight);
 
-            CuriosApi.getCuriosInventory(renderPlayer).ifPresent(iCuriosItemHandler -> {
-                renderBar(event.getGuiGraphics(), mc, renderPlayer, x, y, iCuriosItemHandler);
-            });
+                CuriosApi.getCuriosInventory(renderPlayer).ifPresent(iCuriosItemHandler -> {
+                    renderBar(arg, mc, renderPlayer, x, y, iCuriosItemHandler);
+                });
 
-        }
+            }
+        });
 
 
     }

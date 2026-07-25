@@ -19,13 +19,13 @@ public class MinecraftMixin {
         SHOULD_SWITCH_HAND = true;
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraftforge/common/ForgeHooks;onEmptyLeftClick(Lnet/minecraft/world/entity/player/Player;)V", remap = false),
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/NeoForge/common/ForgeHooks;onEmptyLeftClick(Lnet/minecraft/world/entity/player/Player;)V", remap = false),
             method = "startAttack()Z")
     private void dungeons_libraries_startAttack_onMiss(CallbackInfoReturnable<Boolean> cir) {
         SHOULD_SWITCH_HAND = true;
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/event/InputEvent$InteractionKeyMappingTriggered;shouldSwingHand()Z"),
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/NeoForge/client/event/InputEvent$InteractionKeyMappingTriggered;shouldSwingHand()Z"),
             method = "startAttack()Z")
     private void dungeons_libraries_startAttack_onSwing(CallbackInfoReturnable<Boolean> cir) {
         if (SHOULD_SWITCH_HAND) {

@@ -13,16 +13,17 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SOUL_CAP;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
+@EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class SoulBarRender {
     private static final ResourceLocation SOUL_BAR_RESOURCE = GeneralUtil.loc(MODID, "textures/misc/soul_bar.png");
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
@@ -46,7 +47,7 @@ public class SoulBarRender {
             SoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(renderPlayer);
 
             float souls = soulCasterCapability.getSouls();
-            double maxSouls = renderPlayer.getAttributeValue(SOUL_CAP.get());
+            double maxSouls = renderPlayer.getAttributeValue(SOUL_CAP);
 
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();

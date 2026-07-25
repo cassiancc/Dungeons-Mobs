@@ -22,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +32,7 @@ import java.util.UUID;
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.ARTIFACT_COOLDOWN_MULTIPLIER;
 import static com.infamous.dungeons_libraries.items.ItemTagWrappers.ARTIFACT_REPAIR_ITEMS;
 import static java.util.UUID.randomUUID;
-import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public abstract class ArtifactItem extends Item implements IReloadableGear {
     protected final UUID SLOT0_UUID = UUID.fromString("7037798e-ac2c-4711-aa72-ba73589f1411");
@@ -50,7 +50,7 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
 
     @Override
     public void reload() {
-        artifactGearConfig = ArtifactGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
+        artifactGearConfig = ArtifactGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ((ItemAccessor) this).setMaxDamage(artifactGearConfig.getDurability());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         artifactGearConfig.getAttributes().forEach(attributeModifier -> {
@@ -74,7 +74,7 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
 
     public static void triggerSynergy(Player player, ItemStack stack) {
         ArtifactEvent.Activated event = new ArtifactEvent.Activated(player, stack);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
     }
 
     public static void reduceArtifactCooldowns(Player playerEntity, double reductionInSeconds) {
@@ -94,7 +94,7 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
 
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return ForgeRegistries.ITEMS.tags().getTag(ARTIFACT_REPAIR_ITEMS).contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        return BuiltInRegistries.ITEM.tags().getTag(ARTIFACT_REPAIR_ITEMS).contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 
     public InteractionResultHolder<ItemStack> activateArtifact(ArtifactUseContext artifactUseContext) {
@@ -155,8 +155,8 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(stack, world, list, flag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, list, tooltipFlag);
         DescriptionHelper.addArtifactDescription(list, stack);
     }
 }

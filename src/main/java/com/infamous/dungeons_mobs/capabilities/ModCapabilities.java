@@ -9,18 +9,18 @@ import com.infamous.dungeons_mobs.capabilities.convertible.Convertible;
 import com.infamous.dungeons_mobs.capabilities.properties.AttacherMobProps;
 import com.infamous.dungeons_mobs.capabilities.properties.MobProps;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MODID)
 public class ModCapabilities {
 
     public static final Capability<Ancient> ANCIENT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
@@ -34,7 +34,7 @@ public class ModCapabilities {
 
 
     public static void setupCapabilities() {
-        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        IEventBus forgeBus = NeoForge.EVENT_BUS;
         forgeBus.addGenericListener(Entity.class, AttacherAncient::attach);
         forgeBus.addGenericListener(Entity.class, AttacherAnimatedProps::attach);
         forgeBus.addGenericListener(Entity.class, AttacherConvertible::attach);

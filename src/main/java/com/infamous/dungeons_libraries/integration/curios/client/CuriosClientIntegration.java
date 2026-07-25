@@ -1,14 +1,9 @@
 package com.infamous.dungeons_libraries.integration.curios.client;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.bus.api.SubscribeEvent;
 
-import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.*;
 
 public class CuriosClientIntegration {

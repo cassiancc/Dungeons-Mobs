@@ -8,8 +8,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -33,11 +33,6 @@ public abstract class TotemBaseEntity extends Entity {
         super(p_i48580_1_, p_i48580_2_);
         this.lifeTicks = lifeTicks;
         this.deathTicks = deathTicks;
-    }
-
-    @Override
-    protected void defineSynchedData() {
-
     }
 
     public int getLifeTicks() {

@@ -2,7 +2,7 @@ package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 

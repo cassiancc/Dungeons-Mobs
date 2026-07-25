@@ -5,15 +5,15 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = DungeonsMobs.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = DungeonsMobs.MODID)
 public class DungeonsGearCompat {
     public static final String DUNGEONS_GEAR_MOD_ID = "dungeons_gear";
     private static boolean IS_LOADED = false;
@@ -42,7 +42,7 @@ public class DungeonsGearCompat {
     }
 
     private static Item getRegisteredItem(String item) {
-        return ForgeRegistries.ITEMS.getValue(getDungeonsGearResource(item));
+        return BuiltInRegistries.ITEM.getValue(getDungeonsGearResource(item));
     }
 
     public static Item getOrDefault(Supplier<Item> dungeonsItemSupplier, Item defaultTo) {

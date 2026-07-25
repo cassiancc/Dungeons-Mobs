@@ -51,15 +51,15 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.fml.ModList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -68,7 +68,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
 public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, IShieldUser, SpawnArmoredMob {
 
@@ -220,7 +220,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
         equipArmorSet(ModItems.ROYAL_GUARD_ARMOR, this);
 
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item MACE = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("mace"));
+            Item MACE = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("mace"));
 
             ItemStack mace = new ItemStack(MACE);
             if (this.getCurrentRaid() == null) {
@@ -238,7 +238,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
     public void applyRaidBuffs(int waveAmount, boolean b) {
         ItemStack mainhandWeapon = new ItemStack(Items.IRON_AXE);
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item MACE = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("mace"));
+            Item MACE = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("mace"));
 
             mainhandWeapon = new ItemStack(MACE);
         }
@@ -332,7 +332,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
 
     @Override
     protected void hurtCurrentlyUsedShield(float amount) {
-        if (this.useItem.canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK)) {
+        if (this.useItem.canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK)) {
             if (amount >= 3.0F) {
                 int i = 1 + Mth.floor(amount);
                 InteractionHand hand = this.getUsedItemHand();
@@ -425,7 +425,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
 
         @Override
         public void stop() {
-            if (target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target) && mob.getOffhandItem().canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK) && mob.random.nextInt(6) == 0) {
+            if (target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target) && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK) && mob.random.nextInt(6) == 0) {
                 mob.startUsingItem(InteractionHand.OFF_HAND);
             }
         }

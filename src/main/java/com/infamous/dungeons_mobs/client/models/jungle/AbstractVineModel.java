@@ -3,7 +3,7 @@ package com.infamous.dungeons_mobs.client.models.jungle;
 import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.core.molang.MolangParser;
 import software.bernie.geckolib.model.GeoModel;
 

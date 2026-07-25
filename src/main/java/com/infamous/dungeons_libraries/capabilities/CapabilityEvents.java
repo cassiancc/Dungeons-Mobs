@@ -9,16 +9,17 @@ import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import com.infamous.dungeons_libraries.network.UpdateSoulsMessage;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getLeaderCapability;
 import static com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewardsHelper.getPlayerRewardsCapability;
 
-@Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
+@EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class CapabilityEvents {
 
     @SubscribeEvent

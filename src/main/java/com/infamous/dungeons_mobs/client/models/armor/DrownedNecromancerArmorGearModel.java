@@ -6,7 +6,7 @@ import com.infamous.dungeons_mobs.entities.water.DrownedNecromancerEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.core.molang.MolangParser;
 
 public class DrownedNecromancerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {

@@ -8,10 +8,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraftforge.common.world.ModifiableStructureInfo;
-import net.minecraftforge.common.world.StructureModifier;
-import net.minecraftforge.common.world.StructureSettingsBuilder;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.world.ModifiableStructureInfo;
+import net.neoforged.neoforge.common.world.StructureModifier;
+import net.neoforged.neoforge.common.world.StructureSettingsBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class DungeonsMobsStructureModifiers {
                     if(spawnOverrides != null){
                         List<MobSpawnSettings.SpawnerData> spawns = spawnOverrides.getSpawns();
                         spawns.forEach(spawnerData -> {
-                            if (this.entityTypes.contains(ForgeRegistries.ENTITY_TYPES.getHolder(spawnerData.type).get())) {
+                            if (this.entityTypes.contains(BuiltInRegistries.ENTITY_TYPE.getHolder(spawnerData.type).get())) {
                                 spawnOverrides.removeSpawn(spawnerData);
                             }
                         });

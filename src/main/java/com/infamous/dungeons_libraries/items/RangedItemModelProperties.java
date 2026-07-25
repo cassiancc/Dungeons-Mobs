@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
-import net.minecraftforge.registries.RegistryObject;
+import java.util.function.Supplier;
 
 import java.util.Map;
 
@@ -38,27 +38,27 @@ public class RangedItemModelProperties {
                 RangedItemModelProperties::getCrossbowChargedProperty);
     }
 
-    public static void addRangedModelProperties(RegistryObject<Item> itemRegistryObject) {
-        if (itemRegistryObject.get() instanceof BowItem) {
-            addBowModelProperties(itemRegistryObject);
-        } else if (itemRegistryObject.get() instanceof CrossbowItem) {
-            addCrossbowModelProperties(itemRegistryObject);
+    public static void addRangedModelProperties(Supplier<Item> itemSupplier) {
+        if (itemSupplier.get() instanceof BowItem) {
+            addBowModelProperties(itemSupplier);
+        } else if (itemSupplier.get() instanceof CrossbowItem) {
+            addCrossbowModelProperties(itemSupplier);
         }
     }
 
-    public static void addBowModelProperties(RegistryObject<Item> itemRegistryObject) {
-        ItemProperties.register(itemRegistryObject.get(), PULL_PROPERTY,
+    public static void addBowModelProperties(Supplier<Item> itemSupplier) {
+        ItemProperties.register(itemSupplier.get(), PULL_PROPERTY,
                 RangedItemModelProperties::getBowPullProperty);
-        ItemProperties.register(itemRegistryObject.get(), PULLING_PROPERTY,
+        ItemProperties.register(itemSupplier.get(), PULLING_PROPERTY,
                 RangedItemModelProperties::getBowPullingProperty);
     }
 
-    public static void addCrossbowModelProperties(RegistryObject<Item> itemRegistryObject) {
-        ItemProperties.register(itemRegistryObject.get(), PULL_PROPERTY,
+    public static void addCrossbowModelProperties(Supplier<Item> itemSupplier) {
+        ItemProperties.register(itemSupplier.get(), PULL_PROPERTY,
                 RangedItemModelProperties::getCrossbowPullProperty);
-        ItemProperties.register(itemRegistryObject.get(), PULLING_PROPERTY,
+        ItemProperties.register(itemSupplier.get(), PULLING_PROPERTY,
                 RangedItemModelProperties::getCrossbowPullingProperty);
-        ItemProperties.register(itemRegistryObject.get(), CHARGED_PROPERTY,
+        ItemProperties.register(itemSupplier.get(), CHARGED_PROPERTY,
                 RangedItemModelProperties::getCrossbowChargedProperty);
     }
 

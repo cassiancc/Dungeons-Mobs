@@ -9,7 +9,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-//@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+//@EventBusSubscriber(modid = MODID)
 public class GuiElementConfigRegistry {
     public static final ResourceLocation ELEMENT_CONFIG_BUILTIN_RESOURCELOCATION = GeneralUtil.loc(MODID, "gui/element");
 

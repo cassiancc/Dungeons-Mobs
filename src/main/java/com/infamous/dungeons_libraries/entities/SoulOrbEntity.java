@@ -14,8 +14,8 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
+import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -145,7 +145,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
         if (!this.level().isClientSide) {
             if (this.floatTime == 0) {
                 //Throw OrbEvent
-                if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new PlayerSoulEvent.PickupSoul(player, this)))
+                if (net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new PlayerSoulEvent.PickupSoul(player, this)))
                     return;
 
                 if (this.value > 0) {

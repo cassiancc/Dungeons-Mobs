@@ -8,8 +8,8 @@ import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket
 import com.infamous.dungeons_libraries.network.materials.WeaponMaterialSyncPacket;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(

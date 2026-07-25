@@ -15,11 +15,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION;
 import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
-@Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class DescriptionHelper {
 
     // Rewrite to a mixin inside ItemStack::getTooltipLines. Figure out a way to have all styles available.
@@ -42,7 +42,7 @@ public class DescriptionHelper {
     }
 
     public static void addArtifactDescription(List<Component> list, ItemStack itemStack) {
-        ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+        ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         if (registryName == null) return;
         addLoreDescription(list, registryName);
         addArtifactInfo(list, itemStack);
@@ -88,7 +88,7 @@ public class DescriptionHelper {
                             "artifact.dungeons_libraries.base")
                     .withStyle(ChatFormatting.DARK_AQUA));
 
-            ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+            ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
             list.add(Component.translatable(
                             "ability." + registryName.getNamespace() + "." + registryName.getPath())
                     .withStyle(ChatFormatting.GREEN));
@@ -111,7 +111,7 @@ public class DescriptionHelper {
     }
 
     public static void addFullDescription(List<Component> list, ItemStack itemStack) {
-        ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+        ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         addLoreDescription(list, registryName);
     }
 

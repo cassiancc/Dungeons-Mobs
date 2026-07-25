@@ -20,18 +20,19 @@ import com.infamous.dungeons_libraries.capabilities.timers.AttacherTimers;
 import com.infamous.dungeons_libraries.capabilities.timers.Timers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MODID)
 public class ModCapabilities {
 
     public static final Capability<Timers> TIMERS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
@@ -55,7 +56,7 @@ public class ModCapabilities {
 
 
     public static void setupCapabilities() {
-        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        IEventBus forgeBus = NeoForge.EVENT_BUS;
         forgeBus.addGenericListener(Entity.class, AttacherTimers::attach);
         forgeBus.addGenericListener(Entity.class, AttacherFollower::attach);
         forgeBus.addGenericListener(Entity.class, AttacherLeader::attach);

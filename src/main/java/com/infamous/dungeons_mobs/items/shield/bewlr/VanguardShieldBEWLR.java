@@ -13,8 +13,8 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.neoforge.api.distmarker.OnlyIn;
 
 import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.VANGUARD_SHIELD;
 import static com.infamous.dungeons_mobs.items.shield.ShieldTextures.LOCATION_VANGUARD_SHIELD;

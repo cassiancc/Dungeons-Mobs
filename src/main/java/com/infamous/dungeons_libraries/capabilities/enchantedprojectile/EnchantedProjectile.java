@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class EnchantedProjectile {
         ListTag enchantmentListnbt = new ListTag();
         enchantmentDataList.forEach(enchantmentData -> {
             CompoundTag enchantmentDataNBT = new CompoundTag();
-            enchantmentDataNBT.putString("id", String.valueOf(ForgeRegistries.ENCHANTMENTS.getKey(enchantmentData.enchantment)));
+            enchantmentDataNBT.putString("id", String.valueOf(BuiltInRegistries.ENCHANTMENTS.getKey(enchantmentData.enchantment)));
             enchantmentDataNBT.putShort("lvl", (short) enchantmentData.level);
             enchantmentListnbt.add(enchantmentDataNBT);
         });

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 public class BlastlingBulletEntity extends NecromancerOrbEntity {
 
@@ -58,7 +58,7 @@ public class BlastlingBulletEntity extends NecromancerOrbEntity {
             this.level().addParticle(ParticleTypes.WITCH, this.getX() + this.random.nextGaussian(), this.getY() + 0.5D + this.random.nextGaussian() * (double) 0.13F, this.getZ() + this.random.nextGaussian(), 0.0D, 0.0D, 0.0D);
         }
         if (!this.level().isClientSide) {
-            //Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner()) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
+            //Explosion.Mode explosion$mode = net.neoforged.neoforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner()) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
             //this.level.explode(this, this.getX(), this.getY(), this.getZ(), 0.5F, false, explosion$mode);
             this.remove(RemovalReason.DISCARDED);
         }

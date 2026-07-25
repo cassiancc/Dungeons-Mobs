@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
 import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.*;
@@ -30,7 +30,7 @@ public class SummonHelper {
     private static boolean canSummonMob(LivingEntity leader, Entity beeEntity, Leader leaderCap) {
         AttributeInstance summonCapAttribute = leader.getAttribute(SUMMON_CAP.get());
         if (summonCapAttribute == null) return false;
-        return leaderCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(beeEntity.getType())).getCost() <= summonCapAttribute.getValue();
+        return leaderCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(BuiltInRegistries.ENTITY_TYPE.getKey(beeEntity.getType())).getCost() <= summonCapAttribute.getValue();
     }
 
     public static boolean canSummonMob(LivingEntity master, Master masterCap) {
@@ -70,7 +70,7 @@ public class SummonHelper {
     public static void addSummonGoals(Mob mobEntity) {
         Follower followerCap = getFollowerCapability(mobEntity);
         if (followerCap.isSummon()) {
-            SummonConfig config = SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(mobEntity.getType()));
+            SummonConfig config = SummonConfigRegistry.getConfig(BuiltInRegistries.ENTITY_TYPE.getKey(mobEntity.getType()));
             if (config.shouldAddAttackGoal()) {
                 addSummonAttackGoal(mobEntity);
             }

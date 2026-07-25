@@ -12,8 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import net.neoforged.neoforge.network.NetworkHooks;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 
 import java.util.List;
 

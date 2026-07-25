@@ -12,14 +12,14 @@ import com.infamous.dungeons_mobs.client.models.redstone.RedstoneCubeModel;
 import com.infamous.dungeons_mobs.client.models.undead.SunkenSkeletonModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class ModModelLayers {
     public static ModelLayerLocation REDSTONE_CUBE = new ModelLayerLocation(
             GeneralUtil.parse(MODID + "redstone_cube_model"), "redstone_cube_model");

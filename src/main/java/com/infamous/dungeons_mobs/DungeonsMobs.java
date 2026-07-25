@@ -20,19 +20,19 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.eventbus.api.IEventBus;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib.GeckoLib;
@@ -47,12 +47,12 @@ public class DungeonsMobs {
     public static final String MODID = "dungeons_mobs";
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final CreativeModeTab DUNGEONS_MOBS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobs")).icon(()-> SPAWN_EGGS.getEntries().iterator().next().get().getDefaultInstance()).displayItems(((pParameters, pOutput) -> {
-        for (RegistryObject<Item> entry : SPAWN_EGGS.getEntries()) {
+        for (Supplier<Item> entry : SPAWN_EGGS.getEntries()) {
             pOutput.accept(entry.get());
         }
     })).build();
     public static final CreativeModeTab DUNGEONS_MOBS_ITEMS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobsItems")).icon(()-> ModItems.ITEMS.getEntries().iterator().next().get().getDefaultInstance()).displayItems(((pParameters, pOutput) -> {
-        for (RegistryObject<Item> entry : ModItems.ITEMS.getEntries()) {
+        for (Supplier<Item> entry : ModItems.ITEMS.getEntries()) {
             pOutput.accept(entry.get());
         }
     })).build();
@@ -71,7 +71,7 @@ public class DungeonsMobs {
         context.getModEventBus().addListener(this::onLoadComplete);
 
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
 
         // Registering custom tags
         EntityTags.register();

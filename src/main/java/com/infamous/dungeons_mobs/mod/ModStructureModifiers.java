@@ -12,10 +12,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraftforge.common.world.StructureModifier;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.world.StructureModifier;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
+import java.util.function.Supplier;
 
 import java.util.List;
 import java.util.function.Function;
@@ -23,12 +23,12 @@ import java.util.function.Function;
 public class ModStructureModifiers {
     public static final Codec<HolderSet<Structure>> LIST_CODEC = RegistryCodecs.homogeneousList(Registries.STRUCTURE, Structure.DIRECT_CODEC);
 
-    public static final DeferredRegister<Codec<? extends StructureModifier>> STRUCTURE_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.STRUCTURE_MODIFIER_SERIALIZERS, DungeonsMobs.MODID);
+    public static final DeferredRegister<Codec<? extends StructureModifier>> STRUCTURE_MODIFIER_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.Keys.STRUCTURE_MODIFIER_SERIALIZERS, DungeonsMobs.MODID);
 
     /**
      * Stock structure modifier for adding mob spawns to structures.
      */
-    public static final RegistryObject<Codec<DungeonsMobsStructureModifiers.AddSpawnsStructureModifier>> ADD_SPAWNS_STRUCTURE_MODIFIER_TYPE = STRUCTURE_MODIFIER_SERIALIZERS.register("add_spawns", () ->
+    public static final Supplier<Codec<DungeonsMobsStructureModifiers.AddSpawnsStructureModifier>> ADD_SPAWNS_STRUCTURE_MODIFIER_TYPE = STRUCTURE_MODIFIER_SERIALIZERS.register("add_spawns", () ->
             RecordCodecBuilder.create(builder -> builder.group(
                     LIST_CODEC.fieldOf("structures").forGetter(DungeonsMobsStructureModifiers.AddSpawnsStructureModifier::structures),
                     // Allow either a list or single spawner, attempting to decode the list format first.
@@ -43,10 +43,10 @@ public class ModStructureModifiers {
     /**
      * Stock structure modifier for removing mob spawns from structures.
      */
-    public static final RegistryObject<Codec<DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier>> REMOVE_SPAWNS_STRUCTURE_MODIFIER_TYPE = STRUCTURE_MODIFIER_SERIALIZERS.register("remove_spawns", () ->
+    public static final Supplier<Codec<DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier>> REMOVE_SPAWNS_STRUCTURE_MODIFIER_TYPE = STRUCTURE_MODIFIER_SERIALIZERS.register("remove_spawns", () ->
             RecordCodecBuilder.create(builder -> builder.group(
                     LIST_CODEC.fieldOf("structures").forGetter(DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::structures),
-                    RegistryCodecs.homogeneousList(ForgeRegistries.Keys.ENTITY_TYPES).fieldOf("entity_types").forGetter(DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::entityTypes)
+                    RegistryCodecs.homogeneousList(BuiltInRegistries.Keys.ENTITY_TYPES).fieldOf("entity_types").forGetter(DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::entityTypes)
             ).apply(builder, DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::new))
     );
 }

@@ -3,13 +3,13 @@ package com.infamous.dungeons_libraries.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static net.minecraftforge.registries.ForgeRegistries.ENCHANTMENTS;
+import static net.minecraft.core.registries.BuiltInRegistries.ENCHANTMENTS;
 
 public class BuiltInEnchantmentsMessage {
     private final int entityId;

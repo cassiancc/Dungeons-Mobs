@@ -4,8 +4,8 @@ import com.infamous.dungeons_mobs.mod.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +25,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     }
 
     private void curiosArtifactTags() {
-        ModItems.ARTIFACTS.forEach((resourceLocation, itemRegistryObject) -> this.tag(CURIOS_ARTIFACTS).add(itemRegistryObject.get()));
+        ModItems.ARTIFACTS.forEach((resourceLocation, itemSupplier) -> this.tag(CURIOS_ARTIFACTS).add(itemSupplier.get()));
     }
 
 }

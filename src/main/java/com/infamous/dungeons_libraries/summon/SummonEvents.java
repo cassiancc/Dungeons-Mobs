@@ -4,14 +4,14 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getFollowerCapability;
 
-@Mod.EventBusSubscriber(modid = MODID)
+@EventBusSubscriber(modid = MODID)
 public class SummonEvents {
 
     @SubscribeEvent

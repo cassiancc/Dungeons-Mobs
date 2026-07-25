@@ -24,8 +24,8 @@ public class ToolGear extends MeleeGear {
     @Deprecated // FORGE: Use stack sensitive variant below
     @Override
     public boolean isCorrectToolForDrops(BlockState p_150816_) {
-        if (net.minecraftforge.common.TierSortingRegistry.isTierSorted(getTier())) {
-            return net.minecraftforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), p_150816_) && p_150816_.is(this.blocks);
+        if (net.neoforged.neoforge.common.TierSortingRegistry.isTierSorted(getTier())) {
+            return net.neoforged.neoforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), p_150816_) && p_150816_.is(this.blocks);
         }
         int i = this.getTier().getLevel();
         if (i < 3 && p_150816_.is(BlockTags.NEEDS_DIAMOND_TOOL)) {
@@ -45,7 +45,7 @@ public class ToolGear extends MeleeGear {
     // FORGE START
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return state.is(blocks) && net.minecraftforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
+        return state.is(blocks) && net.neoforged.neoforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
     }
 
 }

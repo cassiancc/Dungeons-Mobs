@@ -12,9 +12,9 @@ import com.infamous.dungeons_mobs.items.shield.VanguardShieldItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
+import java.util.function.Supplier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,52 +26,52 @@ import static net.minecraft.world.item.ArmorItem.Type.*;
 
 public class ModItems {
     private static final ResourceLocation DEFAULT_ANIMATION_RESOURCE = GeneralUtil.loc(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
 
-    public static final Map<ResourceLocation, RegistryObject<Item>> ARTIFACTS = new HashMap<>();
+    public static final Map<ResourceLocation, Supplier<Item>> ARTIFACTS = new HashMap<>();
 
     public static final Item.Properties ARMOR_PROPERTIES = new Item.Properties();
-    public static final Map<ResourceLocation, RegistryObject<Item>> ARMORS = new HashMap<>();
+    public static final Map<ResourceLocation, Supplier<Item>> ARMORS = new HashMap<>();
 
     // SHIELD
-    public static final RegistryObject<Item> ROYAL_GUARD_SHIELD = ITEMS.register("royal_guard_shield",
+    public static final Supplier<Item> ROYAL_GUARD_SHIELD = ITEMS.register("royal_guard_shield",
             () -> new RoyalGuardShieldItem(new Item.Properties().durability(336)));
 
-    public static final RegistryObject<Item> VANGUARD_SHIELD = ITEMS.register("vanguard_shield",
+    public static final Supplier<Item> VANGUARD_SHIELD = ITEMS.register("vanguard_shield",
             () -> new VanguardShieldItem(new Item.Properties().durability(336)));
 
     // HELMETS
-    public static final RegistryObject<Item> GOLD_PILLAGER_HELMET = registerArmor("gold_pillager_helmet",
+    public static final Supplier<Item> GOLD_PILLAGER_HELMET = registerArmor("gold_pillager_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     GeneralUtil.loc(MODID, "geo/armor/pillager_helmet.geo.json"),
                     GeneralUtil.loc(MODID, "textures/models/armor/gold_pillager_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
-    public static final RegistryObject<Item> DIAMOND_PILLAGER_HELMET = ITEMS.register("diamond_pillager_helmet",
+    public static final Supplier<Item> DIAMOND_PILLAGER_HELMET = ITEMS.register("diamond_pillager_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     GeneralUtil.loc(MODID, "geo/armor/pillager_helmet.geo.json"),
                     GeneralUtil.loc(MODID, "textures/models/armor/diamond_pillager_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
-    public static final RegistryObject<Item> GOLD_VINDICATOR_HELMET = ITEMS.register("gold_vindicator_helmet",
+    public static final Supplier<Item> GOLD_VINDICATOR_HELMET = ITEMS.register("gold_vindicator_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     GeneralUtil.loc(MODID, "geo/armor/vindicator_helmet.geo.json"),
                     GeneralUtil.loc(MODID, "textures/models/armor/gold_vindicator_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
-    public static final RegistryObject<Item> DIAMOND_VINDICATOR_HELMET = ITEMS.register("diamond_vindicator_helmet",
+    public static final Supplier<Item> DIAMOND_VINDICATOR_HELMET = ITEMS.register("diamond_vindicator_helmet",
             () -> new ArmorGear(HELMET, ARMOR_PROPERTIES, null,
                     GeneralUtil.loc(MODID, "geo/armor/vindicator_helmet.geo.json"),
                     GeneralUtil.loc(MODID, "textures/models/armor/diamond_vindicator_helmet.png"),
                     DEFAULT_ANIMATION_RESOURCE));
 
-    public static final RegistryObject<Item> NETHERITE_PIGLIN_HELMET = ITEMS.register("netherite_piglin_helmet",
+    public static final Supplier<Item> NETHERITE_PIGLIN_HELMET = ITEMS.register("netherite_piglin_helmet",
             () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, HELMET, new Item.Properties()));
-    public static final RegistryObject<Item> CRACKED_NETHERITE_PIGLIN_HELMET = ITEMS.register("cracked_netherite_piglin_helmet",
+    public static final Supplier<Item> CRACKED_NETHERITE_PIGLIN_HELMET = ITEMS.register("cracked_netherite_piglin_helmet",
             () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, HELMET, new Item.Properties()));
-    public static final RegistryObject<Item> GOLD_PIGLIN_HELMET = ITEMS.register("gold_piglin_helmet",
+    public static final Supplier<Item> GOLD_PIGLIN_HELMET = ITEMS.register("gold_piglin_helmet",
             () -> new PiglinHelmetItem(ArmorMaterials.GOLD, HELMET, new Item.Properties()));
-    public static final RegistryObject<Item> CRACKED_GOLD_PIGLIN_HELMET = ITEMS.register("cracked_gold_piglin_helmet",
+    public static final Supplier<Item> CRACKED_GOLD_PIGLIN_HELMET = ITEMS.register("cracked_gold_piglin_helmet",
             () -> new PiglinHelmetItem(ArmorMaterials.GOLD, HELMET, new Item.Properties()));
 
     public static final ArmorSet CHEF_ARMOR = registerArmorSet("chef_armor", "chef_helmet", "chef_chestplate", null, null);
@@ -92,40 +92,40 @@ public class ModItems {
 
 
     // SPATULA
-    public static final RegistryObject<Item> WOODEN_LADLE = ITEMS.register("wooden_ladle",
+    public static final Supplier<Item> WOODEN_LADLE = ITEMS.register("wooden_ladle",
             () -> new WoodenLadleItem(Tiers.WOOD, 0.5F, (2.0F - 4.0F), new Item.Properties()));
 
     // MOUNTAINEER AXES
-    public static final RegistryObject<Item> MOUNTAINEER_AXE = ITEMS.register("mountaineer_axe",
+    public static final Supplier<Item> MOUNTAINEER_AXE = ITEMS.register("mountaineer_axe",
             () -> new MountaineerAxeItem(Tiers.IRON, 1, (1.2F - 4.0F), new Item.Properties()));
 
-    public static final RegistryObject<Item> GOLD_MOUNTAINEER_AXE = ITEMS.register("gold_mountaineer_axe",
+    public static final Supplier<Item> GOLD_MOUNTAINEER_AXE = ITEMS.register("gold_mountaineer_axe",
             () -> new MountaineerAxeItem(Tiers.IRON, 1, (1.2F - 4.0F), new Item.Properties()));
 
-    public static final RegistryObject<Item> DIAMOND_MOUNTAINEER_AXE = ITEMS.register("diamond_mountaineer_axe",
+    public static final Supplier<Item> DIAMOND_MOUNTAINEER_AXE = ITEMS.register("diamond_mountaineer_axe",
             () -> new MountaineerAxeItem(Tiers.DIAMOND, 1, (1.2F - 4.0F), new Item.Properties()));
 
     // ARTIFACTS
-    public static final RegistryObject<Item> WINDCALLER_STAFF = registerArtifact("windcaller_staff",
+    public static final Supplier<Item> WINDCALLER_STAFF = registerArtifact("windcaller_staff",
             () -> new WindcallerStaffItem(new Item.Properties()));
 
-    public static final RegistryObject<Item> GEOMANCER_STAFF = registerArtifact("geomancer_staff",
+    public static final Supplier<Item> GEOMANCER_STAFF = registerArtifact("geomancer_staff",
             () -> new GeomancerStaffItem(new Item.Properties()));
 
-    public static final RegistryObject<Item> NECROMANCER_STAFF = registerArtifact("necromancer_staff",
+    public static final Supplier<Item> NECROMANCER_STAFF = registerArtifact("necromancer_staff",
             () -> new NecromancerStaffItem(new Item.Properties()));
 
-    public static final RegistryObject<Item> NECROMANCER_TRIDENT = registerArtifact("necromancer_trident",
+    public static final Supplier<Item> NECROMANCER_TRIDENT = registerArtifact("necromancer_trident",
             () -> new NecromancerTridentItem(new Item.Properties()));
 
-    public static final RegistryObject<Item> BLUE_NETHERSHROOM = ITEMS.register("blue_nethershroom",
+    public static final Supplier<Item> BLUE_NETHERSHROOM = ITEMS.register("blue_nethershroom",
             () -> new BlueNethershroomItem(new Item.Properties().stacksTo(16)));
 
     //TRIDENTS
-    public static final RegistryObject<Item> YELLOW_TRIDENT = ITEMS.register("yellow_trident",
+    public static final Supplier<Item> YELLOW_TRIDENT = ITEMS.register("yellow_trident",
             () -> new ColoredTridentItem((new Item.Properties().durability(250)), DyeColor.YELLOW));
 
-    public static final RegistryObject<Item> PURPLE_TRIDENT = ITEMS.register("purple_trident",
+    public static final Supplier<Item> PURPLE_TRIDENT = ITEMS.register("purple_trident",
             () -> new ColoredTridentItem((new Item.Properties().durability(250)), DyeColor.PURPLE));
 
 
@@ -244,15 +244,15 @@ public class ModItems {
         );
     }
 
-    private static RegistryObject<Item> registerArmor(String armorId, Supplier<Item> itemSupplier) {
+    private static Supplier<Item> registerArmor(String armorId, Supplier<Item> itemSupplier) {
         if (armorId == null) return null;
-        RegistryObject<Item> register = ITEMS.register(armorId, itemSupplier);
+        Supplier<Item> register = ITEMS.register(armorId, itemSupplier);
         ARMORS.put(GeneralUtil.mobsLoc(armorId), register);
         return register;
     }
 
-    private static RegistryObject<Item> registerArtifact(String meleeWeaponId, Supplier<Item> itemSupplier) {
-        RegistryObject<Item> register = ITEMS.register(meleeWeaponId, itemSupplier);
+    private static Supplier<Item> registerArtifact(String meleeWeaponId, Supplier<Item> itemSupplier) {
+        Supplier<Item> register = ITEMS.register(meleeWeaponId, itemSupplier);
         ARTIFACTS.put(GeneralUtil.mobsLoc(meleeWeaponId), register);
         return register;
     }

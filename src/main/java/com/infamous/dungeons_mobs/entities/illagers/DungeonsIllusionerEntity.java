@@ -48,15 +48,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.fml.ModList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -64,7 +64,7 @@ import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
 public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnimatable, SpawnArmoredMob {
 
@@ -219,7 +219,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
         super.populateDefaultEquipmentSlots(random, p_180481_1_);
         equipArmorSet(ModItems.ILLUSIONER_ARMOR, this);
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item SHORTBOW = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("shortbow"));
+            Item SHORTBOW = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("shortbow"));
 
             SpawnEquipmentHelper.equipMainhand(SHORTBOW.getDefaultInstance(), this);
         } else {

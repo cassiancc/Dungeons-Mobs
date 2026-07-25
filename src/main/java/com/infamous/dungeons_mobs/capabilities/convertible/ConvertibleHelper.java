@@ -10,7 +10,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.neoforged.fml.util.ObfuscationReflectionHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,7 +37,7 @@ public class ConvertibleHelper {
             handleZombieAttributes(convertedToZombie);
             setZombieCanBreakDoors(originalZombie, convertedToZombie);
         }
-        net.minecraftforge.event.ForgeEventFactory.onLivingConvert(original, convertedTo);
+        net.neoforged.neoforge.event.ForgeEventFactory.onLivingConvert(original, convertedTo);
     }
 
     private static void setZombieCanBreakDoors(Zombie originalZombie, Zombie convertedToZombie) {

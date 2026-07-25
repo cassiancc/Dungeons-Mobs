@@ -10,6 +10,7 @@ import com.infamous.dungeons_libraries.mixin.CrossbowItemInvoker;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,7 +23,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.UUID;
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
-import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
@@ -44,16 +45,16 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
 
     @Override
     public void reload() {
-        crossbowGearConfig = CrossbowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
+        crossbowGearConfig = CrossbowGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         crossbowGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
             if (attribute != null) {
-                UUID uuid = randomUUID();
+                ResourceLocation uuid = randomUUID();
                 if (ATTACK_DAMAGE.equals(attribute)) {
-                    uuid = BASE_ATTACK_DAMAGE_UUID;
+                    uuid = BASE_ATTACK_DAMAGE_ID;
                 } else if (ATTACK_SPEED.equals(attribute)) {
-                    uuid = BASE_ATTACK_SPEED_UUID;
+                    uuid = BASE_ATTACK_SPEED_ID;
                 }
                 builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
             }
@@ -127,7 +128,7 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
         int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         float minTime = 1;
         CrossbowEvent.ChargeTime event = new CrossbowEvent.ChargeTime(livingEntity, stack, this.getDefaultChargeTime());
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
         return Math.max(event.getChargeTime() - 5 * quickChargeLevel, minTime);
     }
 
@@ -156,7 +157,7 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);
     }

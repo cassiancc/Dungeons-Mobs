@@ -5,37 +5,38 @@ import com.infamous.dungeons_libraries.items.gearconfig.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.*;
-import net.minecraftforge.event.ItemAttributeModifierEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.LIFE_STEAL;
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.MAGIC_DAMAGE_MULTIPLIER;
 
-@Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
+@EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class ItemEvents {
     private static final UUID[] ARMOR_MODIFIER_UUID_PER_SLOT = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
     protected static final UUID BASE_ATTACK_DAMAGE_UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
     protected static final UUID BASE_ATTACK_SPEED_UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
     @SubscribeEvent
-    public static void onMagicDamage(LivingDamageEvent event) {
-        if (event.getSource().isIndirect() && event.getSource().equals(event.getEntity().damageSources().magic()) &&
+    public static void onMagicDamage(LivingDamageEvent.Pre event) { // fixme check if pre or post is better
+        if (!event.getSource().isDirect() && event.getSource().equals(event.getEntity().damageSources().magic()) &&
                 event.getSource().getEntity() instanceof LivingEntity) {
 
-            float originalDamage = event.getAmount();
+            float originalDamage = event.getOriginalDamage();
 
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
             AttributeInstance magicDamageMultiplierAttribute = attacker.getAttribute(MAGIC_DAMAGE_MULTIPLIER.get());
             double attributeModifier = magicDamageMultiplierAttribute != null ? magicDamageMultiplierAttribute.getValue() : 1.0D;
             double additionalDamage = originalDamage * attributeModifier;
 
-            if (additionalDamage > 0) event.setAmount(originalDamage + (float) additionalDamage);
+            if (additionalDamage > 0) event.setNewDamage(originalDamage + (float) additionalDamage);
         }
     }
 
@@ -43,7 +44,7 @@ public class ItemEvents {
     public static void onEntityKilled(LivingDeathEvent event) {
         if (event.getSource().getEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-            AttributeInstance attribute = attacker.getAttribute(LIFE_STEAL.get());
+            AttributeInstance attribute = attacker.getAttribute(LIFE_STEAL);
             if (attribute != null) {
                 double lifeStealAmount = attribute.getValue() - 1.0D;
                 float victimMaxHealth = event.getEntity().getMaxHealth();
@@ -58,7 +59,7 @@ public class ItemEvents {
     public static void onItemAttributeModifierEvent(ItemAttributeModifierEvent event){
 //        Item item = event.getItemStack().getItem();
 //        if(item instanceof BowItem && (event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND)){
-//            BowGearConfig config = BowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            BowGearConfig config = BowGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(item));
 //            if(config != BowGearConfig.DEFAULT){
 //                event.clearModifiers();
 //                UUID uuid = randomUUID();
@@ -67,7 +68,7 @@ public class ItemEvents {
 //                });
 //            }
 //        }else if(item instanceof CrossbowItem && (event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND)){
-//            BowGearConfig config = CrossbowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            BowGearConfig config = CrossbowGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(item));
 //            if(config != BowGearConfig.DEFAULT){
 //                event.clearModifiers();
 //                UUID uuid = randomUUID();
@@ -76,7 +77,7 @@ public class ItemEvents {
 //                });
 //            }
 //        }else if(item instanceof ArmorItem && event.getSlotType() == ((ArmorItem) item).getSlot()){
-//            ArmorGearConfig config = ArmorGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            ArmorGearConfig config = ArmorGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(item));
 //            if(config == ArmorGearConfig.DEFAULT) return;
 //            event.clearModifiers();
 //            ArmorMaterial material = config.getArmorMaterial();
@@ -94,7 +95,7 @@ public class ItemEvents {
 //                }
 //            });
 //        }else if(event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND) {
-//            MeleeGearConfig meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            MeleeGearConfig meleeGearConfig = MeleeGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(item));
 //            if (meleeGearConfig == MeleeGearConfig.DEFAULT) return;
 //            event.clearModifiers();
 //            meleeGearConfig.getAttributes().forEach(attributeModifier -> {

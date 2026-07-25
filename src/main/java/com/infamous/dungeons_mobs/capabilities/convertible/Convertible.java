@@ -3,7 +3,7 @@ package com.infamous.dungeons_mobs.capabilities.convertible;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.BiConsumer;
 

@@ -7,7 +7,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -79,7 +79,7 @@ public class BasicModdedAttackGoal<T extends Mob & GeoAnimatable & AnimatableMel
     @Override
     public void stop() {
         if (target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target)
-                && mob.getOffhandItem().canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK) && mob.getRandom().nextInt(4) == 0) {
+                && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK) && mob.getRandom().nextInt(4) == 0) {
             mob.startUsingItem(InteractionHand.OFF_HAND);
         }
     }

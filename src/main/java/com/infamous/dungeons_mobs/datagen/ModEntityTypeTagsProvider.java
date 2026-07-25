@@ -6,7 +6,7 @@ import com.infamous.dungeons_mobs.tags.EntityTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {

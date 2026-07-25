@@ -54,12 +54,12 @@ public class UseShieldGoal extends Goal {
     @Override
     public boolean canUse() {
         target = mob.getTarget();
-        return target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target) && (((mob.getRandom().nextInt(this.blockChance) == 0 && mob.distanceTo(target) <= blockDistance && mob.hasLineOfSight(target) && mob.getOffhandItem().canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK)) || mob.isBlocking()) || (guaranteedBlockIfTargetNotVisible && !mob.hasLineOfSight(target)));
+        return target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target) && (((mob.getRandom().nextInt(this.blockChance) == 0 && mob.distanceTo(target) <= blockDistance && mob.hasLineOfSight(target) && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK)) || mob.isBlocking()) || (guaranteedBlockIfTargetNotVisible && !mob.hasLineOfSight(target)));
     }
 
     @Override
     public boolean canContinueToUse() {
-        return target != null && mob.invulnerableTime <= 0 && !isShieldDisabled(mob) && mob.getOffhandItem().canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK);
+        return target != null && mob.invulnerableTime <= 0 && !isShieldDisabled(mob) && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK);
     }
 
     @Override

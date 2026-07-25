@@ -3,7 +3,7 @@ package com.infamous.dungeons_libraries.capabilities.artifact;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public class ArtifactUsage implements INBTSerializable<CompoundTag> {
 

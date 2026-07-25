@@ -8,6 +8,7 @@ import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.network.EliteMobMessage;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -20,22 +21,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import static java.util.UUID.randomUUID;
-import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
-@Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
+@EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class EliteMobEvents {
     public static final float SIZE_ADJUSTMENT = 1.1F;
 
@@ -49,10 +51,10 @@ public class EliteMobEvents {
 
     public static void makeEliteChance(Level level, LivingEntity entity) {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-        EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()), entity.getRandom());
+        EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()), entity.getRandom());
         if (!cap.hasSpawned() && config != null) {
             LevelChunk chunk = level.getChunkSource().getChunkNow(entity.blockPosition().getX() >> 4, entity.blockPosition().getZ() >> 4);
-            if (chunk != null && chunk.getStatus().isOrAfter(ChunkStatus.FULL)
+            if (chunk != null && chunk.getFullStatus().isOrAfter(FullChunkStatus.FULL)
                     && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
                 makeElite(entity, config);
             }
@@ -62,7 +64,7 @@ public class EliteMobEvents {
 
     public static void makeElite(LivingEntity entity) {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-        EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()), entity.getRandom());
+        EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()), entity.getRandom());
         if (!cap.hasSpawned() && config != null) {
             makeElite(entity, config);
         }
@@ -79,7 +81,7 @@ public class EliteMobEvents {
         setItemSlot(entity, EquipmentSlot.OFFHAND, config.getOffhandItem());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         config.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
             if (attribute != null) {
                 builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
             }
@@ -101,8 +103,8 @@ public class EliteMobEvents {
 
         EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
         if (cap.isElite()) {
-            float totalWidth = event.getNewSize().width * SIZE_ADJUSTMENT;
-            float totalHeight = event.getNewSize().height * SIZE_ADJUSTMENT;
+            float totalWidth = event.getNewSize().width() * SIZE_ADJUSTMENT;
+            float totalHeight = event.getNewSize().height() * SIZE_ADJUSTMENT;
             event.setNewEyeHeight(event.getNewEyeHeight() * SIZE_ADJUSTMENT);
             event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
         }

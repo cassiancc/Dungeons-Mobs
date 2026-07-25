@@ -8,15 +8,15 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
+import java.util.function.Supplier;
 
 public class ModDataSerializers {
 
-    public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, DungeonsMobs.MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.Keys.ENTITY_DATA_SERIALIZERS, DungeonsMobs.MODID);
 
-    public static final RegistryObject<EntityDataSerializer<List<UUID>>> UUID_LIST = DATA_SERIALIZERS.register("uuid_list", () -> getUUIDListSerializer());
+    public static final Supplier<EntityDataSerializer<List<UUID>>> UUID_LIST = DATA_SERIALIZERS.register("uuid_list", () -> getUUIDListSerializer());
 
     private static EntityDataSerializer<List<UUID>> getUUIDListSerializer() {
         return new EntityDataSerializer<List<UUID>>() {

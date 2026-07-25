@@ -3,13 +3,13 @@ package com.infamous.dungeons_libraries.summon;
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = MODID)
 public class SummonConfigRegistry {
     public static final ResourceLocation SUMMON_RESOURCELOCATION = GeneralUtil.loc(MODID, "summon");
 

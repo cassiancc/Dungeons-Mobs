@@ -21,16 +21,15 @@ package com.infamous.dungeons_libraries.event;
 
 import com.infamous.dungeons_libraries.entities.SoulOrbEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /**
  * PlayerXpEvent is fired whenever an event involving player experience occurs. <br>
- * If a method utilizes this {@link net.minecraftforge.eventbus.api.Event} as its parameter, the method will
+ * If a method utilizes this {@link net.neoforged.neoforge.eventbus.api.Event} as its parameter, the method will
  * receive every child event of this class.<br>
  * <br>
- * All children of this event are fired on the {@link MinecraftForge#EVENT_BUS}.
+ * All children of this event are fired on the {@link NeoForge#EVENT_BUS}.
  */
 public class PlayerSoulEvent extends PlayerEvent {
 
@@ -42,7 +41,6 @@ public class PlayerSoulEvent extends PlayerEvent {
      * This event is fired after the player collides with an experience orb, but before the player has been given the experience.
      * It can be cancelled, and no further processing will be done.
      */
-    @Cancelable
     public static class PickupSoul extends PlayerSoulEvent {
 
         private final SoulOrbEntity orb;

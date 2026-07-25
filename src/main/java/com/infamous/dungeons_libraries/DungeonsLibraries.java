@@ -19,18 +19,17 @@ import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,20 +49,17 @@ public class DungeonsLibraries {
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "dungeons_libraries";
 
-    public DungeonsLibraries() {
+    public DungeonsLibraries(IEventBus modEventBus, ModContainer container) {
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> {
             return GuiElementConfigRegistry::initGuiElementConfigs;
         });
         // Register the setup method for modloading
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
-        FMLJavaModLoadingContext fmlJavaModLoadingContext = FMLJavaModLoadingContext.get();
-        fmlJavaModLoadingContext.getModEventBus().addListener(this::setup);
+        container.registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
+        modEventBus.addListener(this::setup);
         // Register the doClientStuff method for modloading
-        fmlJavaModLoadingContext.getModEventBus().addListener(this::doClientStuff);
+        modEventBus.addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-
-        final IEventBus modEventBus = fmlJavaModLoadingContext.getModEventBus();
+        NeoForge.EVENT_BUS.register(this);
         ItemTagWrappers.init();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
@@ -79,8 +75,8 @@ public class DungeonsLibraries {
         ARTIFACT_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArtifactGearConfigRegistry::toPacket);
 
         if (ModList.get().isLoaded("curios")) {
-            MinecraftForge.EVENT_BUS.register(ArtifactEvents.class);
-            MinecraftForge.EVENT_BUS.register(CuriosKeyBindings.class);
+            NeoForge.EVENT_BUS.register(ArtifactEvents.class);
+            NeoForge.EVENT_BUS.register(CuriosKeyBindings.class);
             modEventBus.register(CuriosIntegration.class);
             modEventBus.register(CuriosClientIntegration.class);
             modEventBus.register(ArtifactsBarRender.class);

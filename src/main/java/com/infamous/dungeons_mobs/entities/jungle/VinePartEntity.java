@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
-import net.minecraftforge.entity.PartEntity;
+import net.neoforged.neoforge.entity.PartEntity;
 
 public class VinePartEntity extends PartEntity<AbstractVineEntity> {
     public final AbstractVineEntity parentMob;

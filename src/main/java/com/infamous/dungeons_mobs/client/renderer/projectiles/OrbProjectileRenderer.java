@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.object.Color;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class OrbProjectileRenderer extends GeoEntityRenderer<NecromancerOrbEntity> {

@@ -30,8 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.EntityTeleportEvent;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -214,7 +214,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements GeoAnim
         boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
-            EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory
+            EntityTeleportEvent.EnderEntity event = net.neoforged.neoforge.event.ForgeEventFactory
                     .onEnderTeleport(this, p_70825_1_, p_70825_3_, p_70825_5_);
             if (event.isCanceled())
                 return false;

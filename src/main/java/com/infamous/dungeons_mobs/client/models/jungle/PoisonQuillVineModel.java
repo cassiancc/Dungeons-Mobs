@@ -5,7 +5,7 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.data.EntityModelData;
 
 public class PoisonQuillVineModel extends AbstractVineModel {

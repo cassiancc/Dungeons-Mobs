@@ -128,3 +128,9 @@ description='''Library mod for the Dungeons Suite. Brings a lot of tools for mod
     versionRange="[2.4.2,)" 
     ordering="NONE"
     side="CLIENT"
+
+[[mixins]]
+config='dungeons_mobs.mixins.json'
+
+[[mixins]]
+config='dungeons_libraries.mixins.json'

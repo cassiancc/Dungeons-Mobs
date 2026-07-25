@@ -2,13 +2,13 @@ package com.infamous.dungeons_mobs.compat;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.mobenchants.*;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.neoforged.neoforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 
-@Mod.EventBusSubscriber(modid = DungeonsMobs.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = DungeonsMobs.MODID)
 public class EnchantWithMobCompat {
     public static final String ENCHANTWITHMOB_MOD_ID = "enchantwithmob";
     private static boolean IS_LOADED = false;

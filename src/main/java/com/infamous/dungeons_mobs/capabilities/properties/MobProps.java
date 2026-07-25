@@ -1,7 +1,7 @@
 package com.infamous.dungeons_mobs.capabilities.properties;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import static com.infamous.dungeons_mobs.capabilities.ModCapabilities.CONVERTIBLE_CAPABILITY;
 

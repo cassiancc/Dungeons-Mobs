@@ -53,7 +53,7 @@ public class ArmorGearRenderer<T extends ArmorGear & GeoItem> extends GeoArmorRe
         }
         RenderUtils.scaleMatrixForBone(stack, bone);
         //FIXME this may be an unsafe cast
-        ArmorMaterial material = ((ArmorItem) this.currentStack.getItem()).getMaterial();
+        ArmorMaterial material = ((ArmorItem) this.currentStack.getItem()).getMaterial().value();
         if (bone.getName().contains("Body") && material instanceof DungeonsArmorMaterial && ((DungeonsArmorMaterial) material).getBaseType() == ArmorMaterialBaseType.CLOTH) {
             stack.scale(1.0F, 1.0F, 0.93F);
         }

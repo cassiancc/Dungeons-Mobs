@@ -10,7 +10,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import static net.minecraftforge.registries.ForgeRegistries.ITEMS;
+import static net.minecraft.core.registries.BuiltInRegistries.ITEM;
 
 public class DungeonsWeaponMaterial implements Tier {
 

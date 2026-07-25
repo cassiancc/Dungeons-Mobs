@@ -1,7 +1,7 @@
 package com.infamous.dungeons_mobs.config;
 
 import com.google.common.collect.Lists;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -9,50 +9,50 @@ import java.util.List;
 public class DungeonsMobsConfig {
 
     public static class Common {
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_WRAITH_FIRE_SUMMON;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ICY_CREEPER_GRIEFING;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MOB_ARMOR_DROPS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MOB_HELD_ITEM_DROPS;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> NECROMANCER_MOB_SUMMONS;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> DROWNED_NECROMANCER_MOB_SUMMONS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_WRAITH_FIRE_SUMMON;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ICY_CREEPER_GRIEFING;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MOB_ARMOR_DROPS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MOB_HELD_ITEM_DROPS;
+        public static ModConfigSpec.ConfigValue<List<? extends String>> NECROMANCER_MOB_SUMMONS;
+        public static ModConfigSpec.ConfigValue<List<? extends String>> DROWNED_NECROMANCER_MOB_SUMMONS;
 
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_FROZEN_ZOMBIE_REPLACES_ZOMBIE;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ICY_CREEPER_REPLACES_CREEPER;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_JUNGLE_ZOMBIE_REPLACES_ZOMBIE;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MOSSY_SKELETON_REPLACES_SKELETON;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_3D_SLEEVES;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_FROZEN_ZOMBIE_REPLACES_ZOMBIE;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ICY_CREEPER_REPLACES_CREEPER;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_JUNGLE_ZOMBIE_REPLACES_ZOMBIE;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MOSSY_SKELETON_REPLACES_SKELETON;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_3D_SLEEVES;
 
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_VANILLA_VINDICATOR;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_VANILLA_EVOKER;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_DUNGEONS_MOBS_MELEE;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_DUNGEONS_MOBS_CASTER;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MANSION_VANILLA;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MANSION_DUNGEONS_MOBS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_BASTION_VANILLA;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_BASTION_DUNGEONS_MOBS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_NETHER_FORTRESS_DUNGEONS_MOBS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_DESERT_PYRAMID_DUNGEONS_MOBS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_JUNGLE_TEMPLE_DUNGEONS_MOBS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_VANILLA_VINDICATOR;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_VANILLA_EVOKER;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_DUNGEONS_MOBS_MELEE;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_OUTPOST_DUNGEONS_MOBS_CASTER;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MANSION_VANILLA;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MANSION_DUNGEONS_MOBS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_BASTION_VANILLA;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_BASTION_DUNGEONS_MOBS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_NETHER_FORTRESS_DUNGEONS_MOBS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_DESERT_PYRAMID_DUNGEONS_MOBS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_JUNGLE_TEMPLE_DUNGEONS_MOBS;
 
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_BIOME_SPECIFIC_RAIDERS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MOUNTAINEERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_MOUNTAINEERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ROYAL_GUARDS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_GEOMANCERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ILLUSIONERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MAGES_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ICEOLOGERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_WINDCALLERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_PILLAGERS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_SQUALL_GOLEMS_IN_RAIDS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_REDSTONE_GOLEMS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_BIOME_SPECIFIC_RAIDERS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MOUNTAINEERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_MOUNTAINEERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ROYAL_GUARDS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_GEOMANCERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ILLUSIONERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MAGES_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ICEOLOGERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_WINDCALLERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_PILLAGERS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_SQUALL_GOLEMS_IN_RAIDS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_REDSTONE_GOLEMS_IN_RAIDS;
 
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_STRONGER_HUSKS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_RANGED_SPIDERS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_STRONGER_HUSKS;
+        public final ModConfigSpec.ConfigValue<Boolean> ENABLE_RANGED_SPIDERS;
 
-        public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ITEM_TAB;
+        public static ModConfigSpec.ConfigValue<Boolean> ENABLE_ITEM_TAB;
 
-        public Common(ForgeConfigSpec.Builder builder) {
+        public Common(ModConfigSpec.Builder builder) {
             // MOB CONFIGURATION
             builder.comment("Mob Configuration").push("mob_configuration");
             ENABLE_WRAITH_FIRE_SUMMON = builder
@@ -219,11 +219,11 @@ public class DungeonsMobsConfig {
         }
     }
 
-    public static final ForgeConfigSpec COMMON_SPEC;
+    public static final ModConfigSpec COMMON_SPEC;
     public static final Common COMMON;
 
     static {
-        final Pair<Common, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        final Pair<Common, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = commonSpecPair.getRight();
         COMMON = commonSpecPair.getLeft();
     }

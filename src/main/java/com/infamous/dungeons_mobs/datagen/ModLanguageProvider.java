@@ -5,7 +5,7 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.mod.ModEffects;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import static com.infamous.dungeons_mobs.mod.ModMobEnchants.MOB_ENCHANTS_DEFERRED;
 
@@ -26,9 +26,9 @@ public class ModLanguageProvider extends LanguageProvider {
     }
 
     private void addMobEnchantments() {
-        MOB_ENCHANTS_DEFERRED.getEntries().forEach(mobEnchantmentRegistryObject -> {
-            ResourceLocation id = mobEnchantmentRegistryObject.getId();
-            MobEnchant mobEnchant = mobEnchantmentRegistryObject.get();
+        MOB_ENCHANTS_DEFERRED.getEntries().forEach(mobEnchantmentSupplier -> {
+            ResourceLocation id = mobEnchantmentSupplier.getId();
+            MobEnchant mobEnchant = mobEnchantmentSupplier.get();
             add("mobenchant.enchantwithmob.name.dungeons_mobs." + id.getPath(), getNameFromId(id.getPath()));
         });
     }

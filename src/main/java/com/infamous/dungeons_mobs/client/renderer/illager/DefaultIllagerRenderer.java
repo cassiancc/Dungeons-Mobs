@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -175,7 +175,7 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends GeoEn
 //    @Override
 //    protected void prepareArmorPositionAndScale(GeoBone bone, List<ModelPart.Cube> cubeList, ModelPart sourceLimb, PoseStack stack, boolean geoArmor, boolean modMatrixRot) {
 //        super.prepareArmorPositionAndScale(bone, cubeList, sourceLimb, stack, geoArmor, modMatrixRot);
-//        if (bone.getName().equals("armorBipedHead") && geoArmor && ForgeRegistries.ITEMS.getKey(helmet.getItem()).getNamespace().equals(MODID)) {
+//        if (bone.getName().equals("armorBipedHead") && geoArmor && BuiltInRegistries.ITEM.getKey(helmet.getItem()).getNamespace().equals(MODID)) {
 //            stack.translate(0, 0.125, 0); // 1y is 1 cube up, we want 2/16
 //        }
 //    }

@@ -43,22 +43,22 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.fml.ModList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
-import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
+import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
 public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, GeoAnimatable, SpawnArmoredMob, AnimatableMeleeAttackMob {
 
@@ -114,7 +114,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
 
         if (ModList.get().isLoaded("dungeons_gear")) {
 
-            Item GLAIVE = ForgeRegistries.ITEMS.getValue(GeneralUtil.gearLoc("glaive"));
+            Item GLAIVE = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("glaive"));
             ItemStack glaive = new ItemStack(GLAIVE);
 
             SpawnEquipmentHelper.equipMainhand(glaive, this);
@@ -262,7 +262,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
 
     @Override
     protected void hurtCurrentlyUsedShield(float amount) {
-        if (this.useItem.canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK)) {
+        if (this.useItem.canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK)) {
             if (amount >= 3.0F) {
                 int i = 1 + Mth.floor(amount);
                 InteractionHand hand = this.getUsedItemHand();

@@ -1,7 +1,7 @@
 package com.infamous.dungeons_mobs.capabilities.properties;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 
 import static com.infamous.dungeons_mobs.capabilities.ModCapabilities.MOB_PROPS_CAPABILITY;
 

@@ -21,16 +21,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -40,7 +40,7 @@ import java.util.function.Consumer;
 
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.item.ArmorMaterials.CHAIN;
-import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IArmor, IUniqueGear, GeoAnimatable {
     private static final ResourceLocation DEFAULT_ARMOR_ANIMATIONS = GeneralUtil.loc(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
@@ -66,7 +66,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
     public void reload() {
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
         if (armorGearConfig == ArmorGearConfig.DEFAULT) {
-            armorGearConfig = ArmorGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
+            armorGearConfig = ArmorGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         }
         ArmorMaterial material = armorGearConfig.getArmorMaterial();
         ((ArmorItemAccessor) this).setMaterial(material);
@@ -82,7 +82,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
             builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(primaryUuid, "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADDITION));
         }
         armorGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
             if (attribute != null) {
                 UUID uuid = randomUUID();
                 builder.put(attribute, new AttributeModifier(uuid, "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
@@ -112,7 +112,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
         if (armorSet != null) {
             DescriptionHelper.addLoreDescription(list, armorSet);
         } else {
-            DescriptionHelper.addLoreDescription(list, ForgeRegistries.ITEMS.getKey(this));
+            DescriptionHelper.addLoreDescription(list, BuiltInRegistries.ITEM.getKey(this));
         }
     }
 

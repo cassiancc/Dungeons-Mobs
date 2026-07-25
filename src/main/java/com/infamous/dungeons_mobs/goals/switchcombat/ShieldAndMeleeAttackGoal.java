@@ -26,7 +26,7 @@ public class ShieldAndMeleeAttackGoal<T extends PathfinderMob & IShieldUser> ext
     }
 
     private boolean hasShieldInOffhand() {
-        return this.hostCreature.getOffhandItem().canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK); // using the Forge ItemStack-sensitive version
+        return this.hostCreature.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK); // using the Forge ItemStack-sensitive version
     }
 
     private void useShield() {

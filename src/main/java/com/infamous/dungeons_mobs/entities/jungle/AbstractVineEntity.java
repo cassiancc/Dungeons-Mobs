@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 
 import java.util.function.Predicate;
 
@@ -86,7 +86,7 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
     }
 
     @Override
-    public net.minecraftforge.entity.PartEntity<?>[] getParts() {
+    public net.neoforged.neoforge.entity.PartEntity<?>[] getParts() {
         return subEntities;
     }
 

@@ -1,12 +1,12 @@
 package com.infamous.dungeons_mobs.compat;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 
-@Mod.EventBusSubscriber(modid = DungeonsMobs.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = DungeonsMobs.MODID)
 public class EnderlingsCompat {
     public static final String ENDERLINGS_MOD_ID = "enderlings";
     private static boolean IS_LOADED = false;

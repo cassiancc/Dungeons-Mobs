@@ -8,7 +8,7 @@ import com.infamous.dungeons_mobs.entities.illagers.MageEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.core.molang.MolangParser;
 
 public class MageArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {

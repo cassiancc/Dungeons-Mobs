@@ -7,18 +7,19 @@ import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.minecraft.core.registries.BuiltInRegistries;
 
-@Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
+@EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class TwoHandedHandler {
 
     @SubscribeEvent
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
         if (!DungeonsLibrariesConfig.ENABLE_TWO_HANDED_WEAPON.get()) return;
-        MeleeGearConfig configTo = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(event.getTo().getItem()));
+        MeleeGearConfig configTo = MeleeGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(event.getTo().getItem()));
         if (configTo.isTwoHanded()) {
             if (event.getSlot().equals(EquipmentSlot.MAINHAND)) {
                 ItemStack offhandItem = event.getEntity().getOffhandItem();
@@ -37,7 +38,7 @@ public class TwoHandedHandler {
             }
         } else if (!event.getTo().isEmpty()) {
             ItemStack mainhandItem = event.getEntity().getMainHandItem();
-            MeleeGearConfig configMainHand = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(mainhandItem.getItem()));
+            MeleeGearConfig configMainHand = MeleeGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(mainhandItem.getItem()));
             if (configMainHand.isTwoHanded() && event.getSlot().equals(EquipmentSlot.OFFHAND)) {
                 event.getEntity().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 event.getEntity().spawnAtLocation(mainhandItem);

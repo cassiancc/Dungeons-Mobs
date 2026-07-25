@@ -11,18 +11,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.*;
-import net.minecraftforge.event.level.BlockEvent.BlockToolModificationEvent;
-import net.minecraftforge.event.level.BlockEvent.BreakEvent;
-import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.FillBucketEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.*;
+import net.neoforged.neoforge.event.level.BlockEvent.BlockToolModificationEvent;
+import net.neoforged.neoforge.event.level.BlockEvent.BreakEvent;
+import net.neoforged.neoforge.event.level.BlockEvent.EntityPlaceEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.awt.*;
 
@@ -30,7 +30,7 @@ import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 import static com.infamous.dungeons_mobs.mod.ModEffects.ENSNARED;
 import static net.minecraft.world.entity.EntityType.HUSK;
 
-@Mod.EventBusSubscriber(modid = MODID)
+@EventBusSubscriber(modid = MODID)
 public class EntityEvents {
 
 	@SubscribeEvent

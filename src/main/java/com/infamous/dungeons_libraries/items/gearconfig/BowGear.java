@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +21,7 @@ import java.util.UUID;
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
-import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
 
@@ -35,7 +35,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
 
     @Override
     public void reload() {
-        bowGearConfig = BowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
+        bowGearConfig = BowGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         bowGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
@@ -77,7 +77,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);
     }

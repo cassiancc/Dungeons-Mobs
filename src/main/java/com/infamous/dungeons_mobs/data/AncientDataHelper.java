@@ -14,12 +14,12 @@ import baguchan.enchantwithmob.registry.MobEnchants;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.minecraft.core.registries.BuiltInRegistries;
 
-@Mod.EventBusSubscriber(modid = DungeonsMobs.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = DungeonsMobs.MODID)
 public class AncientDataHelper {
 
     public static final MergeableCodecDataManager<MobAncientData, MobAncientData> MOB_ANCIENT_DATA = new MergeableCodecDataManager<>("ancient/mob_ancient_data", MobAncientData.CODEC, AncientDataHelper::mobMerger);
@@ -68,7 +68,7 @@ public class AncientDataHelper {
                 nouns.addAll(mobEnchantmentAncientData.getNouns());
             });
         }
-        MobAncientData mobAncientData = getMobAncientData(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+        MobAncientData mobAncientData = getMobAncientData(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
         adjectives.addAll(mobAncientData.getAdjectives());
         nouns.addAll(mobAncientData.getNouns());
 //        adjectives.addAll(MobAncientData.DEFAULT.getAdjectives());

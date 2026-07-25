@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.UUID;
 
@@ -47,6 +47,6 @@ public class GearConfigAttributeModifier {
     }
 
     public Attribute getAttribute(){
-        return ForgeRegistries.ATTRIBUTES.getValue(attributeResourceLocation);
+        return BuiltInRegistries.ATTRIBUTE.getValue(attributeResourceLocation);
     }
 }

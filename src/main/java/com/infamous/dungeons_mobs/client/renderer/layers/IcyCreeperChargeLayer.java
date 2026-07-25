@@ -7,8 +7,8 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EnergySwirlLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.neoforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class IcyCreeperChargeLayer extends EnergySwirlLayer<IcyCreeperEntity, CreeperModel<IcyCreeperEntity>> {

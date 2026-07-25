@@ -4,10 +4,7 @@ import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.common.Mod;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
@@ -16,8 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
-
 public class CuriosIntegration {
 
     public static final ResourceLocation CURIOS_ICON_TEXTURE = GeneralUtil.librariesLoc("icon/empty_artifact_slot");
@@ -25,9 +20,9 @@ public class CuriosIntegration {
     public static final String ARTIFACT_IDENTIFIER = "artifact";
 
     public static List<ItemStack> getArtifacts(LivingEntity livingEntity) {
-        LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosInventory(livingEntity);
+        var curiosHandler = CuriosApi.getCuriosInventory(livingEntity);
         if (curiosHandler.isPresent()) {
-            Optional<ICurioStacksHandler> artifactStackHandler = curiosHandler.resolve().get().getStacksHandler(ARTIFACT_IDENTIFIER);
+            Optional<ICurioStacksHandler> artifactStackHandler = curiosHandler.get().getStacksHandler(ARTIFACT_IDENTIFIER);
             if (artifactStackHandler.isPresent()) {
                 IDynamicStackHandler stacks = artifactStackHandler.get().getStacks();
                 List<ItemStack> artifacts = new ArrayList<>();

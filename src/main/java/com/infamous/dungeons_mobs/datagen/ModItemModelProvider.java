@@ -4,10 +4,10 @@ import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 import static com.infamous.dungeons_mobs.mod.ModItems.ARMORS;
@@ -25,7 +25,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     private void registerArmors() {
-        ARMORS.forEach((resourceLocation, itemRegistryObject) -> {
+        ARMORS.forEach((resourceLocation, itemSupplier) -> {
             if (existingFileHelper.exists(itemLoc(resourceLocation), ModelProvider.TEXTURE)) {
                 generated(resourceLocation.getPath(), itemLoc(resourceLocation));
             } else {

@@ -5,8 +5,8 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.network.message.AncientMessage;
 import com.infamous.dungeons_mobs.network.message.AnimatedPropsMessage;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(

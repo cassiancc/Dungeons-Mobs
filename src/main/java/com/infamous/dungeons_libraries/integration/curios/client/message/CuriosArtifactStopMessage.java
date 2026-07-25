@@ -2,7 +2,7 @@ package com.infamous.dungeons_libraries.integration.curios.client.message;
 
 import com.infamous.dungeons_libraries.network.client.ClientHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

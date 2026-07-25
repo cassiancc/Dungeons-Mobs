@@ -5,6 +5,8 @@ import com.infamous.dungeons_libraries.event.CrossbowEvent;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGear;
 import com.infamous.dungeons_libraries.items.gearconfig.CrossbowGear;
 import com.infamous.dungeons_libraries.mixin.CrossbowItemInvoker;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -17,7 +19,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -37,7 +39,7 @@ public class RangedAttackHelper {
         arrowVelocity = (arrowVelocity * arrowVelocity + arrowVelocity * 2.0F) / 3.0F;
         float velocityLimit = 1.0F;
         BowEvent.Overcharge overchargeEvent = new BowEvent.Overcharge(livingEntity, stack, 0);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(overchargeEvent);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(overchargeEvent);
         int overchargeLevel = overchargeEvent.getCharges();
         if (overchargeLevel > 0) {
             velocityLimit += overchargeLevel;
@@ -47,7 +49,7 @@ public class RangedAttackHelper {
         }
 
         BowEvent.Velocity velocityEvent = new BowEvent.Velocity(livingEntity, stack, arrowVelocity);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(velocityEvent);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(velocityEvent);
         return velocityEvent.getVelocity();
     }
 
@@ -56,15 +58,15 @@ public class RangedAttackHelper {
         int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         float minTime = 1;
         BowEvent.ChargeTime event = new BowEvent.ChargeTime(livingEntity, stack, defaultChargeTime);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
         return Math.max(event.getChargeTime() - 5 * quickChargeLevel, minTime);
     }
 
     public static float getVanillaCrossbowChargeTime(@Nullable LivingEntity livingEntity, ItemStack stack) {
-        int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+        int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(livingEntity.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.QUICK_CHARGE), stack);
         float minTime = 1;
         CrossbowEvent.ChargeTime event = new CrossbowEvent.ChargeTime(livingEntity, stack, 25.0F);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
         return Math.max(event.getChargeTime() - 5 * quickChargeLevel, minTime);
     }
 
@@ -80,11 +82,11 @@ public class RangedAttackHelper {
 
     public static float getCrossbowArrowVelocity(@Nullable LivingEntity livingEntity, ItemStack stack) {
         float baseVelocity = 3.15F;
-        if (containsChargedProjectile(stack, Items.FIREWORK_ROCKET)) {
+        if (stack.has(DataComponents.CHARGED_PROJECTILES) && stack.get(DataComponents.CHARGED_PROJECTILES).contains(Items.FIREWORK_ROCKET)) {
             baseVelocity = 1.6F;
         }
         CrossbowEvent.Velocity event = new CrossbowEvent.Velocity(livingEntity, stack, baseVelocity);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
         return event.getVelocity();
     }
 

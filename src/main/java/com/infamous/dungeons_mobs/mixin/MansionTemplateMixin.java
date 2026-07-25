@@ -17,7 +17,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.structures.WoodlandMansionPieces;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,7 +40,7 @@ public abstract class MansionTemplateMixin extends TemplateStructurePiece {
     private void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, RandomSource rand, BoundingBox sbb, CallbackInfo callbackInfo) {
         if (!function.startsWith("Chest") && !function.equals("Warrior") && !function.equals("Mage")) {
             ResourceLocation entityResourceLocation = GeneralUtil.loc(function);
-            EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(entityResourceLocation);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(entityResourceLocation);
             if (entityType != null) {
                 Entity entity = entityType.create(worldIn.getLevel());
                 if (entity instanceof Mob) {

@@ -7,8 +7,8 @@ import com.infamous.dungeons_mobs.client.renderer.layers.GeoEyeLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.neoforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class PoisonQuillVineRenderer extends AbstractVineRenderer<PoisonQuillVineModel> {

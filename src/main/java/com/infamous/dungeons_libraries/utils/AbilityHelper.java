@@ -15,7 +15,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -96,8 +96,8 @@ public class AbilityHelper {
         if (target.getType().equals(ARMOR_STAND)) return true;
         return origin instanceof Player
                 && !isDefaultEnemy(target)
-                && (!DungeonsLibrariesConfig.ENEMY_WHITELIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString())
-                || (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString())));
+                && (!DungeonsLibrariesConfig.ENEMY_WHITELIST.get().contains(BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString())
+                || (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString())));
     }
 
     private static boolean isAliveAndCanBeSeen(LivingEntity nearbyEntity, LivingEntity attacker) {

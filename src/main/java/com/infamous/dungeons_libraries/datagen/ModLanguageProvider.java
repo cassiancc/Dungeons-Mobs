@@ -2,7 +2,7 @@ package com.infamous.dungeons_libraries.datagen;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class ModLanguageProvider extends LanguageProvider {
 

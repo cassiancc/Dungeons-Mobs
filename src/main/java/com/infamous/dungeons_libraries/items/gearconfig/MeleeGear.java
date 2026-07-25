@@ -24,9 +24,9 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,9 +34,9 @@ import java.util.UUID;
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
-import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
-public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, Vanishable, IReloadableGear, IUniqueGear {
+public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IReloadableGear, IUniqueGear {
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private MeleeGearConfig meleeGearConfig;
@@ -49,19 +49,19 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @Override
     public void reload() {
-        meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
+        meleeGearConfig = MeleeGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ((TieredItemAccessor) this).setTier(meleeGearConfig.getWeaponMaterial());
         ((ItemAccessor) this).setMaxDamage(this.getTier().getUses());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
             if (attribute != null) {
                 UUID uuid = randomUUID();
                 if (ATTACK_DAMAGE.equals(attribute)) {
-                    uuid = BASE_ATTACK_DAMAGE_UUID;
+                    uuid = BASE_ATTACK_DAMAGE_ID;
                     this.attackDamage = (float) attributeModifier.getAmount() + this.getTier().getAttackDamageBonus();
                 } else if (ATTACK_SPEED.equals(attribute)) {
-                    uuid = BASE_ATTACK_SPEED_UUID;
+                    uuid = BASE_ATTACK_SPEED_ID;
                 }
                 builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
             }
@@ -90,7 +90,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);
     }
@@ -135,15 +135,5 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
         } else {
             return p_150893_2_.is(BlockTags.SWORD_EFFICIENT) ? 1.5F : 1.0F;
         }
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack pStack) {
-        return getGearConfig().getRarity();
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment.category == EnchantmentCategory.WEAPON;
     }
 }
