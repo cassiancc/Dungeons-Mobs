@@ -21,6 +21,7 @@
     "MobMixin",
     "NearestAttackableTargetGoalAccessor",
     "PiglinMixin",
+    "ProjectileWeaponItemMixin",
     "TargetingConditionsAccessor",
     "TieredItemAccessor"
   ],

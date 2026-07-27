@@ -9,6 +9,7 @@ import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.mixin.TieredItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
-import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
@@ -55,14 +55,14 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
             if (attribute != null) {
-                ResourceLocation uuid = randomUUID();
+                ResourceLocation uuid = GeneralUtil.librariesLoc("weapon_modifier");
                 if (ATTACK_DAMAGE.equals(attribute)) {
                     uuid = BASE_ATTACK_DAMAGE_ID;
                     this.attackDamage = (float) attributeModifier.getAmount() + this.getTier().getAttackDamageBonus();
                 } else if (ATTACK_SPEED.equals(attribute)) {
                     uuid = BASE_ATTACK_SPEED_ID;
                 }
-                builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+                builder.put(attribute, new AttributeModifier(uuid, attributeModifier.getAmount(), attributeModifier.getOperation()));
             }
         });
         this.defaultModifiers = builder.build();
@@ -101,7 +101,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.hurtAndBreak(1, attacker, MojankHelper::hurtEnemyBroadcastBreakEvent);
+        stack.hurtAndBreak(1, attacker, MojankHelper.hurtEnemyBroadcastBreakEvent());
         return true;
     }
 
@@ -116,15 +116,15 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     @Override
     public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
         if (blockState.getDestroySpeed(level, blockPos) != 0.0F) {
-            itemStack.hurtAndBreak(1, livingEntity, MojankHelper::hurtEnemyBroadcastBreakEvent);
+            itemStack.hurtAndBreak(1, livingEntity, MojankHelper.hurtEnemyBroadcastBreakEvent());
         }
 
         return true;
     }
 
     @Override
-    public boolean isCorrectToolForDrops(BlockState p_150897_1_) {
-        return p_150897_1_.is(Blocks.COBWEB) || p_150897_1_.is(BlockTags.LEAVES);
+    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
+        return state.is(Blocks.COBWEB) || state.is(BlockTags.LEAVES);
     }
 
     @Override

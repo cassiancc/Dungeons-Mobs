@@ -20,7 +20,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -96,16 +95,21 @@ public class RangedAttackHelper {
     }
 
     public static void multiplyRangedDamage(LivingEntity shooter, AbstractArrow arrow) {
-        AttributeInstance rangedDamageMultiplier = shooter.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
+        AttributeInstance rangedDamageMultiplier = shooter.getAttribute(RANGED_DAMAGE_MULTIPLIER);
         if (rangedDamageMultiplier != null) {
             arrow.setBaseDamage(arrow.getBaseDamage() * (rangedDamageMultiplier.getValue()));
         }
     }
 
+    public static void createBowArrow(ItemStack bowStack, Level world, Player player, List<ItemStack> projectileStack, float powerForTime, int arrowIndex, boolean isInfiniteArrow) {
+        createBowArrow(bowStack, world, player, projectileStack.getFirst(), powerForTime, arrowIndex, isInfiniteArrow);
+    }
+
+
     public static void createBowArrow(ItemStack bowStack, Level world, Player player, ItemStack projectileStack, float powerForTime, int arrowIndex, boolean isInfiniteArrow) {
         ArrowItem arrowitem = (ArrowItem) (projectileStack.getItem() instanceof ArrowItem ? projectileStack.getItem() : Items.ARROW);
-        AbstractArrow arrow = arrowitem.createArrow(world, projectileStack, player);
-        if(bowStack.getItem() instanceof BowItem bowItem) bowItem.customArrow(arrow);
+        AbstractArrow arrow = arrowitem.createArrow(world, projectileStack, player, bowStack);
+        if(bowStack.getItem() instanceof BowItem bowItem) bowItem.customArrow(arrow, projectileStack, bowStack);
         multiplyRangedDamage(player, arrow);
         arrow.shootFromRotation(player, player.getXRot(), player.getYRot() + getAngleForProjectileByIndex(arrowIndex), 0.0F, powerForTime * 3.0F, 1.0F);
 
@@ -124,7 +128,7 @@ public class RangedAttackHelper {
 
         int flameLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.FLAME, bowStack, world);
         if (flameLevel > 0) {
-            arrow.setSecondsOnFire(100);
+            arrow.igniteForSeconds(100);
         }
 
         int piercingLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.PIERCING, bowStack, world);
