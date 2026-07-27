@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +33,8 @@ public class ArtifactGearConfigSyncPacket {
         return new ArtifactGearConfigSyncPacket(MAPPER.parse(NbtOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
     }
 
-    public void onPacketReceived(Supplier<NetworkEvent.Context> contextGetter) {
-        NetworkEvent.Context context = contextGetter.get();
+    public void onPacketReceived(IPayloadContext context) {
         context.enqueueWork(this::handlePacketOnMainThread);
-        context.setPacketHandled(true);
     }
 
     private void handlePacketOnMainThread() {

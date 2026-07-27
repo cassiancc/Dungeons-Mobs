@@ -3,7 +3,6 @@ package com.infamous.dungeons_libraries;
 import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import com.infamous.dungeons_libraries.client.artifactBar.ArtifactsBarRender;
-import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.integration.curios.CuriosIntegration;
 import com.infamous.dungeons_libraries.integration.curios.client.CuriosClientIntegration;
@@ -21,15 +20,12 @@ import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.neoforge.api.distmarker.Dist;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.fml.DistExecutor;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,9 +46,6 @@ public class DungeonsLibraries {
     public static final String MODID = "dungeons_libraries";
 
     public DungeonsLibraries(IEventBus modEventBus, ModContainer container) {
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> {
-            return GuiElementConfigRegistry::initGuiElementConfigs;
-        });
         // Register the setup method for modloading
         container.registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
         modEventBus.addListener(this::setup);
@@ -85,8 +78,9 @@ public class DungeonsLibraries {
         ModCapabilities.setupCapabilities();
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(NetworkHandler::init);
+    private void setup(final RegisterPayloadHandlersEvent event) {
+        var registrar = event.registrar("0");
+        NetworkHandler.init(registrar);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

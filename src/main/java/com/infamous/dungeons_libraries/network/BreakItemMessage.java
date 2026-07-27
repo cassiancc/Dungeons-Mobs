@@ -1,55 +1,45 @@
 package com.infamous.dungeons_libraries.network;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.fml.DistExecutor.SafeRunnable;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record BreakItemMessage(int entityId, ItemStack stack) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<BreakItemMessage> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("break_item"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, BreakItemMessage> STREAM_CODEC =
+            StreamCodec.composite(
+                    // Stream codec and getter pair
+                    ByteBufCodecs.VAR_INT, BreakItemMessage::entityId,
+                    ItemStack.STREAM_CODEC, BreakItemMessage::stack,
+                    BreakItemMessage::new
+            );
 
-public class BreakItemMessage {
-    private final ItemStack stack;
-    private final int entityID;
-
-    public BreakItemMessage(int entityID, ItemStack stack) {
-        this.stack = stack;
-        this.entityID = entityID;
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void encode(BreakItemMessage packet, FriendlyByteBuf buf) {
-        buf.writeInt(packet.entityID);
-        buf.writeItem(packet.stack);
-    }
-
-    public static BreakItemMessage decode(FriendlyByteBuf buf) {
-        return new BreakItemMessage(buf.readInt(), buf.readItem());
-    }
 
     public static class BreakItemHandler {
-        public static void handle(BreakItemMessage packet, Supplier<NetworkEvent.Context> ctx) {
+        public static void handle(BreakItemMessage packet, IPayloadContext ctx) {
             if (packet != null) {
-                ctx.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new SafeRunnable() {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public void run() {
-                        ClientLevel world = Minecraft.getInstance().level;
-                        Entity target = null;
-                        if (world != null)
-                            target = world.getEntity(packet.entityID);
-                        if (target instanceof LivingEntity livingEntity) {
-                            livingEntity.breakItem(packet.stack);
-                        }
+                ctx.enqueueWork(()->{
+                    ClientLevel world = Minecraft.getInstance().level;
+                    Entity target = null;
+                    if (world != null)
+                        target = world.getEntity(packet.entityId);
+                    if (target instanceof LivingEntity livingEntity) {
+                        livingEntity.breakItem(packet.stack);
                     }
-
-                }));
+                });
             }
         }
     }

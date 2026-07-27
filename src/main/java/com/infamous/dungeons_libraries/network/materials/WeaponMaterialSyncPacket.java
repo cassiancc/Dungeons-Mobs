@@ -8,7 +8,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +35,8 @@ public class WeaponMaterialSyncPacket {
         return new WeaponMaterialSyncPacket(MAPPER.parse(NbtOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
     }
 
-    public void onPacketReceived(Supplier<NetworkEvent.Context> contextGetter) {
-        NetworkEvent.Context context = contextGetter.get();
+    public void onPacketReceived(IPayloadContext contextGetter) {
+        IPayloadContext context = contextGetter.get();
         context.enqueueWork(this::handlePacketOnMainThread);
         context.setPacketHandled(true);
     }

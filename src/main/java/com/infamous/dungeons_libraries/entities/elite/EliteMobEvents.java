@@ -19,7 +19,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -30,7 +29,6 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -105,7 +103,7 @@ public class EliteMobEvents {
         if (cap.isElite()) {
             float totalWidth = event.getNewSize().width() * SIZE_ADJUSTMENT;
             float totalHeight = event.getNewSize().height() * SIZE_ADJUSTMENT;
-            event.setNewEyeHeight(event.getNewEyeHeight() * SIZE_ADJUSTMENT);
+//            event.setNewEyeHeight(event.getNewEyeHeight() * SIZE_ADJUSTMENT);
             event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
         }
     }

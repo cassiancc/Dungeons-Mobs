@@ -19,13 +19,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
-import static net.minecraft.world.item.CrossbowItem.containsChargedProjectile;
 
 
 public class RangedAttackHelper {
@@ -112,27 +112,27 @@ public class RangedAttackHelper {
         if (powerForTime >= 1.0F) {
             arrow.setCritArrow(true);
         }
-        int powerLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, bowStack);
+        int powerLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.POWER, bowStack, world);
         if (powerLevel > 0) {
             arrow.setBaseDamage(arrow.getBaseDamage() + (double) powerLevel * 0.5D + 0.5D);
         }
 
-        int punchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, bowStack);
+        int punchLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.PUNCH, bowStack, world);
         if (punchLevel > 0) {
             arrow.setKnockback(punchLevel);
         }
 
-        int flameLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, bowStack);
+        int flameLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.FLAME, bowStack, world);
         if (flameLevel > 0) {
             arrow.setSecondsOnFire(100);
         }
 
-        int piercingLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, bowStack);
+        int piercingLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.PIERCING, bowStack, world);
         if (piercingLevel > 0) {
             arrow.setPierceLevel((byte) piercingLevel);
         }
 
-        bowStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
+        bowStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
         if (isInfiniteArrow
                 || player.getAbilities().instabuild && isSpecialArrow(projectileStack)
                 || arrowIndex > 0) {
@@ -146,7 +146,7 @@ public class RangedAttackHelper {
     }
 
     public static void fireCrossbowProjectiles(Level world, LivingEntity livingEntity, InteractionHand hand, ItemStack stack, float velocityIn, float inaccuracyIn) {
-        if (livingEntity instanceof Player player && ForgeEventFactory.onArrowLoose(stack, livingEntity.level(), player, 1, true) < 0) return;
+        if (livingEntity instanceof Player player && EventHooks.onArrowLoose(stack, livingEntity.level(), player, 1, true) < 0) return;
 
         List<ItemStack> list = CrossbowItemInvoker.callGetChargedProjectiles(stack);
         float[] randomSoundPitches = CrossbowItemInvoker.callGetShotPitches(livingEntity.getRandom());

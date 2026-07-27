@@ -57,12 +57,12 @@ public class DrownedNecromancerArmorGearRenderer extends ArmorGearRenderer<Drown
 //    }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, DrownedNecromancerArmorGear animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, DrownedNecromancerArmorGear animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
 
         GeoModel<DrownedNecromancerArmorGear> geoModelProvider = getGeoModel();
         if (geoModelProvider instanceof DrownedNecromancerArmorGearModel<DrownedNecromancerArmorGear>) {
             ((DrownedNecromancerArmorGearModel<DrownedNecromancerArmorGear>) geoModelProvider).setWearer((LivingEntity) this.currentEntity);
         }
-        super.renderRecursively(poseStack, animatable, getBodyBone(), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, getBodyBone(), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }

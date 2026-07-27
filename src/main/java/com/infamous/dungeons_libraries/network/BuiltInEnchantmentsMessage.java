@@ -3,7 +3,7 @@ package com.infamous.dungeons_libraries.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,8 @@ public class BuiltInEnchantmentsMessage {
         return new BuiltInEnchantmentsMessage(entityId, resourceLocation, enchantmentInstance);
     }
 
-    public static boolean onPacketReceived(BuiltInEnchantmentsMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
-/*        NetworkEvent.Context context = contextSupplier.get();
+    public static boolean onPacketReceived(BuiltInEnchantmentsMessage message, IPayloadContext contextSupplier) {
+/*        IPayloadContext context = contextSupplier.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.level.getEntity(message.entityId);

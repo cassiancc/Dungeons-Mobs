@@ -7,18 +7,15 @@ import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfig
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SOUL_CAP;
@@ -29,14 +26,14 @@ public class SoulBarRender {
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
 
     @SubscribeEvent
-    public static void displaySoulBar(RenderGuiOverlayEvent.Post event) {
+    public static void displaySoulBar(RenderGuiLayerEvent.Post event) {
         GuiGraphics guiGraphics = event.getGuiGraphics();
-        Window sr = event.getWindow();
+        Window sr = Minecraft.getInstance().getWindow();
         int scaledWidth = sr.getGuiScaledWidth();
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
 
-        if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player) {
+        if (event.getName().equals(VanillaGuiLayers.HOTBAR) && mc.getCameraEntity() instanceof Player) {
             GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "soul_bar"));
             if (guiElementConfig.isHidden()) return;
             //draw souls

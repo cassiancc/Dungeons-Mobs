@@ -13,14 +13,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.function.Supplier;
 
 public class ClientHandler {
-    public static void handleCuriosArtifactStopMessage(CuriosArtifactStopMessage packet, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleCuriosArtifactStopMessage(CuriosArtifactStopMessage packet, IPayloadContext ctx) {
         if (packet != null) {
-            NetworkEvent.Context context = ctx.get();
+            IPayloadContext context = ctx.get();
             if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
                 context.enqueueWork(() -> {
                     AbstractClientPlayer player = Minecraft.getInstance().player;
@@ -37,8 +37,8 @@ public class ClientHandler {
         }
     }
 
-    public static void handleEliteMobMessage(EliteMobMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
+    public static void handleEliteMobMessage(EliteMobMessage message, IPayloadContext contextSupplier) {
+        IPayloadContext context = contextSupplier.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.level().getEntity(message.getEntityId());

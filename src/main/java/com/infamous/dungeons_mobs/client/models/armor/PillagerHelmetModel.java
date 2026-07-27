@@ -48,14 +48,14 @@ public class PillagerHelmetModel<T extends LivingEntity> extends HumanoidModel<T
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int colour) {
         matrixStackIn.pushPose();
         this.helmet.copyFrom(this.head);
         if (livingEntity.isBaby()) {
             matrixStackIn.scale(0.8F, 0.8F, 0.8F);
             this.helmet.setPos(0.0F, 15.0F, 0.0F);
         }
-        this.helmet.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.helmet.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, colour);
         matrixStackIn.popPose();
     }
 

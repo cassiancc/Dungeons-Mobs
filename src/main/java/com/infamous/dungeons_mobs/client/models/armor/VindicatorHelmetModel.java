@@ -41,7 +41,7 @@ public class VindicatorHelmetModel<T extends LivingEntity> extends HumanoidModel
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int colour) {
         matrixStackIn.pushPose();
         this.head.copyFrom(this.head);
         if (this.entity.isBaby()) {
@@ -52,7 +52,7 @@ public class VindicatorHelmetModel<T extends LivingEntity> extends HumanoidModel
             horn1.visible = false;
             horn2.visible = false;
         }
-        this.head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, colour);
         matrixStackIn.popPose();
     }
 

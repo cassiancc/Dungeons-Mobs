@@ -42,11 +42,11 @@ public class WraithRenderer extends DynamicGeoEntityRenderer<WraithEntity> {
     //FIXME
 //
 //    @Override
-//    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+//    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayInint colour) {
 //        if (this.isArmorBone(bone)) {
 //            bone.setCubesHidden(true);
 //        }
-//        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+//        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, colour);
 //    }
 //
 //    @Override

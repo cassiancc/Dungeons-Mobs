@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
@@ -32,7 +32,7 @@ public class CuriosArtifactStartMessage {
     }
 
     public static class CuriosArtifactHandler {
-        public static void handle(CuriosArtifactStartMessage packet, Supplier<NetworkEvent.Context> ctx) {
+        public static void handle(CuriosArtifactStartMessage packet, IPayloadContext ctx) {
             if (packet != null) {
                 ctx.get().setPacketHandled(true);
                 ctx.get().enqueueWork(() -> {

@@ -2,11 +2,12 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.utils.AbilityHelper;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -15,6 +16,8 @@ import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +34,7 @@ public class FollowerEvents {
     public static void onSetAttackTarget(LivingChangeTargetEvent event) {
         LivingEntity attacker = event.getEntity();
         Level level = attacker.level();
-        LivingEntity target = event.getNewTarget();
+        LivingEntity target = event.getNewAboutToBeSetTarget();
         if (attacker instanceof Mob && target instanceof Mob) {
             if (AbilityHelper.isAlly(attacker, target)) {
                 createDummyTarget(level);
@@ -65,19 +68,20 @@ public class FollowerEvents {
      */
 
     @SubscribeEvent
-    public static void onLivingEntityTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entityLiving = event.getEntity();
-        if (entityLiving.level().isClientSide()) return;
-        Follower cap = getFollowerCapability(entityLiving);
-        if (cap.isFollower()) {
-            if (cap.isTemporary()) {
-                if (cap.getFollowerDuration() > 0) {
-                    cap.setFollowerDuration(cap.getFollowerDuration() - 1);
-                } else {
-                    if (cap.revertsOnExpiration()) {
-                        FollowerLeaderHelper.removeFollower(entityLiving);
+    public static void onLivingEntityTick(EntityTickEvent event) {
+        if (event.getEntity() instanceof LivingEntity entityLiving) {
+            if (entityLiving.level().isClientSide()) return;
+            Follower cap = getFollowerCapability(entityLiving);
+            if (cap.isFollower()) {
+                if (cap.isTemporary()) {
+                    if (cap.getFollowerDuration() > 0) {
+                        cap.setFollowerDuration(cap.getFollowerDuration() - 1);
                     } else {
-                        entityLiving.remove(Entity.RemovalReason.KILLED);
+                        if (cap.revertsOnExpiration()) {
+                            FollowerLeaderHelper.removeFollower(entityLiving);
+                        } else {
+                            entityLiving.remove(Entity.RemovalReason.KILLED);
+                        }
                     }
                 }
             }
@@ -106,11 +110,11 @@ public class FollowerEvents {
     // Avoids a situation where your minion died but onSummonableDeath didn't fire in time,
     // making you unable to summon any more of that entity
     @SubscribeEvent
-    public static void checkSummonedMobIsDead(TickEvent.PlayerTickEvent event) {
-        Player player = event.player;
-        if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
+    public static void checkSummonedMobIsDead(PlayerTickEvent.Pre event) {
+        Player player = event.getEntity();
+        if (event.getEntity().isLocalPlayer()) return;
         if (!player.isAlive()) return;
-        Leader leaderCap = getLeaderCapability(event.player);
+        Leader leaderCap = getLeaderCapability(event.getEntity());
         updateAliveList(leaderCap);
     }
 

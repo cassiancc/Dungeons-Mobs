@@ -33,11 +33,11 @@ public class NecromancerRenderer extends DynamicGeoEntityRenderer<NecromancerEnt
     //FIXME
 //
 //    @Override
-//    public void renderRecursively(PoseStack poseStack, NecromancerEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+//    public void renderRecursively(PoseStack poseStack, NecromancerEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
 //        if (this.isArmorBone(bone)) {
 //            bone.setCubesHidden(true);
 //        }
-//        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+//        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, colour);
 //    }
 //
 //    @Override
