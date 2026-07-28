@@ -4,16 +4,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import baguchan.enchantwithmob.api.IEnchantCap;
+import baguchi.enchantwithmob.api.IEnchantCap;
 import com.infamous.dungeons_libraries.data.util.MergeableCodecDataManager;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 
-import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.capability.MobEnchantCapability;
-import baguchan.enchantwithmob.registry.MobEnchants;
+import baguchi.enchantwithmob.EnchantWithMob;
+import baguchi.enchantwithmob.capability.MobEnchantCapability;
+import baguchi.enchantwithmob.registry.MobEnchants;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;

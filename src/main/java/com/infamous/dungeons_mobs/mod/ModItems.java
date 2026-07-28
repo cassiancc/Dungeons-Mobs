@@ -66,9 +66,9 @@ public class ModItems {
                     DEFAULT_ANIMATION_RESOURCE));
 
     public static final Supplier<Item> NETHERITE_PIGLIN_HELMET = ITEMS.register("netherite_piglin_helmet",
-            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, HELMET, new Item.Properties()));
+            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE.toVanilla(), HELMET, new Item.Properties()));
     public static final Supplier<Item> CRACKED_NETHERITE_PIGLIN_HELMET = ITEMS.register("cracked_netherite_piglin_helmet",
-            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE, HELMET, new Item.Properties()));
+            () -> new PiglinHelmetItem(CustomArmorMaterial.PURE_NETHERITE.toVanilla(), HELMET, new Item.Properties()));
     public static final Supplier<Item> GOLD_PIGLIN_HELMET = ITEMS.register("gold_piglin_helmet",
             () -> new PiglinHelmetItem(ArmorMaterials.GOLD, HELMET, new Item.Properties()));
     public static final Supplier<Item> CRACKED_GOLD_PIGLIN_HELMET = ITEMS.register("cracked_gold_piglin_helmet",

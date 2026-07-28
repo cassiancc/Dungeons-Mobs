@@ -245,7 +245,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobType() == MobType.ILLAGER) {
+                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;

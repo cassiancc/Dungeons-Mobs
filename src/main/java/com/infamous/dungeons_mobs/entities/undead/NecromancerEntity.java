@@ -118,7 +118,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobType() == MobType.UNDEAD) {
+                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.UNDEAD) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;

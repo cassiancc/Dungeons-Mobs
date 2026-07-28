@@ -78,7 +78,7 @@ public class IcyCreeperEntity extends Creeper {
 
     private void explodeCreeper() {
         if (!this.level().isClientSide) {
-            Level.ExplosionInteraction explosion$mode = net.neoforged.neoforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this) ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE;
+            Level.ExplosionInteraction explosion$mode = net.neoforged.neoforge.event.EventHooks.getMobGriefingEvent(this.level(), this) ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE;
             float f = this.isPowered() ? 2.0F : 1.0F;
             this.dead = true;
             this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float) this.explosionRadius * f, explosion$mode);

@@ -36,15 +36,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.neoforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.ForgeHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -210,7 +210,7 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
     private void handleLeafCollision() {
         if (this.isAlive()) {
 
-            if (this.horizontalCollision && net.neoforged.neoforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
+            if (this.horizontalCollision && net.neoforged.neoforge.event.EventHooks.getMobGriefingEvent(this.level(), this)) {
                 boolean destroyedLeafBlock = false;
                 AABB axisalignedbb = this.getBoundingBox().inflate(0.2D);
 
@@ -355,8 +355,8 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
         private Processor() {
         }
 
-        protected BlockPathTypes evaluateBlockPathType(BlockGetter blockReader, BlockPos blockPos, BlockPathTypes pathNodeType) {
-            return pathNodeType == BlockPathTypes.LEAVES ? BlockPathTypes.OPEN : super.evaluateBlockPathType(blockReader, blockPos, pathNodeType);
+        protected PathType evaluateBlockPathType(BlockGetter blockReader, BlockPos blockPos, PathType pathNodeType) {
+            return pathNodeType == PathType.LEAVES ? PathType.OPEN : super.evaluateBlockPathType(blockReader, blockPos, pathNodeType);
         }
     }
 
@@ -378,7 +378,7 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
     public boolean isAlliedTo(Entity entityIn) {
         if (super.isAlliedTo(entityIn)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobType() == MobType.ILLAGER
+        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER
                 || entityIn instanceof Raider) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
@@ -493,7 +493,7 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
         }
 
         private void forceKnockback(LivingEntity attackTarget, float strength, double ratioX, double ratioZ, double knockbackResistanceReduction) {
-            LivingKnockBackEvent event = ForgeHooks.onLivingKnockBack(attackTarget, strength, ratioX, ratioZ);
+            LivingKnockBackEvent event = CommonHooks.onLivingKnockBack(attackTarget, strength, ratioX, ratioZ);
             if (event.isCanceled()) return;
             strength = event.getStrength();
             ratioX = event.getRatioX();

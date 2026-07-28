@@ -6,18 +6,20 @@ import com.infamous.dungeons_mobs.effects.WarpedEffect;
 import com.infamous.dungeons_mobs.entities.projectiles.BlueNethershroomEntity;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.function.Supplier;
 
 public class ModEffects {
 
-    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(BuiltInRegistries.MOB_EFFECTS,
+    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT,
             DungeonsMobs.MODID);
 
-    public static final Supplier<MobEffect> ENSNARED = EFFECTS.register("ensnared", () -> new EnsnaredEffect(MobEffectCategory.HARMFUL, 0xdbe64e).addAttributeModifier(Attributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890", -5.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final DeferredHolder<MobEffect, MobEffect> ENSNARED = EFFECTS.register("ensnared", () -> new EnsnaredEffect(MobEffectCategory.HARMFUL, 0xdbe64e).addAttributeModifier(Attributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890", -5.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
-    public static final Supplier<MobEffect> WARPED = EFFECTS.register("warped", () -> new WarpedEffect(MobEffectCategory.HARMFUL, BlueNethershroomEntity.LIGHT_BLUE_HEX_COLOR_CODE));
+    public static final DeferredHolder<MobEffect, MobEffect> WARPED = EFFECTS.register("warped", () -> new WarpedEffect(MobEffectCategory.HARMFUL, BlueNethershroomEntity.LIGHT_BLUE_HEX_COLOR_CODE));
 }

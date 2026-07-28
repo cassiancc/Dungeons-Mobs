@@ -26,9 +26,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -58,7 +58,7 @@ public class WraithEntity extends Monster implements GeoAnimatable {
 
     public WraithEntity(EntityType<? extends WraithEntity> type, Level world) {
         super(type, world);
-        this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+        this.setPathfindingMalus(PathType.WATER, -1.0F);
     }
 
     protected void registerGoals() {
@@ -99,7 +99,7 @@ public class WraithEntity extends Monster implements GeoAnimatable {
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobType() == MobType.UNDEAD) {
+                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.UNDEAD) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -196,8 +196,8 @@ public class WraithEntity extends Monster implements GeoAnimatable {
     }
 
     @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
+    public MobCategory getMobCategory() {
+        return MobCategory.UNDEAD;
     }
 
     @Override
@@ -229,7 +229,7 @@ public class WraithEntity extends Monster implements GeoAnimatable {
         boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
-            EntityTeleportEvent.EnderEntity event = ForgeEventFactory.onEnderTeleport(this, pX, pY, pZ);
+            EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(this, pX, pY, pZ);
             if (event.isCanceled()) {
                 return false;
             } else {

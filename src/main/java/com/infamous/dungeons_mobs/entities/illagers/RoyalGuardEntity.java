@@ -332,7 +332,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
 
     @Override
     protected void hurtCurrentlyUsedShield(float amount) {
-        if (this.useItem.canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK)) {
+        if (this.useItem.canPerformAction(net.neoforged.neoforge.common.ItemAbilities.SHIELD_BLOCK)) {
             if (amount >= 3.0F) {
                 int i = 1 + Mth.floor(amount);
                 InteractionHand hand = this.getUsedItemHand();
@@ -425,7 +425,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
 
         @Override
         public void stop() {
-            if (target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target) && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK) && mob.random.nextInt(6) == 0) {
+            if (target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target) && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ItemAbilities.SHIELD_BLOCK) && mob.random.nextInt(6) == 0) {
                 mob.startUsingItem(InteractionHand.OFF_HAND);
             }
         }

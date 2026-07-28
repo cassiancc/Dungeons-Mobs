@@ -1,52 +1,26 @@
 package com.infamous.dungeons_mobs.capabilities;
 
 import com.infamous.dungeons_mobs.capabilities.ancient.Ancient;
-import com.infamous.dungeons_mobs.capabilities.ancient.AttacherAncient;
 import com.infamous.dungeons_mobs.capabilities.animatedprops.AnimatedProps;
-import com.infamous.dungeons_mobs.capabilities.animatedprops.AttacherAnimatedProps;
-import com.infamous.dungeons_mobs.capabilities.convertible.AttacherConvertible;
 import com.infamous.dungeons_mobs.capabilities.convertible.Convertible;
-import com.infamous.dungeons_mobs.capabilities.properties.AttacherMobProps;
 import com.infamous.dungeons_mobs.capabilities.properties.MobProps;
-import net.minecraft.world.entity.Entity;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.eventbus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
+import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = MODID)
+import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+
 public class ModCapabilities {
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
 
-    public static final Capability<Ancient> ANCIENT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<AnimatedProps> ANIMATED_PROPS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<Convertible> CONVERTIBLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<MobProps> MOB_PROPS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-
-
-    public static void setupCapabilities() {
-        IEventBus forgeBus = NeoForge.EVENT_BUS;
-        forgeBus.addGenericListener(Entity.class, AttacherAncient::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherAnimatedProps::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherConvertible::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherMobProps::attach);
-    }
-
-    @SubscribeEvent
-    public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.register(Ancient.class);
-        event.register(AnimatedProps.class);
-        event.register(Convertible.class);
-        event.register(MobProps.class);
-    }
+    public static final Supplier<AttachmentType<Ancient>> ANCIENT_CAPABILITY = ATTACHMENT_TYPES.register(
+            "ancient", () -> AttachmentType.builder(Ancient::new).build());;
+    public static final Supplier<AttachmentType<AnimatedProps>> ANIMATED_PROPS_CAPABILITY = ATTACHMENT_TYPES.register(
+            "animated_props", () -> AttachmentType.builder(AnimatedProps::new).build());;
+    public static final Supplier<AttachmentType<Convertible>> CONVERTIBLE_CAPABILITY = ATTACHMENT_TYPES.register(
+            "convertible", () -> AttachmentType.builder(Convertible::new).build());;
+    public static final Supplier<AttachmentType<MobProps>> MOB_PROPS_CAPABILITY = ATTACHMENT_TYPES.register(
+            "mob_props", () -> AttachmentType.builder(MobProps::new).build());;
 }

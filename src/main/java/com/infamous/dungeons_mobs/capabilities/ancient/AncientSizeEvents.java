@@ -6,8 +6,9 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.neoforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,7 +24,7 @@ public class AncientSizeEvents {
         if (cap.isAncient()) {
             float totalWidth = event.getNewSize().width * 1.2F;
             float totalHeight = event.getNewSize().height * 1.2F;
-            event.setNewEyeHeight(event.getNewEyeHeight() * 1.2F);
+//            event.setNewEyeHeight(event.getNewEyeHeight() * 1.2F);
             event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
         }
     }

@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.entities;
 
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,11 +12,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
-import net.neoforged.neoforge.event.entity.player.FillBucketEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.*;
 import net.neoforged.neoforge.event.level.BlockEvent.BlockToolModificationEvent;
 import net.neoforged.neoforge.event.level.BlockEvent.BreakEvent;
@@ -57,16 +60,16 @@ public class EntityEvents {
 	public static void preventKnockback(LivingKnockBackEvent event) {
 		LivingEntity owner = event.getEntity();
 
-		if (owner.hasEffect(ENSNARED.get())) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) event.setCanceled(true);
 	}
 	
 	@SubscribeEvent
 	public static void preventBlockBreaking(BreakEvent event) {
 		Player owner = event.getPlayer();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
+		if (owner.hasEffect(ENSNARED)) {
 			// Prevent crashes, cause sometimes it isn't cancellable
-			if (event.isCancelable()) event.setCanceled(true);
+			if (event.isCanceled()) event.setCanceled(true);
 		}
 	}
 	
@@ -75,8 +78,8 @@ public class EntityEvents {
 		Entity owner = event.getEntity();
 		
 		if (owner instanceof LivingEntity) {
-			if (((LivingEntity) owner).hasEffect(ENSNARED.get())) {
-				if (event.isCancelable()) event.setCanceled(true);
+			if (((LivingEntity) owner).hasEffect(ENSNARED)) {
+				if (event.isCanceled()) event.setCanceled(true);
 			}
 		}
 	}
@@ -85,17 +88,17 @@ public class EntityEvents {
 	public static void preventBlockInteraction(BlockToolModificationEvent event) {
 		Player owner = event.getPlayer();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) {
+			if (event.isCanceled()) event.setCanceled(true);
 		}
 	}
 	
 	@SubscribeEvent
-	public static void preventItemUseCustom(LivingEntityUseItemEvent event) {
+	public static void preventItemUseCustom(LivingEntityUseItemEvent.Start event) {
 		LivingEntity owner = event.getEntity();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) {
+			if (event.isCanceled()) event.setCanceled(true);
 		}
 	}
 	
@@ -109,38 +112,11 @@ public class EntityEvents {
 	}
 	
 	@SubscribeEvent
-	public static void preventBucketFill(FillBucketEvent event) {
+	public static void preventBucketFill(PlayerInteractEvent.RightClickItem event) {
 		Player owner = event.getEntity();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
-		}
-	}
-	
-	@SubscribeEvent
-	public static void preventEmptyInteraction(RightClickEmpty event) {
-		Player owner = event.getEntity();
-		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
-		}
-	}
-	
-	@SubscribeEvent
-	public static void preventEmptyInteraction(LeftClickEmpty event) {
-		Player owner = event.getEntity();
-		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
-		}
-	}
-	
-	@SubscribeEvent
-	public static void preventItemUse(RightClickItem event) {
-		Player owner = event.getEntity();
-		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) {
+			if (event.getCancellationResult().consumesAction()) event.setCanceled(true);
 		}
 	}
 	
@@ -148,8 +124,8 @@ public class EntityEvents {
 	public static void preventBlockInteraction(RightClickBlock event) {
 		Player owner = event.getEntity();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) {
+			if (event.getCancellationResult().consumesAction()) event.setCanceled(true);
 		}
 	}
 	
@@ -157,8 +133,8 @@ public class EntityEvents {
 	public static void preventBlockInteraction(LeftClickBlock event) {
 		Player owner = event.getEntity();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) {
+			if (event.isCanceled()) event.setCanceled(true);
 		}
 	}
 

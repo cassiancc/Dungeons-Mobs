@@ -8,7 +8,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -102,7 +102,7 @@ public class SimpleTrapEntity extends AbstractTrapEntity {
     @Override
     public boolean canTrapEntity(LivingEntity entity) {
         if (this.getTrapType() == 0) {
-            return super.canTrapEntity(entity) && entity.getMobType() != MobType.ARTHROPOD;
+            return super.canTrapEntity(entity) && entity.getMobCategory() != MobCategory.ARTHROPOD;
         } else if (this.getTrapType() == 1) {
             return super.canTrapEntity(entity) && !entity.getType().is(EntityTags.PLANT_MOBS);
         } else {

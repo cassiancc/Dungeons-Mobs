@@ -79,7 +79,7 @@ public class BasicModdedAttackGoal<T extends Mob & GeoAnimatable & AnimatableMel
     @Override
     public void stop() {
         if (target != null && !isShieldDisabled(mob) && shouldBlockForTarget(target)
-                && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK) && mob.getRandom().nextInt(4) == 0) {
+                && mob.getOffhandItem().canPerformAction(net.neoforged.neoforge.common.ItemAbilities.SHIELD_BLOCK) && mob.getRandom().nextInt(4) == 0) {
             mob.startUsingItem(InteractionHand.OFF_HAND);
         }
     }

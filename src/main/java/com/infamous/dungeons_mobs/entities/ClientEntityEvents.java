@@ -1,7 +1,8 @@
 package com.infamous.dungeons_mobs.entities;
 
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.api.distmarker.Dist;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -16,7 +17,7 @@ public class ClientEntityEvents {
     public static void preventExtraMovement(MovementInputUpdateEvent event) {
         Player owner = event.getEntity();
 
-        if (owner.hasEffect(ENSNARED.get())) {
+        if (owner.hasEffect(ENSNARED)) {
             event.getInput().getMoveVector().scale(0);
             if (event.getInput().jumping) event.getInput().jumping = false;
         }

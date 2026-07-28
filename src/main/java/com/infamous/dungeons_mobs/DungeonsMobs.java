@@ -2,6 +2,7 @@ package com.infamous.dungeons_mobs;
 
 import com.infamous.dungeons_libraries.client.ClientProxy;
 import com.infamous.dungeons_libraries.network.CommonProxy;
+import com.infamous.dungeons_mobs.capabilities.ModCapabilities;
 import com.infamous.dungeons_mobs.client.ModItemModelProperties;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.compat.EnchantWithMobCompat;
@@ -24,22 +25,17 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.eventbus.api.IEventBus;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.minecraft.core.registries.BuiltInRegistries;
-import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import software.bernie.geckolib.GeckoLib;
 
 import static com.infamous.dungeons_mobs.mod.ModEntityTypes.SPAWN_EGGS;
 
@@ -64,10 +60,12 @@ public class DungeonsMobs {
     public static CommonProxy PROXY;
 
     public DungeonsMobs(IEventBus modEventBus, ModContainer container) {
-    	GeckoLib.initialize();
+//    	GeckoLib.initialize();
         // Register the setup method for modloading
         container.registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
         modEventBus.addListener(this::setup);
+        modEventBus.addListener(this::setupNetworking);
+        modEventBus.addListener(this::setupSpawnPlacements);
         // Register the doClientStuff method for modloading
         modEventBus.addListener(this::doClientStuff);
         modEventBus.addListener(this::onLoadComplete);
@@ -91,6 +89,7 @@ public class DungeonsMobs {
         ModItems.ITEMS.register(modEventBus);
         ModRecipes.RECIPES.register(modEventBus);
         ModParticleTypes.PARTICLES.register(modEventBus);
+        ModCapabilities.ATTACHMENT_TYPES.register(modEventBus);
         if (EnchantWithMobCompat.isLoaded()) {
             ModMobEnchants.MOB_ENCHANTS_DEFERRED.register(modEventBus);
             EnchantWithMobCompat.initMobEnchants(modEventBus);
@@ -104,10 +103,16 @@ public class DungeonsMobs {
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(EntitySpawnPlacements::createPlacementTypes);
-        event.enqueueWork(EntitySpawnPlacements::initSpawnPlacements);
         event.enqueueWork(RaidEntries::initWaveMemberEntries);
         event.enqueueWork(SensorMapModifier::replaceSensorMaps);
-        event.enqueueWork(NetworkHandler::init);
+    }
+
+    private void setupNetworking(final RegisterPayloadHandlersEvent event) {
+        NetworkHandler.init(event.registrar("1"));
+    }
+
+    private void setupSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
+        EntitySpawnPlacements.initSpawnPlacements(event);
     }
 
 

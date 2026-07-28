@@ -14,7 +14,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.neoforged.neoforge.network.NetworkHooks;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -191,7 +190,7 @@ public class NecromancerOrbEntity extends StraightMovingProjectileEntity impleme
     }
 
     public void onHitEntity(Entity entity) {
-        if (entity instanceof Mob && ((Mob) entity).getMobType() == MobType.UNDEAD) {
+        if (entity instanceof Mob && ((Mob) entity).getMobCategory() == MobCategory.UNDEAD) {
 
         } else if (!this.level().isClientSide) {
             super.onHitEntity(entity);
@@ -231,10 +230,6 @@ public class NecromancerOrbEntity extends StraightMovingProjectileEntity impleme
         return false;
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     @Override
     public SoundEvent getImpactSound() {

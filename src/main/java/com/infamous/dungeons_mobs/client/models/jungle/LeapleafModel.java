@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.core.molang.MolangParser;
+import software.bernie.geckolib.loading.math.MathParser;
 import software.bernie.geckolib.model.GeoModel;
 
 public class LeapleafModel extends GeoModel<LeapleafEntity> {
@@ -42,7 +42,7 @@ public class LeapleafModel extends GeoModel<LeapleafEntity> {
     public void setCustomAnimations(LeapleafEntity animatable, long instanceId, AnimationState<LeapleafEntity> animationState) {
         Vec3 velocity = animatable.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 17.5);
+        MathParser.setVariable("query.ground_speed", () -> groundSpeed * 17.5);
     }
 }
 

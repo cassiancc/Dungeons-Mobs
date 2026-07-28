@@ -37,7 +37,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -69,7 +69,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
         this.isConstructed = true;
         this.setMaxUpStep(1.0F);
         this.moveControl = new AquaticMoveHelperController<>(this);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.waterNavigation = new WaterBoundPathNavigation(this, world);
         this.groundNavigation = new GroundPathNavigation(this, world);
     }

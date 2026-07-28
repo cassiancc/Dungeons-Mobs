@@ -2,8 +2,8 @@ package com.infamous.dungeons_mobs.interfaces;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.HumanoidArm;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.neoforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import software.bernie.geckolib.cache.object.GeoBone;
 
 @OnlyIn(Dist.CLIENT)

@@ -262,7 +262,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
 
     @Override
     protected void hurtCurrentlyUsedShield(float amount) {
-        if (this.useItem.canPerformAction(net.neoforged.neoforge.common.ToolActions.SHIELD_BLOCK)) {
+        if (this.useItem.canPerformAction(net.neoforged.neoforge.common.ItemAbilities.SHIELD_BLOCK)) {
             if (amount >= 3.0F) {
                 int i = 1 + Mth.floor(amount);
                 InteractionHand hand = this.getUsedItemHand();

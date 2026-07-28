@@ -19,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkHooks;
 
 import java.util.List;
 
@@ -221,13 +220,13 @@ public class AreaDamageEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(SIZE, 0.0F);
-        this.entityData.define(SIZE_TO_REACH, 0.0F);
-        this.entityData.define(Y_SIZE, 0.0F);
-        this.entityData.define(GROW_SPEED, 0.0F);
-        this.entityData.define(PARTICLE_TYPE, 0);
-        this.entityData.define(EXTRA_TIME, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(SIZE, 0.0F);
+        builder.define(SIZE_TO_REACH, 0.0F);
+        builder.define(Y_SIZE, 0.0F);
+        builder.define(GROW_SPEED, 0.0F);
+        builder.define(PARTICLE_TYPE, 0);
+        builder.define(EXTRA_TIME, 0);
     }
 
     public float getSize() {
@@ -310,10 +309,4 @@ public class AreaDamageEntity extends Entity {
         p_213281_1_.putBoolean("DisableShields", this.disableShields);
         p_213281_1_.putInt("ExtraTime", this.getExtraTime());
     }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
 }

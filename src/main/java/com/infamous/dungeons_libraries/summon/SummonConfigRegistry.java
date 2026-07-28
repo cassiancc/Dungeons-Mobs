@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.summon;
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;

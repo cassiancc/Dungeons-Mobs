@@ -70,7 +70,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.ForgeSpawnEggItem;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.function.Supplier;
@@ -584,7 +584,7 @@ public class ModEntityTypes {
         Supplier<EntityType<T>> entityType = ENTITY_TYPES.register(key, sup);
 
         // TODO add to main creative tab
-        SPAWN_EGGS.register(key + "_spawn_egg", () -> new ForgeSpawnEggItem(entityType, primaryColor, secondaryColor, new Item.Properties()));
+        SPAWN_EGGS.register(key + "_spawn_egg", () -> new DeferredSpawnEggItem(entityType, primaryColor, secondaryColor, new Item.Properties()));
 
         return entityType;
     }

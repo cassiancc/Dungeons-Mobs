@@ -4,7 +4,7 @@ import com.infamous.dungeons_mobs.entities.jungle.AbstractVineEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.core.molang.MolangParser;
+import software.bernie.geckolib.loading.math.MathParser;
 import software.bernie.geckolib.model.GeoModel;
 
 public abstract class AbstractVineModel extends GeoModel<AbstractVineEntity> {
@@ -24,7 +24,7 @@ public abstract class AbstractVineModel extends GeoModel<AbstractVineEntity> {
                 part.setHidden(i < partsToShow);
             }
         }
-        MolangParser.INSTANCE.setValue("query.vine_length", entity::getLengthInSegments);
+        MathParser.setVariable("query.vine_length", entity::getLengthInSegments);
     }
 
     @Override

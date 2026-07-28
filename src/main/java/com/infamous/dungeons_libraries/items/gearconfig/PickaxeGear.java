@@ -12,7 +12,7 @@ public class PickaxeGear extends ToolGear {
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
-        return ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
+    public boolean canPerformAction(ItemStack stack, ItemAbility ItemAbility) {
+        return ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(ItemAbility);
     }
 }

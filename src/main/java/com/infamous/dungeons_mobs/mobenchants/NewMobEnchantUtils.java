@@ -1,13 +1,13 @@
 package com.infamous.dungeons_mobs.mobenchants;
 
-import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.api.IEnchantCap;
-import baguchan.enchantwithmob.mobenchant.MobEnchant;
+import baguchi.enchantwithmob.EnchantWithMob;
+import baguchi.enchantwithmob.api.IEnchantCap;
+import baguchi.enchantwithmob.mobenchant.MobEnchant;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Consumer;
 
-import static baguchan.enchantwithmob.utils.MobEnchantUtils.getMobEnchantLevelFromHandler;
+import static baguchi.enchantwithmob.utils.MobEnchantUtils.getMobEnchantLevelFromHandler;
 
 public class NewMobEnchantUtils {
 

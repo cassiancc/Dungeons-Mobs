@@ -1,8 +1,8 @@
 package com.infamous.dungeons_mobs.entities.illagers;
 
-import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.api.IEnchantCap;
-import baguchan.enchantwithmob.capability.MobEnchantCapability;
+import baguchi.enchantwithmob.EnchantWithMob;
+import baguchi.enchantwithmob.api.IEnchantCap;
+import baguchi.enchantwithmob.capability.MobEnchantCapability;
 import com.infamous.dungeons_libraries.utils.AreaOfEffectHelper;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static baguchan.enchantwithmob.registry.MobEnchants.PROTECTION;
-import static baguchan.enchantwithmob.registry.MobEnchants.STRONG;
+import static baguchi.enchantwithmob.registry.MobEnchants.PROTECTION;
+import static baguchi.enchantwithmob.registry.MobEnchants.STRONG;
 import static com.infamous.dungeons_mobs.network.datasync.ModDataSerializers.UUID_LIST;
 import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
@@ -199,7 +199,7 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
     public boolean isAlliedTo(Entity entityIn) {
         if (super.isAlliedTo(entityIn)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobType() == MobType.ILLAGER) {
+        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;

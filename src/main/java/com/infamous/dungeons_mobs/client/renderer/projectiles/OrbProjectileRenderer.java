@@ -12,8 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.object.Color;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.Color;
 
 public class OrbProjectileRenderer extends GeoEntityRenderer<NecromancerOrbEntity> {
 
@@ -29,15 +29,14 @@ public class OrbProjectileRenderer extends GeoEntityRenderer<NecromancerOrbEntit
     }
 
     @Override
-    public void preRender(PoseStack stackIn, NecromancerOrbEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue,
-                          float alpha) {
+    public void preRender(PoseStack poseStack, NecromancerOrbEntity animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         float scaleFactor = 1.0F;
         if (animatable.lifeTime <= 3) {
             scaleFactor = 0.0F;
         } else {
             scaleFactor = 1.0F;
         }
-        stackIn.scale(scaleFactor, scaleFactor, scaleFactor);
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
     }
 
     @Override

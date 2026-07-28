@@ -6,9 +6,9 @@ import com.infamous.dungeons_mobs.entities.ender.WatchlingEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -33,7 +33,7 @@ public class WatchlingModel extends GeoModel<WatchlingEntity> {
     @Override
     public void setCustomAnimations(WatchlingEntity entity, long uniqueID, AnimationState<WatchlingEntity> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        GeoBone head = this.getAnimationProcessor().getBone("head");
 
         LivingEntity entityIn = (LivingEntity) entity;
         EntityModelData extraData = customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);

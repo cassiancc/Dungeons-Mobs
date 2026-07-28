@@ -20,7 +20,7 @@ import static com.infamous.dungeons_mobs.capabilities.ModCapabilities.CONVERTIBL
 public class ConvertibleHelper {
 
     public static Convertible getConvertibleCapability(Entity entity) {
-        return entity.getCapability(CONVERTIBLE_CAPABILITY).orElse(new Convertible());
+        return entity.getData(CONVERTIBLE_CAPABILITY);
     }
 
     public static void onDrownedAndConvertedTo(Mob original, Mob convertedTo) {
@@ -37,7 +37,7 @@ public class ConvertibleHelper {
             handleZombieAttributes(convertedToZombie);
             setZombieCanBreakDoors(originalZombie, convertedToZombie);
         }
-        net.neoforged.neoforge.event.ForgeEventFactory.onLivingConvert(original, convertedTo);
+        net.neoforged.neoforge.event.EventHooks.onLivingConvert(original, convertedTo);
     }
 
     private static void setZombieCanBreakDoors(Zombie originalZombie, Zombie convertedToZombie) {

@@ -4,6 +4,7 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModItems;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundSource;
@@ -16,14 +17,13 @@ import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.neoforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -52,15 +52,16 @@ public class BlueNethershroomEntity extends ThrowableItemProjectile implements I
         return ModItems.BLUE_NETHERSHROOM.get();
     }
 
-    protected float getGravity() {
+    @Override
+    protected double getDefaultGravity() {
         return 0.05F;
     }
 
     protected void onHit(HitResult rtr) {
         super.onHit(rtr);
         ItemStack itemstack = this.getItem();
-        List<MobEffectInstance> list = PotionUtils.getMobEffects(itemstack);
-        if (!list.isEmpty()) {
+        PotionContents list = itemstack.get(DataComponents.POTION_CONTENTS);
+        if (list != null) {
             if (!this.level().isClientSide) {
                 Entity target = null;
                 if (rtr instanceof EntityHitResult entityHitResult) {
@@ -90,15 +91,13 @@ public class BlueNethershroomEntity extends ThrowableItemProjectile implements I
         aoeCloud.setWaitTime(10);
         aoeCloud.setRadiusPerTick(-aoeCloud.getRadius() / (float) aoeCloud.getDuration());
 
-        for (MobEffectInstance customEffects : PotionUtils.getCustomEffects(itemStack)) {
+        PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
+        if (potionContents == null) return;
+        for (MobEffectInstance customEffects : potionContents.getAllEffects()) {
             aoeCloud.addEffect(new MobEffectInstance(customEffects));
         }
 
         this.level().addFreshEntity(aoeCloud);
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 }

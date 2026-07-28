@@ -11,9 +11,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.neoforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderer.specialty.DynamicGeoEntityRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class WhispererRenderer extends DynamicGeoEntityRenderer<WhispererEntity> {

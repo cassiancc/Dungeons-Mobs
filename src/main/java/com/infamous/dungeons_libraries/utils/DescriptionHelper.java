@@ -1,45 +1,28 @@
 package com.infamous.dungeons_libraries.utils;
 
 import com.google.common.collect.Multimap;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.neoforged.neoforge.api.distmarker.Dist;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
 import java.util.Map;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
-import static com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION;
-import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
+import static net.minecraft.world.item.component.ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT;
 
 @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class DescriptionHelper {
 
-    // Rewrite to a mixin inside ItemStack::getTooltipLines. Figure out a way to have all styles available.
-    @SubscribeEvent
-    public static void onItemTooltip(ItemTooltipEvent event) {
-        BuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(event.getItemStack());
-        List<EnchantmentInstance> builtInEnchantments = cap.getBuiltInEnchantments(GEAR_CONFIG_BUILTIN_RESOURCELOCATION);
-        builtInEnchantments.forEach(enchantmentInstance -> {
-            event.getToolTip().add(enchantmentInstance.enchantment.getFullname(enchantmentInstance.level).copy().withStyle(Style.EMPTY.withColor(TextColor.parseColor("#FF8100"))));
-        });
-    }
 
     public static void addArtifactDescription(List<Component> list, ItemStack itemStack) {
         ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
@@ -58,10 +41,10 @@ public class DescriptionHelper {
 
             for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                 AttributeModifier attributemodifier = entry.getValue();
-                double d0 = attributemodifier.getAmount();
+                double d0 = attributemodifier.amount();
 
                 double d1;
-                if (attributemodifier.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && attributemodifier.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL) {
+                if (attributemodifier.operation() != AttributeModifier.Operation.ADD_MULTIPLIED_BASE && attributemodifier.operation() != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL) {
                     if (entry.getKey().equals(Attributes.KNOCKBACK_RESISTANCE)) {
                         d1 = d0 * 10.0D;
                     } else {
@@ -72,10 +55,10 @@ public class DescriptionHelper {
                 }
 
                 if (d0 > 0.0D) {
-                    list.add(Component.translatable("attribute.modifier.plus." + attributemodifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                    list.add(Component.translatable("attribute.modifier.plus." + attributemodifier.operation().id(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                 } else if (d0 < 0.0D) {
                     d1 *= -1.0D;
-                    list.add(Component.translatable("attribute.modifier.take." + attributemodifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
+                    list.add(Component.translatable("attribute.modifier.take." + attributemodifier.operation().id(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
                 }
             }
         }

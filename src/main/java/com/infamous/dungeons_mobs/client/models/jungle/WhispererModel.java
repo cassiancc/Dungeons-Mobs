@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.core.molang.MolangParser;
+import software.bernie.geckolib.loading.math.MathParser;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -75,6 +75,6 @@ public class WhispererModel<T extends WhispererEntity> extends GeoModel<T> {
         }
         Vec3 velocity = entity.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 12.5);
+        MathParser.setVariable("query.ground_speed", () -> groundSpeed * 12.5);
     }
 }

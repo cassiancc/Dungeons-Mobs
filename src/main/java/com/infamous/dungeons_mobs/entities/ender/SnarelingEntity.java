@@ -61,8 +61,8 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements GeoAnima
         //this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, AbstractEndermanVariant.class, true, false));
     }
 
-    public MobType getMobType() {
-        return MobType.ARTHROPOD;
+    public MobCategory getMobCategory() {
+        return MobCategory.ARTHROPOD;
     }
 
     @Override

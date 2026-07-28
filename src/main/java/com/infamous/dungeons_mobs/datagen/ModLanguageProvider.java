@@ -1,6 +1,6 @@
 package com.infamous.dungeons_mobs.datagen;
 
-import baguchan.enchantwithmob.mobenchant.MobEnchant;
+import baguchi.enchantwithmob.mobenchant.MobEnchant;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.mod.ModEffects;
 import net.minecraft.data.DataGenerator;

@@ -6,6 +6,7 @@ import com.infamous.dungeons_mobs.entities.piglin.ZombifiedFungusThrowerEntity;
 import com.infamous.dungeons_mobs.entities.undead.FrozenZombieEntity;
 import com.infamous.dungeons_mobs.entities.undead.JungleZombieEntity;
 import com.infamous.dungeons_mobs.entities.undead.MossySkeletonEntity;
+import com.infamous.dungeons_mobs.entities.undead.WraithEntity;
 import com.infamous.dungeons_mobs.interfaces.IAquaticMob;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -15,10 +16,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.raid.Raider;
@@ -27,43 +25,42 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 public class EntitySpawnPlacements {
 
-    public static SpawnPlacements.Type IN_WATER_ON_GROUND;
+    public static SpawnPlacementType IN_WATER_ON_GROUND;
 
-    public static SpawnPlacements.Type ON_GROUND_ALLOW_LEAVES;
+    public static SpawnPlacementType ON_GROUND_ALLOW_LEAVES;
 
     public static void createPlacementTypes() {
-        IN_WATER_ON_GROUND = SpawnPlacements.Type.create("in_water_on_ground",
-                (iWorldReader, blockPos, entityType) -> {
-                    BlockState blockstate = iWorldReader.getBlockState(blockPos);
-                    FluidState fluidstate = iWorldReader.getFluidState(blockPos);
-                    BlockPos above = blockPos.above();
-                    BlockPos below = blockPos.below();
-                    BlockState stateAtPos = iWorldReader.getBlockState(blockPos);
-                    boolean inWater = fluidstate.is(FluidTags.WATER) && iWorldReader.getFluidState(below).is(FluidTags.WATER) && !iWorldReader.getBlockState(above).isRedstoneConductor(iWorldReader, above);
-                    if (!stateAtPos.isValidSpawn(iWorldReader, below, SpawnPlacements.Type.ON_GROUND, entityType)) {
-                        return false;
-                    } else {
-                        boolean validEmptySpawn = isValidEmptySpawnBlockNoFluidCheck(iWorldReader, blockPos, blockstate, entityType) && isValidEmptySpawnBlockNoFluidCheck(iWorldReader, above, iWorldReader.getBlockState(above), entityType);
-                        return validEmptySpawn && inWater;
-                    }
-                });
-        ON_GROUND_ALLOW_LEAVES = SpawnPlacements.Type.create("on_ground_allow_leaves",
-                ((levelReader, blockPos, entityType) -> {
-                    BlockState blockstate = levelReader.getBlockState(blockPos);
-                    FluidState fluidstate = levelReader.getFluidState(blockPos);
-                    BlockPos above = blockPos.above();
-                    BlockPos below = blockPos.below();
-                    BlockState stateBelow = levelReader.getBlockState(below);
-                    if (!stateBelow.isValidSpawn(levelReader, below, SpawnPlacements.Type.ON_GROUND, entityType) && !(stateBelow.is(BlockTags.LEAVES))) {
-                        return false;
-                    } else {
-                        return NaturalSpawner.isValidEmptySpawnBlock(levelReader, blockPos, blockstate, fluidstate, entityType)
-                                && NaturalSpawner.isValidEmptySpawnBlock(levelReader, above, levelReader.getBlockState(above), levelReader.getFluidState(above), entityType);
-                    }
-                }));
+        IN_WATER_ON_GROUND = (iWorldReader, blockPos, entityType) -> {
+			BlockState blockstate = iWorldReader.getBlockState(blockPos);
+			FluidState fluidstate = iWorldReader.getFluidState(blockPos);
+			BlockPos above = blockPos.above();
+			BlockPos below = blockPos.below();
+			BlockState stateAtPos = iWorldReader.getBlockState(blockPos);
+			boolean inWater = fluidstate.is(FluidTags.WATER) && iWorldReader.getFluidState(below).is(FluidTags.WATER) && !iWorldReader.getBlockState(above).isRedstoneConductor(iWorldReader, above);
+			if (!stateAtPos.isValidSpawn(iWorldReader, below, entityType)) {
+				return false;
+			} else {
+				boolean validEmptySpawn = isValidEmptySpawnBlockNoFluidCheck(iWorldReader, blockPos, blockstate, entityType) && isValidEmptySpawnBlockNoFluidCheck(iWorldReader, above, iWorldReader.getBlockState(above), entityType);
+				return validEmptySpawn && inWater;
+			}
+		};
+        ON_GROUND_ALLOW_LEAVES = (levelReader, blockPos, entityType) -> {
+			BlockState blockstate = levelReader.getBlockState(blockPos);
+			FluidState fluidstate = levelReader.getFluidState(blockPos);
+			BlockPos above = blockPos.above();
+			BlockPos below = blockPos.below();
+			BlockState stateBelow = levelReader.getBlockState(below);
+			if (!stateBelow.isValidSpawn(levelReader, below, entityType) && !(stateBelow.is(BlockTags.LEAVES))) {
+				return false;
+			} else {
+				return NaturalSpawner.isValidEmptySpawnBlock(levelReader, blockPos, blockstate, fluidstate, entityType)
+						&& NaturalSpawner.isValidEmptySpawnBlock(levelReader, above, levelReader.getBlockState(above), levelReader.getFluidState(above), entityType);
+			}
+		};
     }
 
     public static boolean isValidEmptySpawnBlockNoFluidCheck(BlockGetter blockReader, BlockPos blockPos, BlockState blockState, EntityType<?> entityType) {
@@ -78,92 +75,95 @@ public class EntitySpawnPlacements {
         }
     }
 
-    public static void initSpawnPlacements() {
-        SpawnPlacements.register(ModEntityTypes.WRAITH.get(),
-                SpawnPlacements.Type.ON_GROUND,
+    static RegisterSpawnPlacementsEvent event;
+
+    public static void initSpawnPlacements(RegisterSpawnPlacementsEvent event) {
+        EntitySpawnPlacements.event = event;
+        register(ModEntityTypes.WRAITH.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.FROZEN_ZOMBIE.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.FROZEN_ZOMBIE.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 FrozenZombieEntity::canFrozenZombieSpawn);
-        SpawnPlacements.register(ModEntityTypes.ICY_CREEPER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ICY_CREEPER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 IcyCreeperEntity::canIcyCreeperSpawn);
-        SpawnPlacements.register(ModEntityTypes.JUNGLE_ZOMBIE.get(),
+        register(ModEntityTypes.JUNGLE_ZOMBIE.get(),
                 ON_GROUND_ALLOW_LEAVES,
                 Heightmap.Types.MOTION_BLOCKING,
                 JungleZombieEntity::canJungleZombieSpawn);
-        SpawnPlacements.register(ModEntityTypes.MOSSY_SKELETON.get(),
+        register(ModEntityTypes.MOSSY_SKELETON.get(),
                 ON_GROUND_ALLOW_LEAVES,
                 Heightmap.Types.MOTION_BLOCKING,
                 MossySkeletonEntity::canMossySkeletonSpawn);
 
 
-        SpawnPlacements.register(ModEntityTypes.SKELETON_VANGUARD.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.SKELETON_VANGUARD.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.NECROMANCER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.NECROMANCER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
 
         // Illager
-        SpawnPlacements.register(ModEntityTypes.ROYAL_GUARD.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ROYAL_GUARD.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
-        SpawnPlacements.register(ModEntityTypes.MOUNTAINEER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.MOUNTAINEER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
-        SpawnPlacements.register(ModEntityTypes.GEOMANCER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.GEOMANCER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
-        SpawnPlacements.register(ModEntityTypes.ICEOLOGER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ICEOLOGER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
-        SpawnPlacements.register(ModEntityTypes.ILLUSIONER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ILLUSIONER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
-        SpawnPlacements.register(ModEntityTypes.ILLUSIONER_CLONE.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ILLUSIONER_CLONE.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
-        SpawnPlacements.register(ModEntityTypes.WINDCALLER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.WINDCALLER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canIllagerSpawn);
 
-        SpawnPlacements.register(ModEntityTypes.SQUALL_GOLEM.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.SQUALL_GOLEM.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::canRaiderSpawn);
 
-        SpawnPlacements.register(ModEntityTypes.REDSTONE_GOLEM.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.REDSTONE_GOLEM.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.REDSTONE_CUBE.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.REDSTONE_CUBE.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.CONJURED_SLIME.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.CONJURED_SLIME.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules);
 
         // Jungle
-        SpawnPlacements.register(ModEntityTypes.WHISPERER.get(),
+        register(ModEntityTypes.WHISPERER.get(),
                 ON_GROUND_ALLOW_LEAVES,
                 Heightmap.Types.MOTION_BLOCKING,
                 EntitySpawnPlacements::canJungleMobSpawn);
-        SpawnPlacements.register(ModEntityTypes.LEAPLEAF.get(),
+        register(ModEntityTypes.LEAPLEAF.get(),
                 ON_GROUND_ALLOW_LEAVES,
                 Heightmap.Types.MOTION_BLOCKING,
                 EntitySpawnPlacements::canJungleMobSpawn);
@@ -178,25 +178,25 @@ public class EntitySpawnPlacements {
                 VineEntity::canVineSpawnInLight);*/
 
         // Piglin
-        SpawnPlacements.register(ModEntityTypes.FUNGUS_THROWER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.FUNGUS_THROWER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 FungusThrowerEntity::checkFungusThrowerSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.ZOMBIFIED_FUNGUS_THROWER.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ZOMBIFIED_FUNGUS_THROWER.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ZombifiedFungusThrowerEntity::checkZombifiedFungusThrowerSpawnRules);
 
         // Blaze
-        SpawnPlacements.register(ModEntityTypes.WILDFIRE.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.WILDFIRE.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkAnyLightMonsterSpawnRules);
 
 
         // Ocean
-        SpawnPlacements.register(ModEntityTypes.WAVEWHISPERER.get(),
-                SpawnPlacements.Type.IN_WATER,
+        register(ModEntityTypes.WAVEWHISPERER.get(),
+                SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::checkAquaticMobSpawnRules);
         // COMMENTED OUT BECAUSE THEY SHOULDN'T SPAWN WITHOUT DUNGEONS WORLD
@@ -208,34 +208,38 @@ public class EntitySpawnPlacements {
                 IN_WATER_ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::checkAquaticMobSpawnRules);*/
-        SpawnPlacements.register(ModEntityTypes.DROWNED_NECROMANCER.get(),
-                SpawnPlacements.Type.IN_WATER,
+        register(ModEntityTypes.DROWNED_NECROMANCER.get(),
+                SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::checkAquaticMobSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.SUNKEN_SKELETON.get(),
-                SpawnPlacements.Type.IN_WATER,
+        register(ModEntityTypes.SUNKEN_SKELETON.get(),
+                SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntitySpawnPlacements::checkAquaticMobSpawnRules);
 
         //Enderlings
-        SpawnPlacements.register(ModEntityTypes.BLASTLING.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.BLASTLING.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.WATCHLING.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.WATCHLING.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.SNARELING.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.SNARELING.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.ENDERSENT.get(),
-                SpawnPlacements.Type.ON_GROUND,
+        register(ModEntityTypes.ENDERSENT.get(),
+                SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMonsterSpawnRules);
 
     }
+
+    private static <T extends Mob> void register(EntityType<T> entityType, SpawnPlacementType spawnPlacementType, Heightmap.Types heightmapType, SpawnPlacements.SpawnPredicate<T> predicate) {
+        event.register(entityType, spawnPlacementType, heightmapType, predicate, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+	}
 
     public static boolean checkAquaticMobSpawnRules(EntityType<? extends Mob> type, ServerLevelAccessor pServerLevel, MobSpawnType pMobSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!pServerLevel.getFluidState(pPos.below()).is(FluidTags.WATER)) {

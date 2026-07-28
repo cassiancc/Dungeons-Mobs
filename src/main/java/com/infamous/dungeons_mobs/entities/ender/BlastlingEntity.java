@@ -65,8 +65,8 @@ public class BlastlingEntity extends AbstractEnderlingEntity implements GeoAnima
         //this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, AbstractEndermanVariant.class, true, false));
     }
 
-    public MobType getMobType() {
-        return MobType.UNDEAD;
+    public MobCategory getMobCategory() {
+        return MobCategory.UNDEAD;
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {

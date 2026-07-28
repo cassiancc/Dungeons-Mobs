@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.GeckoLibCache;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.core.molang.MolangParser;
+import software.bernie.geckolib.loading.math.MathParser;
 
 public class NecromancerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
@@ -31,6 +31,6 @@ public class NecromancerArmorGearModel<T extends ArmorGear> extends ArmorGearMod
         cloak.setHidden(this.getWearer() != null && this.getWearer() instanceof NecromancerEntity);
         Vec3 velocity = wearer.getDeltaMovement();
         float groundSpeed = Mth.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
-        MolangParser.INSTANCE.setValue("query.ground_speed", () -> groundSpeed * 13);
+        MathParser.setVariable("query.ground_speed", () -> groundSpeed * 13);
     }
 }

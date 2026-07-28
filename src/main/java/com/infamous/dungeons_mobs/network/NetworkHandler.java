@@ -1,38 +1,18 @@
 package com.infamous.dungeons_mobs.network;
 
-import com.infamous.dungeons_libraries.utils.GeneralUtil;
-import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.network.message.AncientMessage;
 import com.infamous.dungeons_mobs.network.message.AnimatedPropsMessage;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkRegistry;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class NetworkHandler {
-    public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(
-                    GeneralUtil.mobsLoc("network"))
-            .clientAcceptedVersions("1"::equals)
-            .serverAcceptedVersions("1"::equals)
-            .networkProtocolVersion(() -> "1")
-            .simpleChannel();
-
-    protected static int PACKET_COUNTER = 0;
+    public static PayloadRegistrar INSTANCE;
 
     public NetworkHandler() {
     }
 
-    public static void init() {
-        INSTANCE.messageBuilder(AncientMessage.class, 0)
-                .encoder(AncientMessage::encode).decoder(AncientMessage::decode)
-                .consumerNetworkThread(AncientMessage::onPacketReceived)
-                .add();
-        INSTANCE.messageBuilder(AnimatedPropsMessage.class, 0)
-                .encoder(AnimatedPropsMessage::encode).decoder(AnimatedPropsMessage::decode)
-                .consumerNetworkThread(AnimatedPropsMessage::onPacketReceived)
-                .add();
-    }
-
-    public static int incrementAndGetPacketCounter() {
-        return PACKET_COUNTER++;
+    public static void init(PayloadRegistrar registrar) {
+        INSTANCE = registrar;
+        INSTANCE.playBidirectional(AncientMessage.TYPE, AncientMessage.STREAM_CODEC, AncientMessage::onPacketReceived);
+        INSTANCE.playBidirectional(AnimatedPropsMessage.TYPE, AnimatedPropsMessage.STREAM_CODEC, AnimatedPropsMessage::onPacketReceived);
     }
 }

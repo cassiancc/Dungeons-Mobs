@@ -27,7 +27,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
@@ -54,7 +54,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements GeoAnim
     protected AbstractEnderlingEntity(EntityType<? extends AbstractEnderlingEntity> p_i48553_1_, Level p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
         this.setMaxUpStep(1.0F);
-        this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+        this.setPathfindingMalus(PathType.WATER, -1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -214,7 +214,7 @@ public abstract class AbstractEnderlingEntity extends Monster implements GeoAnim
         boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
-            EntityTeleportEvent.EnderEntity event = net.neoforged.neoforge.event.ForgeEventFactory
+            EntityTeleportEvent.EnderEntity event = net.neoforged.neoforge.event.EventHooks
                     .onEnderTeleport(this, p_70825_1_, p_70825_3_, p_70825_5_);
             if (event.isCanceled())
                 return false;

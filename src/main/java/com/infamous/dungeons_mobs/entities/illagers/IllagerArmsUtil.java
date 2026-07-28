@@ -25,7 +25,7 @@ public class IllagerArmsUtil {
         }
         String defaultString = String.format("%s:textures/models/armor/%s_layer_%d%s.png", domain, texture, 1, "crossed" == null ? "" : String.format("_%s", "crossed"));
 
-        String s1 = net.neoforged.neoforge.client.ForgeHooksClient.getArmorTexture(entity, stack, defaultString, slot, "crossed");
+        String s1 = net.neoforged.neoforge.client.CommonHooksClient.getArmorTexture(entity, stack, defaultString, slot, "crossed");
         if (!s1.endsWith("_crossed.png")) {
             s1 = s1.replace(".png", "_crossed.png");
         }

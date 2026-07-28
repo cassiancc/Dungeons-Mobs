@@ -22,7 +22,7 @@ public class PiglinHelper {
         T convertTo = piglin.convertTo(convertToType, true);
         if (convertTo != null) {
             convertTo.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
-            net.neoforged.neoforge.event.ForgeEventFactory.onLivingConvert(piglin, convertTo);
+            net.neoforged.neoforge.event.EventHooks.onLivingConvert(piglin, convertTo);
         }
     }
 }

@@ -31,9 +31,9 @@ public class AxeGear extends ToolGear {
         BlockPos blockpos = p_40529_.getClickedPos();
         Player player = p_40529_.getPlayer();
         BlockState blockstate = level.getBlockState(blockpos);
-        Optional<BlockState> optional = Optional.ofNullable(blockstate.getToolModifiedState(p_40529_, net.neoforged.neoforge.common.ToolActions.AXE_STRIP, false));
-        Optional<BlockState> optional1 = optional.isPresent() ? Optional.empty() : Optional.ofNullable(blockstate.getToolModifiedState(p_40529_, net.neoforged.neoforge.common.ToolActions.AXE_SCRAPE, false));
-        Optional<BlockState> optional2 = optional.isPresent() || optional1.isPresent() ? Optional.empty() : Optional.ofNullable(blockstate.getToolModifiedState(p_40529_, net.neoforged.neoforge.common.ToolActions.AXE_WAX_OFF, false));
+        Optional<BlockState> optional = Optional.ofNullable(blockstate.getToolModifiedState(p_40529_, net.neoforged.neoforge.common.ItemAbilities.AXE_STRIP, false));
+        Optional<BlockState> optional1 = optional.isPresent() ? Optional.empty() : Optional.ofNullable(blockstate.getToolModifiedState(p_40529_, net.neoforged.neoforge.common.ItemAbilities.AXE_SCRAPE, false));
+        Optional<BlockState> optional2 = optional.isPresent() || optional1.isPresent() ? Optional.empty() : Optional.ofNullable(blockstate.getToolModifiedState(p_40529_, net.neoforged.neoforge.common.ItemAbilities.AXE_WAX_OFF, false));
         ItemStack itemstack = p_40529_.getItemInHand();
         Optional<BlockState> optional3 = Optional.empty();
         if (optional.isPresent()) {
@@ -80,7 +80,7 @@ public class AxeGear extends ToolGear {
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
-        return ItemAbilities.DEFAULT_AXE_ACTIONS.contains(toolAction);
+    public boolean canPerformAction(ItemStack stack, ItemAbility ItemAbility) {
+        return ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ItemAbility);
     }
 }

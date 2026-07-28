@@ -1,10 +1,12 @@
 package com.infamous.dungeons_mobs.mobenchants;
 
-import baguchan.enchantwithmob.mobenchant.MobEnchant;
+import baguchi.enchantwithmob.mobenchant.MobEnchant;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import static com.infamous.dungeons_mobs.DungeonsMobs.PROXY;
 import static com.infamous.dungeons_mobs.mobenchants.NewMobEnchantUtils.executeIfPresentWithLevel;
@@ -17,14 +19,16 @@ public class RegenerationMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void onLivingUpdate(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
-        executeIfPresentWithLevel(entity, REGENERATION.get(), (level) -> {
-            if (entity.getHealth() < entity.getMaxHealth() && entity.tickCount % getTickCountForLevel(level) == 0) {
-                entity.heal(1.0F);
-                PROXY.spawnParticles(entity, ParticleTypes.HEART);
-            }
-        });
+    public static void onLivingUpdate(EntityTickEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof LivingEntity livingEntity) {
+            executeIfPresentWithLevel(livingEntity, REGENERATION.get(), (level) -> {
+                if (livingEntity.getHealth() < livingEntity.getMaxHealth() && livingEntity.tickCount % getTickCountForLevel(level) == 0) {
+                    livingEntity.heal(1.0F);
+                    PROXY.spawnParticles(livingEntity, ParticleTypes.HEART);
+                }
+            });
+        }
     }
 
     private static int getTickCountForLevel(Integer level) {
