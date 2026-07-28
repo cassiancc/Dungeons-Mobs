@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -16,14 +17,14 @@ public class SummonEvents {
 
     @SubscribeEvent
     public static void onSummonedMobAttemptsToAttack(LivingChangeTargetEvent event) {
-        if (event.getNewTarget() == null) return;
+        if (event.getNewAboutToBeSetTarget() == null) return;
         if (FollowerLeaderHelper.isFollower(event.getEntity())) {
             LivingEntity followerAttacker = event.getEntity();
             Follower attackerFollowerCapability = getFollowerCapability(followerAttacker);
             if (attackerFollowerCapability.getMaster() != null) {
                 LivingEntity attackersOwner = attackerFollowerCapability.getMaster();
-                if (FollowerLeaderHelper.isFollower(event.getNewTarget())) {
-                    LivingEntity summonableTarget = event.getNewTarget();
+                if (FollowerLeaderHelper.isFollower(event.getNewAboutToBeSetTarget())) {
+                    LivingEntity summonableTarget = event.getNewAboutToBeSetTarget();
                     Follower targetFollowerCapability = getFollowerCapability(summonableTarget);
                     if (targetFollowerCapability.getLeader() != null) {
                         LivingEntity targetsOwner = targetFollowerCapability.getMaster();
@@ -34,7 +35,7 @@ public class SummonEvents {
                     }
                 }
             }
-            if (attackerFollowerCapability.getMaster() == event.getNewTarget()) {
+            if (attackerFollowerCapability.getMaster() == event.getNewAboutToBeSetTarget()) {
                 event.setCanceled(true);
                 preventAttackForSummonableMob(followerAttacker);
             }

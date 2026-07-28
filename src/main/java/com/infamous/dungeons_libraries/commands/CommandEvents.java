@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.commands;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
