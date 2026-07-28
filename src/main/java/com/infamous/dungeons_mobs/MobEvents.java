@@ -32,16 +32,18 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMobGriefingEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
-import net.neoforged.neoforge.eventbus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.*;
 
@@ -66,10 +68,9 @@ public class MobEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingUpdate(LivingEvent.LivingTickEvent event) {
-        LivingEntity livingEntity = event.getEntity();
-        if (livingEntity instanceof Mob && ConvertibleHelper.convertsInWater((Mob) livingEntity)) {
-            Mob mob = (Mob) livingEntity;
+    public static void onLivingUpdate(EntityTickEvent event) {
+        Entity livingEntity = event.getEntity();
+        if (livingEntity instanceof Mob mob && ConvertibleHelper.convertsInWater((Mob) livingEntity)) {
             if (!mob.level().isClientSide() && mob.isAlive() && !mob.isNoAi()) {
                 Convertible convertibleCap = ConvertibleHelper.getConvertibleCapability(mob);
                 if (convertibleCap == null) return;
@@ -81,7 +82,7 @@ public class MobEvents {
 
                     EntityType<? extends Mob> convertToType = ConvertibleHelper.getDrowningConvertTo(mob);
 
-                    if (convertibleCap.getConversionTime() < 0 && net.neoforged.neoforge.event.ForgeEventFactory.canLivingConvert(mob, convertToType, convertibleCap::setConversionTime)) {
+                    if (convertibleCap.getConversionTime() < 0 && net.neoforged.neoforge.event.EventHooks.canLivingConvert(mob, convertToType, convertibleCap::setConversionTime)) {
                         convertibleCap.doConversion(mob, convertToType, ConvertibleHelper::onDrownedAndConvertedTo);
                     }
                 } else {
@@ -129,11 +130,11 @@ public class MobEvents {
     }
 
     @SubscribeEvent
-    public static void onSnowballDamageMob(LivingHurtEvent event) {
+    public static void onSnowballDamageMob(LivingDamageEvent.Pre event) {
         if (event.getSource().getDirectEntity() instanceof Snowball) {
             if (event.getSource().getEntity() instanceof FrozenZombieEntity) {
                 if (!(event.getEntity() instanceof Player)) {
-                    event.setAmount(event.getAmount() + 2.0F);
+                    event.setNewDamage(event.getOriginalDamage() + 2.0F);
                     int i = 0;
                     if (event.getEntity().level().getDifficulty() == Difficulty.NORMAL) {
                         i = 3;
@@ -181,7 +182,7 @@ public class MobEvents {
     @SubscribeEvent
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
         handlePillarProtection(event);
-        if (event.getExplosion().getDamageSource().getEntity() instanceof IcyCreeperEntity) {
+        if (event.getExplosion().getDirectSourceEntity() instanceof IcyCreeperEntity) {
             if (!DungeonsMobsConfig.COMMON.ENABLE_ICY_CREEPER_GRIEFING.get()) {
                 event.getAffectedBlocks().clear();
             }
@@ -211,8 +212,8 @@ public class MobEvents {
 
     private static void handlePillarProtection(ExplosionEvent.Detonate event) {
         Explosion explosion = event.getExplosion();
-        Entity source = explosion.getExploder();
-        BlockPos detonationOrigin = new BlockPos.MutableBlockPos(explosion.getPosition().x, explosion.getPosition().y, explosion.getPosition().z);
+        Entity source = explosion.getDirectSourceEntity();
+        BlockPos detonationOrigin = new BlockPos.MutableBlockPos(explosion.center().x, explosion.center().y, explosion.center().z);
 
         List<Entity> entityList = event.getAffectedEntities();
         List<ConstructEntity> potentialProtectingPillars = new java.util.ArrayList<>(Collections.emptyList());

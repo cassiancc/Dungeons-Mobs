@@ -22,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -43,8 +44,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
-import net.neoforged.neoforge.common.ForgeMod;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -94,7 +95,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return Drowned.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(ForgeMod.SWIM_SPEED.get(), 2.5D).add(Attributes.FOLLOW_RANGE, 30.0D).add(Attributes.MAX_HEALTH, 75.0D).add(Attributes.ARMOR, 12.5D).add(Attributes.KNOCKBACK_RESISTANCE, 0.6D).add(AttributeRegistry.SUMMON_CAP.get(), 4);
+        return Drowned.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(NeoForgeMod.SWIM_SPEED, 2.5D).add(Attributes.FOLLOW_RANGE, 30.0D).add(Attributes.MAX_HEALTH, 75.0D).add(Attributes.ARMOR, 12.5D).add(Attributes.KNOCKBACK_RESISTANCE, 0.6D).add(AttributeRegistry.FOLLOWER_COST_LIMIT, 4);
     }
 
     @Override
@@ -131,16 +132,11 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobType() == MobType.UNDEAD) {
+                && ((LivingEntity) entityIn).getType().is(EntityTypeTags.UNDEAD)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
         }
-    }
-
-    @Override
-    protected float getStandingEyeHeight(Pose p_213348_1_, EntityDimensions p_213348_2_) {
-        return 2.4F;
     }
 
     public void baseTick() {
@@ -541,7 +537,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
 
                 int randomIndex = mob.getRandom().nextInt(necromancerMobSummons.size());
                 String randomMobID = necromancerMobSummons.get(randomIndex);
-                entityType = BuiltInRegistries.ENTITY_TYPE.getValue(GeneralUtil.parse(randomMobID));
+                entityType = BuiltInRegistries.ENTITY_TYPE.get(GeneralUtil.parse(randomMobID));
             }
             if (entityType == null) {
                 entityType = EntityType.DROWNED;
@@ -878,7 +874,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
 
                 int randomIndex = mob.getRandom().nextInt(necromancerMobSummons.size());
                 String randomMobID = necromancerMobSummons.get(randomIndex);
-                entityType = BuiltInRegistries.ENTITY_TYPE.getValue(GeneralUtil.parse(randomMobID));
+                entityType = BuiltInRegistries.ENTITY_TYPE.get(GeneralUtil.parse(randomMobID));
             }
             if (entityType == null) {
                 entityType = EntityType.DROWNED;

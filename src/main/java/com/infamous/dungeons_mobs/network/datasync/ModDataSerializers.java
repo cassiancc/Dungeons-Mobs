@@ -10,11 +10,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
 import java.util.function.Supplier;
 
 public class ModDataSerializers {
 
-    public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.Keys.ENTITY_DATA_SERIALIZERS, DungeonsMobs.MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, DungeonsMobs.MODID);
 
     public static final Supplier<EntityDataSerializer<List<UUID>>> UUID_LIST = DATA_SERIALIZERS.register("uuid_list", () -> getUUIDListSerializer());
 

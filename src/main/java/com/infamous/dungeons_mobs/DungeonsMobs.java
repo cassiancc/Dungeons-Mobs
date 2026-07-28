@@ -20,6 +20,9 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.eventbus.api.IEventBus;
 import net.neoforged.fml.DistExecutor;
@@ -30,6 +33,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.function.Supplier;
@@ -47,28 +51,26 @@ public class DungeonsMobs {
     public static final String MODID = "dungeons_mobs";
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final CreativeModeTab DUNGEONS_MOBS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobs")).icon(()-> SPAWN_EGGS.getEntries().iterator().next().get().getDefaultInstance()).displayItems(((pParameters, pOutput) -> {
-        for (Supplier<Item> entry : SPAWN_EGGS.getEntries()) {
+        for (DeferredHolder<Item, ? extends Item> entry : SPAWN_EGGS.getEntries()) {
             pOutput.accept(entry.get());
         }
     })).build();
     public static final CreativeModeTab DUNGEONS_MOBS_ITEMS = CreativeModeTab.builder().title(Component.translatable("itemGroup.dungeonsMobsItems")).icon(()-> ModItems.ITEMS.getEntries().iterator().next().get().getDefaultInstance()).displayItems(((pParameters, pOutput) -> {
-        for (Supplier<Item> entry : ModItems.ITEMS.getEntries()) {
+        for (DeferredHolder<Item, ? extends Item> entry : ModItems.ITEMS.getEntries()) {
             pOutput.accept(entry.get());
         }
     })).build();
 
     public static CommonProxy PROXY;
 
-    public DungeonsMobs() {
+    public DungeonsMobs(IEventBus modEventBus, ModContainer container) {
     	GeckoLib.initialize();
         // Register the setup method for modloading
-        FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
-        context.registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
-        final IEventBus modEventBus = context.getModEventBus();
-        context.getModEventBus().addListener(this::setup);
+        container.registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
+        modEventBus.addListener(this::setup);
         // Register the doClientStuff method for modloading
-        context.getModEventBus().addListener(this::doClientStuff);
-        context.getModEventBus().addListener(this::onLoadComplete);
+        modEventBus.addListener(this::doClientStuff);
+        modEventBus.addListener(this::onLoadComplete);
 
         // Register ourselves for server and other game events we are interested in
         NeoForge.EVENT_BUS.register(this);
@@ -95,7 +97,7 @@ public class DungeonsMobs {
         }
         ModDataSerializers.DATA_SERIALIZERS.register(modEventBus);
         ModStructureModifiers.STRUCTURE_MODIFIER_SERIALIZERS.register(modEventBus);
-        PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+        PROXY = FMLEnvironment.dist.isClient() ? new ClientProxy() : new CommonProxy();
 
         //ANCIENT_DATA.subscribeAsSyncable(CHANNEL, AncientDatas::toPacket);
     }

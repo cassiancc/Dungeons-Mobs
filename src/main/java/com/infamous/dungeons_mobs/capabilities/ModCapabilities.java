@@ -9,6 +9,7 @@ import com.infamous.dungeons_mobs.capabilities.convertible.Convertible;
 import com.infamous.dungeons_mobs.capabilities.properties.AttacherMobProps;
 import com.infamous.dungeons_mobs.capabilities.properties.MobProps;
 import net.minecraft.world.entity.Entity;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.capabilities.CapabilityManager;

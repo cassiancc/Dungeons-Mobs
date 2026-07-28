@@ -1,7 +1,7 @@
 package com.infamous.dungeons_mobs.mod;
 
-import baguchan.enchantwithmob.mobenchant.MobEnchant;
-import baguchan.enchantwithmob.registry.MobEnchants;
+import baguchi.enchantwithmob.mobenchant.MobEnchant;
+import baguchi.enchantwithmob.registry.MobEnchants;
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.mobenchants.*;
 import net.neoforged.neoforge.registries.DeferredRegister;

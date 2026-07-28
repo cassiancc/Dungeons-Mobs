@@ -1,7 +1,7 @@
 package com.infamous.dungeons_mobs.worldgen;
 
 import com.infamous.dungeons_mobs.mod.ModStructureModifiers;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.entity.EntityType;
@@ -31,7 +31,7 @@ public class DungeonsMobsStructureModifiers {
         }
 
         @Override
-        public Codec<? extends StructureModifier> codec() {
+        public MapCodec<? extends StructureModifier> codec() {
             return ModStructureModifiers.ADD_SPAWNS_STRUCTURE_MODIFIER_TYPE.get();
         }
     }
@@ -46,7 +46,7 @@ public class DungeonsMobsStructureModifiers {
                     if(spawnOverrides != null){
                         List<MobSpawnSettings.SpawnerData> spawns = spawnOverrides.getSpawns();
                         spawns.forEach(spawnerData -> {
-                            if (this.entityTypes.contains(BuiltInRegistries.ENTITY_TYPE.getHolder(spawnerData.type).get())) {
+                            if (this.entityTypes.contains(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(spawnerData.type))) {
                                 spawnOverrides.removeSpawn(spawnerData);
                             }
                         });
@@ -56,7 +56,7 @@ public class DungeonsMobsStructureModifiers {
         }
 
         @Override
-        public Codec<? extends StructureModifier> codec() {
+        public MapCodec<? extends StructureModifier> codec() {
             return ModStructureModifiers.REMOVE_SPAWNS_STRUCTURE_MODIFIER_TYPE.get();
         }
     }

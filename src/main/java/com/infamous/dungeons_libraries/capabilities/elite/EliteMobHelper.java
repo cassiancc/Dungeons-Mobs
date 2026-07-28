@@ -7,6 +7,6 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ELITE
 public class EliteMobHelper {
 
     public static EliteMob getEliteMobCapability(Entity entity) {
-        return entity.getCapability(ELITE_MOB_CAPABILITY).orElse(new EliteMob());
+        return entity.getData(ELITE_MOB_CAPABILITY);
     }
 }

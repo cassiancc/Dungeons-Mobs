@@ -29,6 +29,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ATTACHMENT_TYPES;
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
 import static com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry.ARTIFACT_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
@@ -55,6 +56,7 @@ public class DungeonsLibraries {
         NeoForge.EVENT_BUS.register(this);
         ItemTagWrappers.init();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
+        ATTACHMENT_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
         DungeonsArmorMaterials.setupVanillaMaterials();
         WeaponMaterials.setupVanillaMaterials();

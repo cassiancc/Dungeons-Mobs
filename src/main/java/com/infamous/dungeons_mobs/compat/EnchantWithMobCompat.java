@@ -2,9 +2,10 @@ package com.infamous.dungeons_mobs.compat;
 
 import com.infamous.dungeons_mobs.DungeonsMobs;
 import com.infamous.dungeons_mobs.mobenchants.*;
-import net.neoforged.neoforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 

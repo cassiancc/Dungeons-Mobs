@@ -10,7 +10,7 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ARTIF
 public class ArtifactUsageHelper {
 
     public static ArtifactUsage getArtifactUsageCapability(Entity entity) {
-        return entity.getCapability(ARTIFACT_USAGE_CAPABILITY).orElse(new ArtifactUsage());
+        return entity.getData(ARTIFACT_USAGE_CAPABILITY);
     }
 
     public static boolean startUsingArtifact(Player playerIn, ArtifactUsage cap, ItemStack itemstack) {

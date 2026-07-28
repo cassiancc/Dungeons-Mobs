@@ -1,15 +1,32 @@
 package com.infamous.dungeons_libraries.capabilities.elite;
 
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 import static com.infamous.dungeons_libraries.entities.elite.EliteMobConfig.EMPTY_TEXTURE;
 
 public class EliteMob {
-    private boolean isElite = false;
-    private boolean hasSpawned = false;
-    private ResourceLocation texture = null;
+
+    public static final Codec<EliteMob> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                    // Up to 16 fields can be declared here
+                    Codec.BOOL.optionalFieldOf("is_elite", false).forGetter(EliteMob::isElite),
+                    Codec.BOOL.optionalFieldOf("has_spawned", false).forGetter(EliteMob::hasSpawned),
+                    ResourceLocation.CODEC.optionalFieldOf("texture", EMPTY_TEXTURE).forGetter(EliteMob::getTexture)
+            )
+            .apply(instance, (e, f, g)->new EliteMob(e, f, g)));
+    private ResourceLocation texture;
+    private boolean isElite;
+    private boolean hasSpawned;
+
+    public EliteMob(boolean isElite, boolean hasSpawned, ResourceLocation texture) {
+        this.isElite = isElite;
+        this.hasSpawned = hasSpawned;
+        this.texture = texture;
+    }
 
     public boolean isElite() {
         return isElite;

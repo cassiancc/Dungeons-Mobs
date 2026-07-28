@@ -1,40 +1,25 @@
 package com.infamous.dungeons_libraries.capabilities;
 
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
-import com.infamous.dungeons_libraries.capabilities.artifact.AttacherArtifactUsage;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.AttacherBuiltInEnchantments;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
-import com.infamous.dungeons_libraries.capabilities.elite.AttacherEliteMob;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
-import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.AttacherEnchantedProjectile;
-import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectile;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherLeader;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherFollower;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.Leader;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
-import com.infamous.dungeons_libraries.capabilities.playerrewards.AttacherPlayerRewards;
 import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewards;
-import com.infamous.dungeons_libraries.capabilities.soulcaster.AttacherSoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
-import com.infamous.dungeons_libraries.capabilities.timers.AttacherTimers;
 import com.infamous.dungeons_libraries.capabilities.timers.Timers;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.capabilities.CapabilityManager;
 import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Supplier;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@EventBusSubscriber(modid = MODID)
 public class ModCapabilities {
-
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
     public static final Capability<Timers> TIMERS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
     public static final Capability<Follower> FOLLOWER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
@@ -43,41 +28,11 @@ public class ModCapabilities {
     });
     public static final Capability<SoulCaster> SOUL_CASTER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
-    public static final Capability<EnchantedProjectile> ENCHANTED_PROJECTILE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
     public static final Capability<PlayerRewards> PLAYER_REWARDS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
-    public static final Capability<BuiltInEnchantments> BUILT_IN_ENCHANTMENTS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<ArtifactUsage> ARTIFACT_USAGE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<EliteMob> ELITE_MOB_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Supplier<AttachmentType<ArtifactUsage>> ARTIFACT_USAGE_CAPABILITY = ATTACHMENT_TYPES.register(
+            "artifact_usage", () -> AttachmentType.builder(ArtifactUsage::new).build());
+    public static final Supplier<AttachmentType<EliteMob>> ELITE_MOB_CAPABILITY = ATTACHMENT_TYPES.register(
+            "elite_mob", () -> AttachmentType.builder(()->new EliteMob(false, false, null)).serialize(EliteMob.CODEC).build());
 
-
-    public static void setupCapabilities() {
-        IEventBus forgeBus = NeoForge.EVENT_BUS;
-        forgeBus.addGenericListener(Entity.class, AttacherTimers::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherFollower::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherLeader::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherSoulCaster::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherEnchantedProjectile::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherPlayerRewards::attach);
-        forgeBus.addGenericListener(ItemStack.class, AttacherBuiltInEnchantments::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherArtifactUsage::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherEliteMob::attach);
-    }
-
-    @SubscribeEvent
-    public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.register(Timers.class);
-        event.register(Follower.class);
-        event.register(Leader.class);
-        event.register(SoulCaster.class);
-        event.register(EnchantedProjectile.class);
-        event.register(PlayerRewards.class);
-        event.register(BuiltInEnchantments.class);
-        event.register(ArtifactUsage.class);
-        event.register(EliteMob.class);
-    }
 }

@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
-public class ArtifactUsage implements INBTSerializable<CompoundTag> {
+public class ArtifactUsage {
 
     private ItemStack usingArtifact = null;
     private int usingArtifactRemaining = 0;
@@ -41,15 +41,5 @@ public class ArtifactUsage implements INBTSerializable<CompoundTag> {
 
     public void setUsingArtifactRemaining(int usingArtifactRemaining) {
         this.usingArtifactRemaining = usingArtifactRemaining;
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
     }
 }

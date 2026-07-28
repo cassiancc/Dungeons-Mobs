@@ -1,13 +1,15 @@
 package com.infamous.dungeons_mobs.mobenchants;
 
-import baguchan.enchantwithmob.mobenchant.MobEnchant;
+import baguchi.enchantwithmob.mobenchant.MobEnchant;
 import com.infamous.dungeons_mobs.capabilities.properties.MobProps;
 import com.infamous.dungeons_mobs.capabilities.properties.MobPropsHelper;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import static com.infamous.dungeons_libraries.utils.AreaOfEffectHelper.applyToNearbyEntities;
 import static com.infamous.dungeons_libraries.utils.AreaOfEffectHelper.getCanApplyToEnemyPredicate;
@@ -22,8 +24,9 @@ public class BurningMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void OnLivingUpdate(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void OnLivingUpdate(EntityTickEvent event) {
+        Entity e = event.getEntity();
+        if (e instanceof LivingEntity entity) {
 
         executeIfPresentWithLevel(entity, BURNING.get(), (level) -> {
             MobProps comboCap = MobPropsHelper.getMobPropsCapability(entity);
@@ -42,5 +45,6 @@ public class BurningMobEnchant extends MobEnchant {
                 comboCap.setBurnNearbyTimer(burnNearbyTimer - 1);
             }
         });
+    }
     }
 }
