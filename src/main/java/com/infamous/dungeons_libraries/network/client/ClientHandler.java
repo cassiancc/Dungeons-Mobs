@@ -15,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
-
 public class ClientHandler {
     public static void handleCuriosArtifactStopMessage(CuriosArtifactStopMessage packet, IPayloadContext ctx) {
         if (packet != null) {
@@ -41,11 +39,11 @@ public class ClientHandler {
         IPayloadContext context = contextSupplier.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.level().getEntity(message.getEntityId());
+                Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId());
                 if (entity instanceof LivingEntity) {
                     EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
                     cap.setElite(message.isElite());
-                    cap.setTexture(message.getTexture());
+                    cap.setTexture(message.texture());
                     if (cap.isElite()) {
                         entity.refreshDimensions();
                     }

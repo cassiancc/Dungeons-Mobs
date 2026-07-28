@@ -45,13 +45,13 @@ public abstract class PiglinEntityMixin extends AbstractPiglin implements ISmart
 
 
     @Inject(at = @At("TAIL"), method = "finalizeSpawn")
-    private void finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_, MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_, CompoundTag p_213386_5_, CallbackInfoReturnable<SpawnGroupData> cir) {
+    private void finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         this.setCrossbowUser(this.isHolding(itemStack -> itemStack.getItem() instanceof CrossbowItem));
     }
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
-    private void registerCustomData(CallbackInfo ci) {
-        this.entityData.define(DATA_IS_CROSSBOW_USER, false);
+    private void registerCustomData(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(DATA_IS_CROSSBOW_USER, false);
     }
 
     @Override

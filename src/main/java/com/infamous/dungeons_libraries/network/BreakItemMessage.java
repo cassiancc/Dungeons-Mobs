@@ -23,10 +23,9 @@ public record BreakItemMessage(int entityId, ItemStack stack) implements CustomP
             );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<BreakItemMessage> type() {
         return TYPE;
     }
-
 
     public static class BreakItemHandler {
         public static void handle(BreakItemMessage packet, IPayloadContext ctx) {

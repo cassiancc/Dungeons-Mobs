@@ -26,13 +26,10 @@ public class DefaultIllagerRenderer<T extends Mob & GeoAnimatable> extends GeoEn
         this.scaleFactor = scaleFactor;
     }
 
-
     @Override
-    protected void applyRotations(T entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-
+    protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
     @Override

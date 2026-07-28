@@ -17,7 +17,7 @@ import java.util.List;
 
 import static net.minecraft.core.registries.BuiltInRegistries.ITEM;
 
-public class DungeonsArmorMaterial implements ArmorMaterial {
+public class DungeonsArmorMaterial {
 
     public static final Codec<ArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getName()),
@@ -50,8 +50,8 @@ public class DungeonsArmorMaterial implements ArmorMaterial {
         this.durability = durability;
         this.enchantability = enchantability;
         this.repairItemResourceLocation = repairItemResourceLocation;
-        if (ITEMS.containsKey(repairItemResourceLocation)) {
-            Item item = ITEMS.getValue(repairItemResourceLocation);
+        if (BuiltInRegistries.ITEM.containsKey(repairItemResourceLocation)) {
+            Item item = ITEM.get(repairItemResourceLocation);
             this.repairItem = new LazyLoadedValue<>(() -> Ingredient.of(item));
         } else {
             this.repairItem = new LazyLoadedValue<>(() -> Ingredient.of(Items.IRON_INGOT));

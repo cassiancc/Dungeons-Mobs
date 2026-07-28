@@ -28,7 +28,7 @@ public abstract class WitherSkeletonEntityMixin extends AbstractSkeleton {
     }
 
     @Inject(at = @At("RETURN"), method = "getArrow")
-    private void getWitherArrow(ItemStack ammoStack, float p_213624_2_, CallbackInfoReturnable<AbstractArrow> cir) {
+    private void getWitherArrow(ItemStack ammoStack, float velocity, ItemStack weapon, CallbackInfoReturnable<AbstractArrow> cir) {
         AbstractArrow arrow = cir.getReturnValue();
         arrow.clearFire();
         if (arrow instanceof Arrow && ((ArrowAccessor) arrow).getEffects().isEmpty()) {

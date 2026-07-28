@@ -30,7 +30,7 @@ public class BipedModelMixin {
     @Shadow
     public ModelPart leftLeg;
 
-    @Inject(at = @At("TAIL"), method = "Lnet/minecraft/client/renderer/entity/model/BipedModel;headParts()Ljava/lang/Iterable;", cancellable = true)
+    @Inject(at = @At("TAIL"), method = "headParts", cancellable = true)
     private void moveHatToHeadParts(CallbackInfoReturnable<Iterable<ModelPart>> cir) {
         Iterable<ModelPart> parts = cir.getReturnValue();
         List<ModelPart> newResult = StreamSupport.stream(parts.spliterator(), false).collect(Collectors.toList());
@@ -40,7 +40,7 @@ public class BipedModelMixin {
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "Lnet/minecraft/client/renderer/entity/model/BipedModel;bodyParts()Ljava/lang/Iterable;", cancellable = true)
+    @Inject(at = @At("TAIL"), method = "bodyParts", cancellable = true)
     private void removeHatfromBodyParts(CallbackInfoReturnable<Iterable<ModelPart>> cir) {
         Iterable<ModelPart> parts = cir.getReturnValue();
         List<ModelPart> newResult = StreamSupport.stream(parts.spliterator(), false).collect(Collectors.toList());

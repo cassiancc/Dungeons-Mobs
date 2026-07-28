@@ -20,13 +20,13 @@ public class NetworkHandler {
         INSTANCE.commonBidirectional(MeleeGearConfigSyncPacket.TYPE, MeleeGearConfigSyncPacket.STREAM_CODEC, MeleeGearConfigSyncPacket::onPacketReceived);
         INSTANCE.commonBidirectional(BowGearConfigSyncPacket.TYPE, BowGearConfigSyncPacket.STREAM_CODEC, BowGearConfigSyncPacket::onPacketReceived);
         INSTANCE.commonBidirectional(CrossbowGearConfigSyncPacket.TYPE, CrossbowGearConfigSyncPacket.STREAM_CODEC, CrossbowGearConfigSyncPacket::onPacketReceived);
-        INSTANCE.commonBidirectional(ArmorMaterialSyncPacket.TYPE, CrossbowGearConfigSyncPacket.STREAM_CODEC, CrossbowGearConfigSyncPacket::onPacketReceived);
+        INSTANCE.commonBidirectional(ArmorMaterialSyncPacket.TYPE, ArmorMaterialSyncPacket.STREAM_CODEC, ArmorMaterialSyncPacket::onPacketReceived);
         INSTANCE.commonBidirectional(WeaponMaterialSyncPacket.TYPE, WeaponMaterialSyncPacket.STREAM_CODEC, WeaponMaterialSyncPacket::onPacketReceived);
         INSTANCE.commonBidirectional(CuriosArtifactStartMessage.TYPE, CuriosArtifactStartMessage.STREAM_CODEC, CuriosArtifactStartMessage.CuriosArtifactHandler::handle);
         INSTANCE.commonBidirectional(CuriosArtifactStopMessage.TYPE, CuriosArtifactStopMessage.STREAM_CODEC, CuriosArtifactStopMessage::handle);
-        INSTANCE.commonBidirectional(EliteMobMessage.TYPE, EliteMobMessage.STREAM_CODEC, EliteMobMessage::handle);
-        INSTANCE.commonBidirectional(BreakItemMessage.TYPE, BreakItemMessage.STREAM_CODEC, BreakItemMessage.BreakItemHandler::handle);
-        INSTANCE.commonBidirectional(SwitchHandMessage.TYPE, SwitchHandMessage.STREAM_CODEC, SwitchHandMessage.SwitchHandHandler::handle);
+        INSTANCE.playBidirectional(EliteMobMessage.TYPE, EliteMobMessage.STREAM_CODEC, EliteMobMessage::handle);
+        INSTANCE.playBidirectional(BreakItemMessage.TYPE, BreakItemMessage.STREAM_CODEC, BreakItemMessage.BreakItemHandler::handle);
+        INSTANCE.playBidirectional(SwitchHandMessage.TYPE, SwitchHandMessage.STREAM_CODEC, SwitchHandMessage.SwitchHandHandler::handle);
         INSTANCE.commonBidirectional(ArtifactGearConfigSyncPacket.TYPE, ArtifactGearConfigSyncPacket.STREAM_CODEC, ArtifactGearConfigSyncPacket::onPacketReceived);
     }
 }

@@ -21,13 +21,13 @@ public abstract class CrossbowItemMixin {
     private static boolean LOGGED_WARNING = false;
 
     @Inject(method = "performShooting", at = @At("HEAD"), cancellable = true)
-    private static void handlePerformShooting(Level level, LivingEntity shooter, InteractionHand useHand, ItemStack crossbow, float velocity, float inaccuracy, CallbackInfo ci) {
+    private static void handlePerformShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack weapon, float velocity, float inaccuracy, LivingEntity target, CallbackInfo ci) {
         ci.cancel();
         if(!LOGGED_WARNING){
             DungeonsLibraries.LOGGER.debug("CrossbowItem#performShooting was canceled by Dungeons Libraries and replaced with its CrossbowGear#fireCrossbowProjectiles");
             LOGGED_WARNING = true;
         }
-        RangedAttackHelper.fireCrossbowProjectiles(level, shooter, useHand, crossbow, velocity, inaccuracy);
+        RangedAttackHelper.fireCrossbowProjectiles(level, shooter, hand, weapon, velocity, inaccuracy);
     }
 
     @Redirect(method = "use",

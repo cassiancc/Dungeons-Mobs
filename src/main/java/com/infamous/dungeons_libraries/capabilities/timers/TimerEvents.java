@@ -1,24 +1,24 @@
 package com.infamous.dungeons_libraries.capabilities.timers;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class TimerEvents {
 
     @SubscribeEvent
-    public static void onLivingUpdate(LivingEvent.LivingTickEvent event) {
+    public static void onLivingUpdate(EntityTickEvent event) {
         Timers timersCapability = TimersHelper.getTimersCapability(event.getEntity());
         timersCapability.tickTimers();
     }
 
     @SubscribeEvent
-    public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
-        Timers timersCapability = TimersHelper.getTimersCapability(event.player);
-        if (event.phase == TickEvent.Phase.START && !event.player.isSpectator() && !event.player.level().isClientSide()) {
+    public static void onPlayerUpdate(PlayerTickEvent.Pre event) {
+        Timers timersCapability = TimersHelper.getTimersCapability(event.getEntity());
+        if (!event.getEntity().isSpectator() && !event.getEntity().level().isClientSide()) {
             timersCapability.tickTimers();
         }
     }
