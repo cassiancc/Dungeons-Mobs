@@ -116,15 +116,15 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
         }
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(LENGTH, 0);
-        this.entityData.define(VANISHES, false);
-        this.entityData.define(STAY_TIME, 0);
-        this.entityData.define(ALWAYS_OUT, false);
-        this.entityData.define(SHOULD_RETRACT, false);
-        this.entityData.define(DETECTION_DISTANCE, 0.0F);
-        this.entityData.define(OUT, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LENGTH, 0);
+        builder.define(VANISHES, false);
+        builder.define(STAY_TIME, 0);
+        builder.define(ALWAYS_OUT, false);
+        builder.define(SHOULD_RETRACT, false);
+        builder.define(DETECTION_DISTANCE, 0.0F);
+        builder.define(OUT, false);
     }
 
     @Override
@@ -368,7 +368,7 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose p_213305_1_) {
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
         return !this.isOut() ? EntityDimensions.scalable(1.0F, 0.1F) : EntityDimensions.scalable(1.5F, this.getLengthInBlocks() + this.getExtraHitboxY());
     }
 
@@ -396,9 +396,9 @@ public abstract class AbstractVineEntity extends PathfinderMob implements Enemy,
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_,
-                                        MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_, CompoundTag p_213386_5_) {
+                                        MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_) {
         this.setDefaultFeatures();
-        return super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+        return super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_);
     }
 
     @Override

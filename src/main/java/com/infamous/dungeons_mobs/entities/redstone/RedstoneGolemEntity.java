@@ -10,9 +10,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -81,16 +83,15 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
 
     public RedstoneGolemEntity(EntityType<? extends RedstoneGolemEntity> type, Level worldIn) {
         super(type, worldIn);
-        this.setMaxUpStep(1.25F);
         this.xpReward = 40;
         this.mineAttackCooldown = 10 * 20;
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SUMMONING_MINES, false);
-        this.entityData.define(MELEEATTACKING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SUMMONING_MINES, false);
+        builder.define(MELEEATTACKING, false);
     }
 
     public boolean isSummoningMines() {
@@ -210,7 +211,7 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
     private void handleLeafCollision() {
         if (this.isAlive()) {
 
-            if (this.horizontalCollision && net.neoforged.neoforge.event.EventHooks.getMobGriefingEvent(this.level(), this)) {
+            if (this.horizontalCollision && net.neoforged.neoforge.event.EventHooks.canEntityGrief(this.level(), this)) {
                 boolean destroyedLeafBlock = false;
                 AABB axisalignedbb = this.getBoundingBox().inflate(0.2D);
 
@@ -236,7 +237,8 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.ATTACK_DAMAGE, 16.0D) // >= Golem Attack
                 .add(Attributes.ATTACK_KNOCKBACK, 3.0D) // 2x Ravager knockback
-                .add(Attributes.FOLLOW_RANGE, 25.0D);
+                .add(Attributes.FOLLOW_RANGE, 25.0D)
+                .add(Attributes.STEP_HEIGHT, 1.25F);
     }
 
     private float getAttackKnockback() {
@@ -362,7 +364,7 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
 
     // RAIDER METHODS
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
 
     }
 
@@ -378,7 +380,7 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
     public boolean isAlliedTo(Entity entityIn) {
         if (super.isAlliedTo(entityIn)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER
+        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getType().is(EntityTypeTags.ILLAGER)
                 || entityIn instanceof Raider) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
@@ -424,12 +426,12 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
             }
 
             this.attackTimer = Math.max(this.attackTimer - 1, 0);
-            this.checkAndPerformAttack(livingentity, RedstoneGolemEntity.this.distanceToSqr(livingentity.getX(), livingentity.getBoundingBox().minY, livingentity.getZ()));
+            this.checkAndPerformAttack(livingentity);
         }
 
         @Override
-        protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
-            if ((distToEnemySqr <= this.getAttackReachSqr(enemy) || RedstoneGolemEntity.this.getBoundingBox().intersects(enemy.getBoundingBox())) && this.attackTimer <= 0) {
+        protected void checkAndPerformAttack(LivingEntity enemy) {
+            if (RedstoneGolemEntity.this.getBoundingBox().intersects(enemy.getBoundingBox()) && this.attackTimer <= 0) {
                 this.attackTimer = this.maxAttackTimer;
                 RedstoneGolemEntity.this.doHurtTarget(enemy);
             }

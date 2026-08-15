@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "dungeons_mobs:wraith",
+    "dungeons_mobs:watchling",
+    "dungeons_mobs:blastling"
+
+  ]
+}

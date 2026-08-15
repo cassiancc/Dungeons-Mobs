@@ -14,7 +14,9 @@ import com.infamous.dungeons_mobs.utils.GeomancyHelper;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -152,11 +154,12 @@ public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable
         equipArmorSet(ModItems.GEOMANCER_ARMOR, this);
     }
 
+    @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
         this.populateDefaultEquipmentSlots(this.getRandom(), difficultyIn);
-        this.populateDefaultEquipmentEnchantments(this.getRandom(), difficultyIn);
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.populateDefaultEquipmentEnchantments(worldIn, this.getRandom(), difficultyIn);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
     }
 
     @Override
@@ -170,7 +173,7 @@ public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable
     public boolean isAlliedTo(Entity entityIn) {
         if (super.isAlliedTo(entityIn)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
+        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getType().is(EntityTypeTags.ILLAGER)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -178,7 +181,7 @@ public class GeomancerEntity extends SpellcasterIllager implements GeoAnimatable
     }
 
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
 
     }
 

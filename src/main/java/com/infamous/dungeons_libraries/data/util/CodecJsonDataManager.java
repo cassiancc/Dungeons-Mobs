@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -123,9 +124,8 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener {
             // if we fail to parse json, log an error and continue
             // if we succeeded, add the resulting T to the map
             this.codec.decode(JsonOps.INSTANCE, element)
-                    .getOrThrow()
-                    .ifLeft(result -> newMap.put(key, result.getFirst()))
-                    .ifRight(partial -> LOGGER.error("Failed to parse data json for {} due to: {}", key, partial.message()));
+                    .ifSuccess(result -> newMap.put(key, result.getFirst()))
+                    .ifError(partial -> LOGGER.error("Failed to parse data json for {} due to: {}", key, partial.message()));
         }
 
         this.data = newMap;
@@ -136,13 +136,12 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener {
      * This should be called at most once, during construction of your mod (static init of your main mod class is fine)
      * Calling this method automatically subscribes a packet-sender to {@link OnDatapackSyncEvent}.
      *
-     * @param <PACKET>      the packet type that will be sent on the given channel
      * @param channel       The networking channel of your mod
      * @param packetFactory A packet constructor or factory method that converts the given map to a packet object to send on the given channel
      * @return this manager object
      */
-    public <PACKET> CodecJsonDataManager<T> subscribeAsSyncable(final PayloadRegistrar channel,
-                                                                final Function<Map<ResourceLocation, T>, PACKET> packetFactory) {
+    public CodecJsonDataManager<T> subscribeAsSyncable(final PayloadRegistrar channel,
+													   final Function<Map<ResourceLocation, T>, CustomPacketPayload> packetFactory) {
         NeoForge.EVENT_BUS.addListener(this.getDatapackSyncListener(channel, packetFactory));
         return this;
     }
@@ -150,11 +149,11 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener {
     /**
      * Generate an event listener function for the on-datapack-sync event
      **/
-    private <PACKET> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final PayloadRegistrar channel,
-                                                                           final Function<Map<ResourceLocation, T>, PACKET> packetFactory) {
+    private Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final PayloadRegistrar channel,
+                                                                  final Function<Map<ResourceLocation, T>, CustomPacketPayload> packetFactory) {
         return event -> {
             ServerPlayer player = event.getPlayer();
-            PACKET packet = packetFactory.apply(this.data);
+            CustomPacketPayload packet = packetFactory.apply(this.data);
 			if (player == null) PacketDistributor.sendToAllPlayers(packet);
 			else PacketDistributor.sendToPlayer(player, packet);
         };

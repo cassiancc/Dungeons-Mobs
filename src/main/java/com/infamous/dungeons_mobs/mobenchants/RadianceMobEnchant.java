@@ -22,7 +22,7 @@ public class RadianceMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingDamageEvent.Post event) {
         Entity attacker;
         if (!event.getSource().is(DamageTypeTags.IS_PROJECTILE)) {
             attacker = event.getSource().getDirectEntity();

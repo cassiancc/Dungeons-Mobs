@@ -109,8 +109,8 @@ public class WindcallerTornadoEntity extends Entity implements GeoAnimatable {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(BLAST, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(BLAST, false);
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -102,7 +103,7 @@ public class SimpleTrapEntity extends AbstractTrapEntity {
     @Override
     public boolean canTrapEntity(LivingEntity entity) {
         if (this.getTrapType() == 0) {
-            return super.canTrapEntity(entity) && entity.getMobCategory() != MobCategory.ARTHROPOD;
+            return super.canTrapEntity(entity) && !entity.getType().is(EntityTypeTags.ARTHROPOD);
         } else if (this.getTrapType() == 1) {
             return super.canTrapEntity(entity) && !entity.getType().is(EntityTags.PLANT_MOBS);
         } else {

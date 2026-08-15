@@ -134,8 +134,8 @@ public class PoisonQuillEntity extends StraightMovingProjectileEntity implements
         }
     }
 
-    protected void defineSynchedData() {
-        this.entityData.define(KELP, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(KELP, false);
     }
 
     public boolean isKelp() {

@@ -519,7 +519,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
                 }
 
                 summonedMob.setTarget(target);
-                summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null);
                 mobSummonSpot.playSound(ModSoundEvents.NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                 if (mob.getTeam() != null) {
                     Scoreboard scoreboard = mob.level().getScoreboard();
@@ -855,7 +855,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
                     }
 
                     summonedMob.setTarget(target);
-                    summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                    summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null);
                     mobSummonSpot.playSound(ModSoundEvents.DROWNED_NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                     if (mob.getTeam() != null) {
                         Scoreboard scoreboard = mob.level().getScoreboard();

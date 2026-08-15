@@ -54,8 +54,8 @@ public class FungusThrowerEntity extends Piglin {
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverWorld, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag compoundNBT) {
-        SpawnGroupData spawnData = super.finalizeSpawn(serverWorld, difficultyInstance, spawnReason, spawnDataIn, compoundNBT);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverWorld, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData spawnDataIn) {
+        SpawnGroupData spawnData = super.finalizeSpawn(serverWorld, difficultyInstance, spawnReason, spawnDataIn);
         if (this instanceof ISmartCrossbowUser && ((ISmartCrossbowUser) this).isCrossbowUser()) {
             ((ISmartCrossbowUser) this).setCrossbowUser(false);
         }
@@ -80,7 +80,7 @@ public class FungusThrowerEntity extends Piglin {
     }
 
     @Override
-    protected void populateDefaultEquipmentEnchantments(RandomSource randomSource, DifficultyInstance p_180483_1_) {
+    protected void populateDefaultEquipmentEnchantments(ServerLevelAccessor level, RandomSource random, DifficultyInstance difficulty) {
         // NO-OP
     }
 

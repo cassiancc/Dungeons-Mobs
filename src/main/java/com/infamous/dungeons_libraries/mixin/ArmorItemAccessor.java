@@ -9,19 +9,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ArmorItem.class)
 public interface ArmorItemAccessor {
 
-    @Accessor
-    @Mutable
-    void setMaterial(ArmorMaterial armorMaterial);
 
-    @Accessor
-    @Mutable
-    void setDefense(int defense);
-
-    @Accessor
-    @Mutable
-    void setToughness(float toughness);
-
-    @Accessor
-    @Mutable
-    void setKnockbackResistance(float knockbackResistance);
 }

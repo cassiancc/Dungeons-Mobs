@@ -62,8 +62,8 @@ public class SummonSpotEntity extends Entity implements GeoAnimatable {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(SUMMON_TYPE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(SUMMON_TYPE, 0);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
+import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterial;
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
@@ -50,7 +51,7 @@ public class ArmorGearConfig {
         return builtInEnchantments;
     }
 
-    public Holder<ArmorMaterial> getArmorMaterial() {
+    public DungeonsArmorMaterial getArmorMaterial() {
         return DungeonsArmorMaterials.getArmorMaterial(materialResource);
     }
 

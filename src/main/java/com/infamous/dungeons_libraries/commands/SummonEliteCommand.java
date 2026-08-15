@@ -55,7 +55,7 @@ public class SummonEliteCommand {
             throw ERROR_FAILED.create();
          } else {
             if (p_138825_ && entity instanceof Mob) {
-               ((Mob)entity).finalizeSpawn(p_138821_.getLevel(), p_138821_.getLevel().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
+               ((Mob)entity).finalizeSpawn(p_138821_.getLevel(), p_138821_.getLevel().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null);
             }
             if(entity instanceof LivingEntity livingEntity) {
                EliteMobEvents.makeElite(livingEntity);

@@ -10,8 +10,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -84,12 +86,10 @@ public class IllusionerCloneEntity extends AbstractIllager implements GeoAnimata
         this.targetSelector.addGoal(1, new IllusionerCloneEntity.CopyOwnerTargetGoal(this));
     }
 
-
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DELAYED_APPEAR, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DELAYED_APPEAR, false);
     }
 
     public boolean hasDelayedAppear() {
@@ -236,7 +236,7 @@ public class IllusionerCloneEntity extends AbstractIllager implements GeoAnimata
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
+                && ((LivingEntity) entityIn).getType().is(EntityTypeTags.ILLAGER)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -244,7 +244,8 @@ public class IllusionerCloneEntity extends AbstractIllager implements GeoAnimata
     }
 
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
+
     }
 
     @Override
@@ -270,9 +271,9 @@ public class IllusionerCloneEntity extends AbstractIllager implements GeoAnimata
     public void shootArrow(LivingEntity target) {
         {
             ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
-            AbstractArrow abstractarrowentity = this.getArrow(itemstack, 0);
+            AbstractArrow abstractarrowentity = this.getArrow(itemstack, 0, this.getMainHandItem());
             if (this.getMainHandItem().getItem() instanceof net.minecraft.world.item.BowItem)
-                abstractarrowentity = ((net.minecraft.world.item.BowItem) this.getMainHandItem().getItem()).customArrow(abstractarrowentity);
+                abstractarrowentity = ((net.minecraft.world.item.BowItem) this.getMainHandItem().getItem()).customArrow(abstractarrowentity, itemstack, this.getMainHandItem());
             double d0 = target.getX() - this.getX();
             double d1 = target.getY(0.3333333333333333D) - abstractarrowentity.getY();
             double d2 = target.getZ() - this.getZ();
@@ -283,8 +284,8 @@ public class IllusionerCloneEntity extends AbstractIllager implements GeoAnimata
         }
     }
 
-    protected AbstractArrow getArrow(ItemStack p_213624_1_, float p_213624_2_) {
-        return ProjectileUtil.getMobArrow(this, p_213624_1_, p_213624_2_);
+    protected AbstractArrow getArrow(ItemStack stack, float velocity, ItemStack mainHandItem) {
+        return ProjectileUtil.getMobArrow(this, stack, velocity, mainHandItem);
     }
 
     @Override

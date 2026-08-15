@@ -17,7 +17,7 @@ import static net.minecraft.world.item.ArmorMaterials.*;
 
 public class DungeonsArmorMaterials {
 
-    public static final DefaultsCodecJsonDataManager<Holder<ArmorMaterial>> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC);
+    public static final DefaultsCodecJsonDataManager<DungeonsArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC);
     public static final Map<Holder<ArmorMaterial>, ArmorMaterialBaseType> baseArmorMaterials = new HashMap<>();
 
     public static void setupVanillaMaterials() {
@@ -31,12 +31,12 @@ public class DungeonsArmorMaterials {
     }
 
     public static void addDefaultArmorMaterial(Holder<ArmorMaterial> material, ArmorMaterialBaseType baseType, ResourceLocation resourceLocation) {
-        ARMOR_MATERIALS.addDefault(resourceLocation, material);
+        ARMOR_MATERIALS.addDefault(resourceLocation, DungeonsArmorMaterial.of(material));
         baseArmorMaterials.put(material, baseType);
     }
 
-    public static Holder<ArmorMaterial> getArmorMaterial(ResourceLocation resourceLocation) {
-        return ARMOR_MATERIALS.getData().getOrDefault(resourceLocation, IRON);
+    public static DungeonsArmorMaterial getArmorMaterial(ResourceLocation resourceLocation) {
+        return ARMOR_MATERIALS.getData().getOrDefault(resourceLocation, DungeonsArmorMaterial.of(IRON));
     }
 
     public static boolean ArmorMaterialExists(ResourceLocation resourceLocation) {
@@ -47,10 +47,10 @@ public class DungeonsArmorMaterials {
         return ARMOR_MATERIALS.getData().keySet();
     }
 
-    public static Collection<Holder<ArmorMaterial>> getArmorMaterials(ArmorMaterialBaseType baseType) {
+    public static Collection<DungeonsArmorMaterial> getArmorMaterials(ArmorMaterialBaseType baseType) {
         return ARMOR_MATERIALS.getData().values().stream().filter(iArmorMaterial -> {
             if (iArmorMaterial instanceof DungeonsArmorMaterial) {
-                return ((DungeonsArmorMaterial) iArmorMaterial).getBaseType() == baseType;
+                return iArmorMaterial.getBaseType() == baseType;
             } else if (baseArmorMaterials.containsKey(iArmorMaterial)) {
                 return baseArmorMaterials.get(iArmorMaterial) == baseType;
             } else {
@@ -59,7 +59,7 @@ public class DungeonsArmorMaterials {
         }).collect(Collectors.toList());
     }
 
-    public static ArmorMaterialSyncPacket toPacket(Map<ResourceLocation, Holder<ArmorMaterial>> map) {
+    public static ArmorMaterialSyncPacket toPacket(Map<ResourceLocation, DungeonsArmorMaterial> map) {
         return new ArmorMaterialSyncPacket(map);
     }
 }

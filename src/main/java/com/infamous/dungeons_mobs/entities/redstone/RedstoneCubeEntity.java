@@ -35,20 +35,20 @@ public class RedstoneCubeEntity extends Monster {
     public RedstoneCubeEntity(EntityType<? extends RedstoneCubeEntity> type, Level worldIn) {
         super(type, worldIn);
         this.moveControl = new RedstoneCubeEntity.MoveHelperController(this);
-        this.setMaxUpStep(1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 4.0D * 4.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2F + 0.1F * (float) 2.0D * 0.5D)
-                .add(Attributes.ATTACK_DAMAGE, 4.0D);
+                .add(Attributes.ATTACK_DAMAGE, 4.0D)
+                .add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(IS_ROLLING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_ROLLING, false);
     }
 
     protected void registerGoals() {
@@ -95,7 +95,7 @@ public class RedstoneCubeEntity extends Monster {
     }
 
     protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-        return 0.625F * sizeIn.height;
+        return 0.625F * sizeIn.height();
     }
 
     /**

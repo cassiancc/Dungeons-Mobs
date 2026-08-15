@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.utils;
 import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,12 +35,12 @@ public class DescriptionHelper {
 
     private static void addArtifactAttributeInfo(List<Component> list, ItemStack itemStack) {
         if (!(itemStack.getItem() instanceof ArtifactItem artifactItem)) return;
-        Multimap<Attribute, AttributeModifier> multimap = artifactItem.getDefaultAttributeModifiers(0);
+        Multimap<Holder<Attribute>, AttributeModifier> multimap = artifactItem.getDefaultAttributeModifiers(0);
         if (!multimap.isEmpty()) {
             list.add(CommonComponents.EMPTY);
             list.add(Component.translatable("item.modifiers.artifact").withStyle(ChatFormatting.GRAY));
 
-            for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
+            for (Map.Entry<Holder<Attribute>, AttributeModifier> entry : multimap.entries()) {
                 AttributeModifier attributemodifier = entry.getValue();
                 double d0 = attributemodifier.amount();
 
@@ -55,10 +56,10 @@ public class DescriptionHelper {
                 }
 
                 if (d0 > 0.0D) {
-                    list.add(Component.translatable("attribute.modifier.plus." + attributemodifier.operation().id(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                    list.add(Component.translatable("attribute.modifier.plus." + attributemodifier.operation().id(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().value().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                 } else if (d0 < 0.0D) {
                     d1 *= -1.0D;
-                    list.add(Component.translatable("attribute.modifier.take." + attributemodifier.operation().id(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
+                    list.add(Component.translatable("attribute.modifier.take." + attributemodifier.operation().id(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().value().getDescriptionId())).withStyle(ChatFormatting.RED));
                 }
             }
         }

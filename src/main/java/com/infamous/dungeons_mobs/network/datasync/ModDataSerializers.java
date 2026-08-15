@@ -7,6 +7,8 @@ import com.infamous.dungeons_mobs.DungeonsMobs;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,6 +36,11 @@ public class ModDataSerializers {
                     uuidList.add(packetBuffer.readUUID());
                 }
                 return uuidList;
+            }
+
+            @Override
+            public StreamCodec<? super RegistryFriendlyByteBuf, List<UUID>> codec() {
+                return StreamCodec.of(this::write, this::read);
             }
 
             public List<UUID> copy(List<UUID> UUIDList) {

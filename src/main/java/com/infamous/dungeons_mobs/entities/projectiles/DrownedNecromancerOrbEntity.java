@@ -7,6 +7,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
@@ -105,7 +106,7 @@ public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity 
     }
 
     public void onHitEntity(Entity entity) {
-        if (entity instanceof Mob && ((Mob) entity).getMobCategory() == MobCategory.UNDEAD) {
+        if (entity instanceof Mob && ((Mob) entity).getType().is(EntityTypeTags.UNDEAD)) {
 
         } else if (!this.level().isClientSide) {
             super.onHitEntity(entity);

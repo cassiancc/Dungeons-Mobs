@@ -88,8 +88,8 @@ public class KelpTrapEntity extends AbstractTrapEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(PULLING, true);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(PULLING, true);
     }
 
     @Override

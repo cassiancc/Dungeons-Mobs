@@ -4,6 +4,7 @@ import com.infamous.dungeons_mobs.tags.EntityTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
@@ -21,7 +22,7 @@ public class VinePartEntity extends PartEntity<AbstractVineEntity> {
         this.refreshDimensions();
     }
 
-    protected void defineSynchedData() {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
     protected void readAdditionalSaveData(CompoundTag p_70037_1_) {

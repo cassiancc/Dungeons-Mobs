@@ -1,10 +1,14 @@
 package com.infamous.dungeons_mobs.entities.projectiles;
 
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.Util;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -65,15 +69,15 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
         return itemstack.isEmpty() ? new ItemStack(Items.SLIME_BALL) : itemstack;
     }
 
-    protected void defineSynchedData() {
-        this.getEntityData().define(STACK, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(STACK, ItemStack.EMPTY);
     }
 
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         ItemStack itemstack = this.getStack();
         if (!itemstack.isEmpty()) {
-            compound.put("Item", itemstack.save(new CompoundTag()));
+            compound.put("Item", itemstack.save(level().registryAccess()));
         }
 
     }
@@ -81,9 +85,9 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(CompoundTag compound, HolderLookup.Provider provider) {
         super.readAdditionalSaveData(compound);
-        ItemStack itemstack = ItemStack.of(compound.getCompound("Item"));
+        ItemStack itemstack = ItemStack.CODEC.decode(provider.createSerializationContext(NbtOps.INSTANCE), compound.getCompound("Item")).getOrThrow().getFirst();
         this.setStack(itemstack);
     }
 

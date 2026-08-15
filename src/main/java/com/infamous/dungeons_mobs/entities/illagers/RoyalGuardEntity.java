@@ -13,8 +13,8 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModItems;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -48,6 +48,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -73,8 +74,7 @@ import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, IShieldUser, SpawnArmoredMob {
 
     private static final UUID SPEED_MODIFIER_BLOCKING_UUID = UUID.fromString("05cd371b-0ff4-4ded-8630-b380232ed7b1");
-    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_BLOCKING_UUID,
-            "Blocking speed decrease", -0.1D, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(GeneralUtil.mobsLoc("blocking_speed_decrease"), -0.1D, AttributeModifier.Operation.ADD_VALUE);
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -120,12 +120,11 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
 
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_,
-                                        MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_, @Nullable CompoundTag p_213386_5_) {
-        SpawnGroupData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_,
-                p_213386_5_);
+                                        MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_) {
+        SpawnGroupData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_);
         ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
         this.populateDefaultEquipmentSlots(this.getRandom(), p_213386_2_);
-        this.populateDefaultEquipmentEnchantments(this.getRandom(), p_213386_2_);
+        this.populateDefaultEquipmentEnchantments(p_213386_1_, this.getRandom(), p_213386_2_);
         return ilivingentitydata;
     }
 
@@ -220,7 +219,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
         equipArmorSet(ModItems.ROYAL_GUARD_ARMOR, this);
 
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item MACE = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("mace"));
+            Item MACE = BuiltInRegistries.ITEM.get(GeneralUtil.gearLoc("mace"));
 
             ItemStack mace = new ItemStack(MACE);
             if (this.getCurrentRaid() == null) {
@@ -235,10 +234,10 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
     }
 
     @Override
-    public void applyRaidBuffs(int waveAmount, boolean b) {
+    public void applyRaidBuffs(ServerLevel level, int waveAmount, boolean unused) {
         ItemStack mainhandWeapon = new ItemStack(Items.IRON_AXE);
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item MACE = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("mace"));
+            Item MACE = BuiltInRegistries.ITEM.get(GeneralUtil.gearLoc("mace"));
 
             mainhandWeapon = new ItemStack(MACE);
         }
@@ -253,9 +252,9 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
             applyEnchant = this.random.nextFloat() <= raid.getEnchantOdds();
         }
         if (applyEnchant) {
-            Map<Enchantment, Integer> enchantmentIntegerMap = Maps.newHashMap();
-            enchantmentIntegerMap.put(Enchantments.SHARPNESS, enchantmentLevel);
-            EnchantmentHelper.setEnchantments(enchantmentIntegerMap, mainhandWeapon);
+            ItemEnchantments.Mutable enchantmentIntegerMap = new ItemEnchantments.Mutable(mainhandWeapon.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
+            enchantmentIntegerMap.set(level.registryAccess().holderOrThrow(Enchantments.SHARPNESS), enchantmentLevel);
+            EnchantmentHelper.setEnchantments(mainhandWeapon, enchantmentIntegerMap.toImmutable());
         }
 
         SpawnEquipmentHelper.equipMainhand(mainhandWeapon, this);
@@ -336,10 +335,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
             if (amount >= 3.0F) {
                 int i = 1 + Mth.floor(amount);
                 InteractionHand hand = this.getUsedItemHand();
-                this.useItem.hurtAndBreak(i, this, (royalGuardEntity) -> {
-                    royalGuardEntity.broadcastBreakEvent(hand);
-                    // Forge would have called onPlayerDestroyItem here
-                });
+                this.useItem.hurtAndBreak(i, this, LivingEntity.getSlotForHand(hand));
                 if (this.useItem.isEmpty()) {
                     if (hand == InteractionHand.MAIN_HAND) {
                         this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);

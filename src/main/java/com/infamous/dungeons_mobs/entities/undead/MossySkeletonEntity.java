@@ -71,7 +71,7 @@ public class MossySkeletonEntity extends AbstractSkeleton {
         ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
         AbstractArrow abstractarrowentity = this.getArrow(itemstack, p_82196_2_);
         if (this.getMainHandItem().getItem() instanceof net.minecraft.world.item.BowItem)
-            abstractarrowentity = ((net.minecraft.world.item.BowItem) this.getMainHandItem().getItem()).customArrow(abstractarrowentity);
+            abstractarrowentity = ((net.minecraft.world.item.BowItem) this.getMainHandItem().getItem()).customArrow(abstractarrowentity, itemstack, this.getMainHandItem());
         double d0 = p_82196_1_.getX() - this.getX();
         double d1 = p_82196_1_.getY(0.3333333333333333D) - abstractarrowentity.getY();
         double d2 = p_82196_1_.getZ() - this.getZ();
@@ -105,7 +105,7 @@ public class MossySkeletonEntity extends AbstractSkeleton {
     }
 
     protected AbstractArrow getArrow(ItemStack stack, float damageMultiplier) {
-        AbstractArrow abstractArrowEntity = super.getArrow(stack, damageMultiplier);
+        AbstractArrow abstractArrowEntity = super.getArrow(stack, damageMultiplier, this.getWeaponItem());
         int i = 0;
         if (this.level().getDifficulty() == Difficulty.NORMAL) {
             i = 4;

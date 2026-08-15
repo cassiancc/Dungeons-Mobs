@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -67,7 +68,7 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
         this.setRot(p_i50175_2_.getYRot(), p_i50175_2_.getXRot());
     }
 
-    protected void defineSynchedData() {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
     public void setPower(double powerX, double powerY, double powerZ) {
@@ -152,7 +153,8 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
         if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
             super.tick();
             if (this.shouldBurn()) {
-                this.setSecondsOnFire(1);
+                this.setSharedFlagOnFire(true);
+                this.setRemainingFireTicks(1*20);
             }
 
             HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);

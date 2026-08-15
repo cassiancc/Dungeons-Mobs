@@ -64,8 +64,9 @@ public class PoisonQuillVineEntity extends AbstractVineEntity {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
     }
 
-    protected float getStandingEyeHeight(Pose p_213348_1_, EntityDimensions p_213348_2_) {
-        return this.isOut() ? this.getBbHeight() - 0.75F : super.getStandingEyeHeight(p_213348_1_, p_213348_2_);
+    @Override
+    public double getEyeY() {
+        return this.isOut() ? this.getBbHeight() - 0.75F : super.getEyeY();
     }
 
     protected BodyRotationControl createBodyControl() {

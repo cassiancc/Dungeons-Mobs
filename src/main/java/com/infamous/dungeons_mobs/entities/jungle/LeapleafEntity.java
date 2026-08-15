@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.entities.jungle;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.client.particle.ModParticleTypes;
 import com.infamous.dungeons_mobs.entities.summonables.AreaDamageEntity;
 import com.infamous.dungeons_mobs.goals.ApproachTargetGoal;
@@ -52,9 +53,8 @@ import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
 public class LeapleafEntity extends Monster implements GeoAnimatable {
 
-    private static final UUID SPEED_MODIFIER_CHARGING_UUID = UUID.fromString("b380d5fd-85cb-4ac3-9450-d9092a09e0c9");
-    private static final AttributeModifier SPEED_MODIFIER_CHARGING = new AttributeModifier(SPEED_MODIFIER_CHARGING_UUID,
-            "Charging speed increase", 0.1D, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier SPEED_MODIFIER_CHARGING = new AttributeModifier(GeneralUtil.mobsLoc(
+            "charging_speed_increase"), 0.1D, AttributeModifier.Operation.ADD_VALUE);
 
     private static final EntityDataAccessor<Integer> TIMES_LEAPT = SynchedEntityData.defineId(LeapleafEntity.class,
             EntityDataSerializers.INT);
@@ -96,7 +96,6 @@ public class LeapleafEntity extends Monster implements GeoAnimatable {
     public LeapleafEntity(EntityType<? extends LeapleafEntity> type, Level world) {
         super(type, world);
         this.xpReward = 20;
-        this.setMaxUpStep(1.0F);
     }
 
     @Override
@@ -119,7 +118,7 @@ public class LeapleafEntity extends Monster implements GeoAnimatable {
 
     public static AttributeSupplier.Builder setCustomAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.275D)
-                .add(Attributes.FOLLOW_RANGE, 25.0D).add(Attributes.MAX_HEALTH, 75.0D).add(Attributes.ARMOR, 15D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+                .add(Attributes.FOLLOW_RANGE, 25.0D).add(Attributes.MAX_HEALTH, 75.0D).add(Attributes.ARMOR, 15D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     public boolean shouldBeStationary() {
@@ -195,11 +194,11 @@ public class LeapleafEntity extends Monster implements GeoAnimatable {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(TIMES_LEAPT, 0);
-        this.entityData.define(CAN_LEAP, false);
-        this.entityData.define(LEAPING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TIMES_LEAPT, 0);
+        builder.define(CAN_LEAP, false);
+        builder.define(LEAPING, false);
     }
 
     public int getTimesLeapt() {
@@ -256,7 +255,7 @@ public class LeapleafEntity extends Monster implements GeoAnimatable {
         }
 
         if (this.canLeap()) {
-            if (!modifiableattributeinstance.hasModifier(SPEED_MODIFIER_CHARGING)) {
+            if (!modifiableattributeinstance.hasModifier(SPEED_MODIFIER_CHARGING.id())) {
                 modifiableattributeinstance.addTransientModifier(SPEED_MODIFIER_CHARGING);
             }
         } else {

@@ -85,7 +85,6 @@ public class WhispererEntity extends Monster implements GeoAnimatable, IAquaticM
 
     public WhispererEntity(EntityType<? extends WhispererEntity> type, Level world) {
         super(type, world);
-        this.setMaxUpStep(1.0F);
         if (this.isWavewhisperer()) {
             this.moveControl = new AquaticMoveHelperController<>(this);
             this.setPathfindingMalus(PathType.WATER, 0.0F);
@@ -165,9 +164,10 @@ public class WhispererEntity extends Monster implements GeoAnimatable, IAquaticM
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_FLAGS_ID, (byte) 0);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_FLAGS_ID, (byte) 0);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class WhispererEntity extends Monster implements GeoAnimatable, IAquaticM
 
     public static AttributeSupplier.Builder setCustomAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D).add(Attributes.ATTACK_DAMAGE, 6.0D)
-                .add(Attributes.FOLLOW_RANGE, 17.5D).add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.25D);
+                .add(Attributes.FOLLOW_RANGE, 17.5D).add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.25D).add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     @Override

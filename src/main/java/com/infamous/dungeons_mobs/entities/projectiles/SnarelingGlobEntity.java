@@ -39,7 +39,7 @@ public class SnarelingGlobEntity extends ThrowableItemProjectile {
 
     @OnlyIn(Dist.CLIENT)
     private ParticleOptions getParticle() {
-        ItemStack itemstack = this.getItemRaw();
+        ItemStack itemstack = this.getItem();
         return itemstack.isEmpty() ? ParticleTypes.ITEM_SLIME : new ItemParticleOption(ParticleTypes.ITEM, itemstack);
     }
 
@@ -63,7 +63,7 @@ public class SnarelingGlobEntity extends ThrowableItemProjectile {
         }
 
         if (entity instanceof LivingEntity && !entity.level().isClientSide) {
-            ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.ENSNARED.get(), 100));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.ENSNARED, 100));
         }
     }
 

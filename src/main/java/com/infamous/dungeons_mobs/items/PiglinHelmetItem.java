@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.items;
 
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
@@ -20,10 +21,9 @@ public class PiglinHelmetItem extends ArmorItem {
         super(armorMaterial, slotType, properties);
     }
 
-    @Nullable
-    @Override
     @OnlyIn(Dist.CLIENT)
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return String.format(MODID + ":textures/models/armor/%s.png", BuiltInRegistries.ITEM.getKey(this).getPath());
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, "textures/models/armor/%s.png".formatted(BuiltInRegistries.ITEM.getKey(this).getPath()));
     }
 }

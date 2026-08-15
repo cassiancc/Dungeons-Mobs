@@ -147,9 +147,9 @@ public abstract class ConstructEntity extends PathfinderMob implements GeoAnimat
         this.entityData.set(LIFE_TICKS, p_189794_1_);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(LIFE_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LIFE_TICKS, 0);
     }
 
     public void handleExistence() {

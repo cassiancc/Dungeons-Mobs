@@ -52,10 +52,6 @@ public class WatchlingEntity extends AbstractEnderlingEntity implements GeoAnima
         //this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, AbstractEndermanVariant.class, true, false));
     }
 
-    public MobCategory getMobCategory() {
-        return MobCategory.UNDEAD;
-    }
-
     public static AttributeSupplier.Builder setCustomAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.MOVEMENT_SPEED, 0.225F).add(Attributes.ATTACK_DAMAGE, 7.0D).add(Attributes.FOLLOW_RANGE, 32.0D);
     }

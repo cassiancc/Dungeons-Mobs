@@ -6,6 +6,9 @@ import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -94,7 +97,7 @@ public class CobwebProjectileEntity extends Projectile implements GeoAnimatable 
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         super.onHitEntity(p_213868_1_);
         Entity entity = this.getOwner();
-        if (p_213868_1_.getEntity() instanceof LivingEntity && ((LivingEntity) p_213868_1_.getEntity()).getMobCategory() == MobCategory.ARTHROPOD) {
+        if (p_213868_1_.getEntity() instanceof LivingEntity && ((LivingEntity) p_213868_1_.getEntity()).getType().is(EntityTypeTags.ARTHROPOD)) {
 
         } else {
             if (entity instanceof LivingEntity) {
@@ -150,7 +153,7 @@ public class CobwebProjectileEntity extends Projectile implements GeoAnimatable 
         this.playSound(ModSoundEvents.SPIDER_WEB_IMPACT.get(), 1.0F, 1.0F);
     }
 
-    protected void defineSynchedData() {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }
 
@@ -168,10 +171,6 @@ public class CobwebProjectileEntity extends Projectile implements GeoAnimatable 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

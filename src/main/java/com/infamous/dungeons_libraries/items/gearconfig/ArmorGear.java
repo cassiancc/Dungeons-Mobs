@@ -7,6 +7,7 @@ import com.infamous.dungeons_libraries.client.renderer.gearconfig.ArmorGearRende
 import com.infamous.dungeons_libraries.items.interfaces.IArmor;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
+import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterial;
 import com.infamous.dungeons_libraries.mixin.ArmorItemAccessor;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
@@ -55,6 +56,9 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
     private final ResourceLocation modelLocation;
     private final ResourceLocation textureLocation;
     private final ResourceLocation animationFileLocation;
+    private int defense;
+    private float toughness;
+    private DungeonsArmorMaterial material;
 
     public ArmorGear(ArmorItem.Type slotType, Properties properties, ResourceLocation armorSet, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties.rarity(ArmorGearConfigRegistry.getConfig(armorSet).getRarity()));
@@ -71,23 +75,34 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
         if (armorGearConfig == ArmorGearConfig.DEFAULT) {
             armorGearConfig = ArmorGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         }
-        Holder<ArmorMaterial> material = armorGearConfig.getArmorMaterial();
-        ((ArmorItemAccessor) this).setMaterial(material.value());
-        ((ArmorItemAccessor) this).setDefense(material.getDefenseForType(this.type));
-        ((ArmorItemAccessor) this).setToughness(material.getToughness());
-        ((ArmorItemAccessor) this).setKnockbackResistance(material.getKnockbackResistance());
+        this.material = armorGearConfig.getArmorMaterial();
+        this.defense = material.getDefenseForType(this.type);
+        this.toughness =material.getToughness();
         ((ItemAccessor) this).setMaxDamage(material.getDefenseForType(this.type));
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-        UUID primaryUuid = ARMOR_MODIFIER_UUID_PER_SLOT[this.type.getSlot().getIndex()];
-        builder.add(Attributes.ARMOR, new AttributeModifier(primaryUuid, "Armor modifier", material.getDefenseForType(this.type), AttributeModifier.Operation.ADD_VALUE), this.type.getSlot());
-        builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(primaryUuid, "Armor toughness", material.getToughness(), AttributeModifier.Operation.ADD_VALUE), this.type.getSlot());
-        if (this.knockbackResistance > 0) {
-            builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(primaryUuid, "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADD_VALUE));
+        builder.add(Attributes.ARMOR, new AttributeModifier(GeneralUtil.librariesLoc("armor_modifier"), material.getDefenseForType(this.type), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
+        builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(GeneralUtil.librariesLoc("armor_toughness"), material.getToughness(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
+        if (material.getKnockbackResistance() > 0) {
+            builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(GeneralUtil.librariesLoc("armor_knockback_resistance"), material.getKnockbackResistance(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
         }
         armorGearConfig.getAttributes().forEach(attributeModifier -> {
 			ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).ifPresent(attribute -> builder.add(attribute, new AttributeModifier(GeneralUtil.librariesLoc("armor_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation()), EquipmentSlotGroup.ARMOR));
 		});
         this.defaultModifiers = builder.build();
+    }
+
+    public DungeonsArmorMaterial getDungeonsArmorMaterial() {
+        return material;
+    }
+
+    @Override
+    public int getDefense() {
+        return defense;
+    }
+
+    @Override
+    public float getToughness() {
+        return toughness;
     }
 
     public ArmorGearConfig getGearConfig() {

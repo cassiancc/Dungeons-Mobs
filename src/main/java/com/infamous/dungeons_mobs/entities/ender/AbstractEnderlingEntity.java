@@ -53,14 +53,13 @@ public abstract class AbstractEnderlingEntity extends Monster implements GeoAnim
 
     protected AbstractEnderlingEntity(EntityType<? extends AbstractEnderlingEntity> p_i48553_1_, Level p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
-        this.setMaxUpStep(1.0F);
         this.setPathfindingMalus(PathType.WATER, -1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.ATTACK_DAMAGE, 7.0D)
-                .add(Attributes.FOLLOW_RANGE, 32.0D);
+                .add(Attributes.FOLLOW_RANGE, 32.0D).add(Attributes.STEP_HEIGHT, 1.0F);;
     }
 
     public void setTarget(@Nullable LivingEntity p_70624_1_) {
@@ -73,11 +72,11 @@ public abstract class AbstractEnderlingEntity extends Monster implements GeoAnim
         super.setTarget(p_70624_1_); // Forge: Moved down to allow event handlers to write data manager values.
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACKING, 0);
-        this.entityData.define(RUNNING, 0);
-        this.entityData.define(DATA_STARED_AT, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ATTACKING, 0);
+        builder.define(RUNNING, 0);
+        builder.define(DATA_STARED_AT, false);
     }
 
     public boolean hasBeenStaredAt() {

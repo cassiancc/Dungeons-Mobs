@@ -26,7 +26,7 @@ import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.rel
 
 public class ArmorMaterialSyncPacket implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ArmorMaterialSyncPacket> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("armor_material_config_sync"));
-    private static final Codec<Map<ResourceLocation, Holder<ArmorMaterial>>> MAPPER =
+    private static final Codec<Map<ResourceLocation, DungeonsArmorMaterial>> MAPPER =
             Codec.unboundedMap(ResourceLocation.CODEC, DungeonsArmorMaterial.CODEC);
     public static final StreamCodec<ByteBuf, ArmorMaterialSyncPacket> STREAM_CODEC =
             StreamCodec.composite(
@@ -35,13 +35,13 @@ public class ArmorMaterialSyncPacket implements CustomPacketPayload {
                     ArmorMaterialSyncPacket::new
             );
 
-    public final Map<ResourceLocation, Holder<ArmorMaterial>> data;
+    public final Map<ResourceLocation, DungeonsArmorMaterial> data;
 
-    public Map<ResourceLocation, Holder<ArmorMaterial>> data() {
+    public Map<ResourceLocation, DungeonsArmorMaterial> data() {
         return data;
     }
 
-    public ArmorMaterialSyncPacket(Map<ResourceLocation, Holder<ArmorMaterial>> data) {
+    public ArmorMaterialSyncPacket(Map<ResourceLocation, DungeonsArmorMaterial> data) {
         this.data = data.entrySet().stream().filter(entry -> entry.getValue() instanceof DungeonsArmorMaterial).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

@@ -153,10 +153,9 @@ public class RedstoneMineEntity extends Entity implements GeoAnimatable {
         }
     }
 
-
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(LIFE_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(LIFE_TICKS, 0);
     }
 
     @Override

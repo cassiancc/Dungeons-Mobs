@@ -80,11 +80,10 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
     public NecromancerEntity(EntityType<? extends NecromancerEntity> p_i48555_1_, Level p_i48555_2_) {
         super(p_i48555_1_, p_i48555_2_);
         this.xpReward = 20;
-        this.setMaxUpStep(1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return Skeleton.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.4D).add(AttributeRegistry.FOLLOWER_COST_LIMIT, 4);
+        return Skeleton.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.4D).add(AttributeRegistry.FOLLOWER_COST_LIMIT, 4).add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose p_213348_1_, EntityDimensions p_213348_2_) {
+    public double getEyeY() {
         return 2.25F;
     }
 
@@ -141,12 +140,11 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
         equipArmorSet(ModItems.NECROMANCER_ARMOR, this);
     }
 
+    @Override
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance,
-                                        MobSpawnType spawnReason, @Nullable SpawnGroupData livingEntityDataIn,
-                                        @Nullable CompoundTag compoundNBT) {
-        livingEntityDataIn = super.finalizeSpawn(world, difficultyInstance, spawnReason, livingEntityDataIn,
-                compoundNBT);
+                                        MobSpawnType spawnReason, @Nullable SpawnGroupData livingEntityDataIn) {
+        livingEntityDataIn = super.finalizeSpawn(world, difficultyInstance, spawnReason, livingEntityDataIn);
 
         return livingEntityDataIn;
     }

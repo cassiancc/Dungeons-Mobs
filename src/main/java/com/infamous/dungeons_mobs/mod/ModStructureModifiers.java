@@ -15,6 +15,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.neoforged.neoforge.common.world.StructureModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
 import java.util.function.Supplier;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.function.Function;
 public class ModStructureModifiers {
     public static final Codec<HolderSet<Structure>> LIST_CODEC = RegistryCodecs.homogeneousList(Registries.STRUCTURE, Structure.DIRECT_CODEC);
 
-    public static final DeferredRegister<Codec<? extends StructureModifier>> STRUCTURE_MODIFIER_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.Keys.STRUCTURE_MODIFIER_SERIALIZERS, DungeonsMobs.MODID);
+    public static final DeferredRegister<Codec<? extends StructureModifier>> STRUCTURE_MODIFIER_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.Keys.STRUCTURE_MODIFIER_SERIALIZERS, DungeonsMobs.MODID);
 
     /**
      * Stock structure modifier for adding mob spawns to structures.
@@ -46,7 +48,7 @@ public class ModStructureModifiers {
     public static final Supplier<Codec<DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier>> REMOVE_SPAWNS_STRUCTURE_MODIFIER_TYPE = STRUCTURE_MODIFIER_SERIALIZERS.register("remove_spawns", () ->
             RecordCodecBuilder.create(builder -> builder.group(
                     LIST_CODEC.fieldOf("structures").forGetter(DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::structures),
-                    RegistryCodecs.homogeneousList(BuiltInRegistries.Keys.ENTITY_TYPES).fieldOf("entity_types").forGetter(DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::entityTypes)
+                    RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_types").forGetter(DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::entityTypes)
             ).apply(builder, DungeonsMobsStructureModifiers.RemoveSpawnsStructureModifier::new))
     );
 }

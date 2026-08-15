@@ -61,10 +61,6 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements GeoAnima
         //this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, AbstractEndermanVariant.class, true, false));
     }
 
-    public MobCategory getMobCategory() {
-        return MobCategory.ARTHROPOD;
-    }
-
     @Override
     protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
         this.playSound(this.getStepSound(), 0.75F, 1.0F);
@@ -89,11 +85,11 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements GeoAnima
     public void baseTick() {
         super.baseTick();
 
-        if (this.getTarget() != null && this.getTarget().isAlive() && this.distanceTo(this.getTarget()) > 5 && this.getTarget().hasEffect(ModEffects.ENSNARED.get()) && this.random.nextInt(10) == 0) {
+        if (this.getTarget() != null && this.getTarget().isAlive() && this.distanceTo(this.getTarget()) > 5 && this.getTarget().hasEffect(ModEffects.ENSNARED) && this.random.nextInt(10) == 0) {
             this.teleport(this.getTarget().getX() - 3 + this.random.nextInt(6), this.getTarget().getY(), this.getTarget().getZ() - 3 + this.random.nextInt(6));
         }
 
-        if (this.getTarget() != null && this.getTarget().isAlive() && !this.getTarget().hasEffect(ModEffects.ENSNARED.get()) && this.hasLineOfSight(this.getTarget()) && this.getShootTime() <= 0 && this.random.nextInt(10) == 0) {
+        if (this.getTarget() != null && this.getTarget().isAlive() && !this.getTarget().hasEffect(ModEffects.ENSNARED) && this.hasLineOfSight(this.getTarget()) && this.getShootTime() <= 0 && this.random.nextInt(10) == 0) {
             this.setShootTime(80);
             this.playSound(ModSoundEvents.SNARELING_PREPARE_SHOOT.get(), 2.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             //this.playSound(SoundEvents.EVOKER_CAST_SPELL, 3.0F, 1.0F);
@@ -131,9 +127,9 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements GeoAnima
         this.level().addFreshEntity(snowballentity);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SHOOT_TIME, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SHOOT_TIME, 0);
     }
 
     public int getShootTime() {
@@ -255,13 +251,13 @@ public class SnarelingEntity extends AbstractEnderlingEntity implements GeoAnima
                     return false;
                 } else {
                     this.path = this.pathNav.createPath(vector3d.x, vector3d.y, vector3d.z, 0);
-                    return SnarelingEntity.this.getTarget() != null && SnarelingEntity.this.getTarget().isAlive() && !SnarelingEntity.this.getTarget().hasEffect(ModEffects.ENSNARED.get()) && this.path != null;
+                    return SnarelingEntity.this.getTarget() != null && SnarelingEntity.this.getTarget().isAlive() && !SnarelingEntity.this.getTarget().hasEffect(ModEffects.ENSNARED) && this.path != null;
                 }
             }
         }
 
         public boolean canContinueToUse() {
-            return SnarelingEntity.this.getTarget() != null && SnarelingEntity.this.getTarget().isAlive() && !SnarelingEntity.this.getTarget().hasEffect(ModEffects.ENSNARED.get()) && !this.pathNav.isDone();
+            return SnarelingEntity.this.getTarget() != null && SnarelingEntity.this.getTarget().isAlive() && !SnarelingEntity.this.getTarget().hasEffect(ModEffects.ENSNARED) && !this.pathNav.isDone();
         }
 
         public void start() {

@@ -20,6 +20,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -67,7 +68,6 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
     public SunkenSkeletonEntity(EntityType<? extends SunkenSkeletonEntity> entityType, Level world) {
         super(entityType, world);
         this.isConstructed = true;
-        this.setMaxUpStep(1.0F);
         this.moveControl = new AquaticMoveHelperController<>(this);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.waterNavigation = new WaterBoundPathNavigation(this, world);
@@ -76,7 +76,7 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
 
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return AbstractSkeleton.createAttributes();
+        return AbstractSkeleton.createAttributes().add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     @Override
@@ -170,9 +170,9 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CHARGING_CROSSBOW, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CHARGING_CROSSBOW, false);
     }
 
     @Override

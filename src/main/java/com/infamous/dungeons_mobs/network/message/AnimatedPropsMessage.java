@@ -29,11 +29,10 @@ public class AnimatedPropsMessage {
         return new AnimatedPropsMessage(entityId, cap);
     }
 
-    public static boolean onPacketReceived(AnimatedPropsMessage message, IPayloadContext contextSupplier) {
-        IPayloadContext context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+    public static boolean onPacketReceived(AnimatedPropsMessage message, IPayloadContext context) {
+        if (context.player().isLocalPlayer()) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
+                Entity entity = context.player().level().getEntity(message.entityId);
                 if (entity instanceof Mob) {
                     AnimatedProps cap = AnimatedPropsHelper.getAnimatedPropsCapability((Mob) entity);
                     cap.setAttackAnimationTick(message.cap.getAttackAnimationTick());

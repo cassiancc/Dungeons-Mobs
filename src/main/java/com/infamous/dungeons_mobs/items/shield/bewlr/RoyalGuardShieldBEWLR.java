@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -36,7 +37,7 @@ public class RoyalGuardShieldBEWLR extends BlockEntityWithoutLevelRenderer {
     }
 
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        boolean flag = BlockItem.getBlockEntityData(stack) != null;
+        boolean flag = stack.get(DataComponents.BLOCK_ENTITY_DATA) != null;
         matrixStack.pushPose();
         matrixStack.scale(1.0F, -1.0F, -1.0F);
 

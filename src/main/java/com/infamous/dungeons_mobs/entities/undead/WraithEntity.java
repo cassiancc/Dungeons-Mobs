@@ -147,7 +147,7 @@ public class WraithEntity extends Monster implements GeoAnimatable {
                     if (itemstack.isDamageableItem()) {
                         itemstack.setDamageValue(itemstack.getDamageValue() + this.random.nextInt(2));
                         if (itemstack.getDamageValue() >= itemstack.getMaxDamage()) {
-                            this.broadcastBreakEvent(EquipmentSlot.HEAD);
+                            this.breakItem(getItemBySlot(EquipmentSlot.HEAD));
                             this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         }
                     }
@@ -156,7 +156,8 @@ public class WraithEntity extends Monster implements GeoAnimatable {
                 }
 
                 if (flag) {
-                    this.setSecondsOnFire(8);
+                    this.setSharedFlagOnFire(true);
+                    this.setRemainingFireTicks(8*20);
                 }
             }
         }
@@ -194,11 +195,6 @@ public class WraithEntity extends Monster implements GeoAnimatable {
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
         this.playSound(this.getStepSound(), 0.5F, 1.0F);
-    }
-
-    @Override
-    public MobCategory getMobCategory() {
-        return MobCategory.UNDEAD;
     }
 
     @Override

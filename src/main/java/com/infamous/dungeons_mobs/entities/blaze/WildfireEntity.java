@@ -14,6 +14,7 @@ import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import com.infamous.dungeons_mobs.utils.PositionUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -179,7 +180,7 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
         p_213281_1_.putFloat("ShieldHealth", this.getShieldHealth());
     }
 
-    public void readAdditionalSaveData(CompoundTag p_70037_1_) {
+    public void readAdditionalSaveData(CompoundTag p_70037_1_, HolderLookup.Provider provider) {
         super.readAdditionalSaveData(p_70037_1_);
         this.setShields(p_70037_1_.getInt("Shields"));
         this.setShieldHealth(p_70037_1_.getFloat("ShieldHealth"));

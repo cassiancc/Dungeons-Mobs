@@ -43,7 +43,7 @@ public class DungeonsGearCompat {
     }
 
     private static Item getRegisteredItem(String item) {
-        return BuiltInRegistries.ITEM.getValue(getDungeonsGearResource(item));
+        return BuiltInRegistries.ITEM.get(getDungeonsGearResource(item));
     }
 
     public static Item getOrDefault(Supplier<Item> dungeonsItemSupplier, Item defaultTo) {

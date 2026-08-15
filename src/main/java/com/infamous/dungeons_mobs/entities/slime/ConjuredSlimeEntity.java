@@ -102,7 +102,7 @@ public class ConjuredSlimeEntity extends Slime implements RangedAttackMob {
     }
 
     protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-        return 0.625F * sizeIn.height;
+        return 0.625F * sizeIn.height();
     }
 
     /**
@@ -115,7 +115,7 @@ public class ConjuredSlimeEntity extends Slime implements RangedAttackMob {
     /**
      * Causes this entity to do an upwards motion (jumping).
      */
-    protected void jumpFromGround() {
+    public void jumpFromGround() {
         // NO-OP
     }
 
