@@ -34,10 +34,9 @@ public class GeomancerBombRenderer extends GeoEntityRenderer<GeomancerBombEntity
         });
     }
 
-    protected void applyRotations(GeomancerBombEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
-
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+    @Override
+    protected void applyRotations(GeomancerBombEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
     //FIXME

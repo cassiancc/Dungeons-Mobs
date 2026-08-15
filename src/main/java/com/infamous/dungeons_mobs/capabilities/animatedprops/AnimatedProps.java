@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.capabilities.animatedprops;
 
 import com.infamous.dungeons_mobs.entities.AnimatableMeleeAttackMob;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
@@ -47,7 +48,7 @@ public class AnimatedProps implements INBTSerializable<CompoundTag>, AnimatableM
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         if (ANIMATED_PROPS_CAPABILITY == null) {
             return new CompoundTag();
         }
@@ -59,7 +60,7 @@ public class AnimatedProps implements INBTSerializable<CompoundTag>, AnimatableM
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         this.attackAnimationTick = tag.getInt("AttackAnimationTick");
         this.attackAnimationLength = tag.getInt("AttackAnimationLength");
         this.attackAnimationActionPoint = tag.getInt("AttackAnimationActionPoint");

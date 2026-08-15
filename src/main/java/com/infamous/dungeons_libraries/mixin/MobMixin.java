@@ -26,8 +26,8 @@ public abstract class MobMixin {
             } else if (pExisting.getItem() instanceof MeleeGear) {
                 SwordItem sworditem = (SwordItem) pCandidate.getItem();
                 MeleeGear meleeGear = (MeleeGear) pExisting.getItem();
-                if (sworditem.getDamage() != meleeGear.getDamage()) {
-                    cir.setReturnValue(sworditem.getDamage() > meleeGear.getDamage());
+                if (sworditem.getDamage(pCandidate) != meleeGear.getDamage()) {
+                    cir.setReturnValue(sworditem.getDamage(pCandidate) > meleeGear.getDamage());
                 } else {
                     cir.setReturnValue(canReplaceEqualItem(pCandidate, pExisting));
                 }
@@ -38,8 +38,8 @@ public abstract class MobMixin {
             } else if (pExisting.getItem() instanceof SwordItem) {
                 SwordItem sworditem = (SwordItem) pExisting.getItem();
                 MeleeGear meleeGear = (MeleeGear) pCandidate.getItem();
-                if (sworditem.getDamage() != meleeGear.getDamage()) {
-                    cir.setReturnValue(sworditem.getDamage() > meleeGear.getDamage());
+                if (sworditem.getDamage(pExisting) != meleeGear.getDamage()) {
+                    cir.setReturnValue(sworditem.getDamage(pExisting) > meleeGear.getDamage());
                 } else {
                     cir.setReturnValue(canReplaceEqualItem(pCandidate, pExisting));
                 }

@@ -17,8 +17,8 @@ public class GeomancerWallRenderer extends GeoEntityRenderer<GeomancerWallEntity
         //this.addLayer(new GeoHeldItemLayer<>(this, 0.0, 0.0, 0.5));
     }
 
-    protected void applyRotations(GeomancerWallEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+    @Override
+    protected void applyRotations(GeomancerWallEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 }

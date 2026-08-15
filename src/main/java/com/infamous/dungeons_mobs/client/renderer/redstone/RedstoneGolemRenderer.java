@@ -64,10 +64,10 @@ public class RedstoneGolemRenderer extends GeoEntityRenderer<RedstoneGolemEntity
         });
     }
 
-    protected void applyRotations(RedstoneGolemEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
+    @Override
+    protected void applyRotations(RedstoneGolemEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         float scaleFactor = 1.0f;
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 }

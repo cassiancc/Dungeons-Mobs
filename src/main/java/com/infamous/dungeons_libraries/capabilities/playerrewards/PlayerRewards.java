@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.capabilities.playerrewards;
 
 
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -53,7 +54,7 @@ public class PlayerRewards implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         Map<ResourceLocation, Integer> rewards = this.getAllPlayerRewards();
         ListTag listNBT = new ListTag();
@@ -68,7 +69,7 @@ public class PlayerRewards implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         ListTag listNBT = tag.getList("rewards", 10);
         for (Tag inbt : listNBT) {
             if (inbt instanceof CompoundTag) {

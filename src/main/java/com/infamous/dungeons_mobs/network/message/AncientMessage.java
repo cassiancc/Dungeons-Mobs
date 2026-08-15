@@ -27,11 +27,10 @@ public class AncientMessage {
         return new AncientMessage(entityId, ancient);
     }
 
-    public static boolean onPacketReceived(AncientMessage message, IPayloadContext contextSupplier) {
-        IPayloadContext context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+    public static boolean onPacketReceived(AncientMessage message, IPayloadContext context) {
+        if (context.player().isLocalPlayer()) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
+                Entity entity = context.player().level().getEntity(message.entityId);
                 if (entity instanceof LivingEntity) {
                     Ancient cap = AncientHelper.getAncientCapability(entity);
                     cap.setAncient(message.ancient);

@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -61,7 +62,7 @@ public class CuriosKeyBindings {
     }
 
     private static void curiosStartMessage(int slot, BlockHitResult blockHitResult, LocalPlayer player) {
-        NetworkHandler.INSTANCE.sendToServer(new CuriosArtifactStartMessage(slot, blockHitResult));
+        PacketDistributor.sendToServer(new CuriosArtifactStartMessage(slot, blockHitResult));
         CuriosApi.getCuriosInventory(player).ifPresent(iCuriosItemHandler -> {
             Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
             if (artifactStackHandler.isPresent()) {

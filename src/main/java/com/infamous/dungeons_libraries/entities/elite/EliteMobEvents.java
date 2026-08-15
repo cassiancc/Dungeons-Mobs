@@ -7,7 +7,9 @@ import com.infamous.dungeons_libraries.capabilities.elite.EliteMobHelper;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.network.EliteMobMessage;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -77,13 +79,10 @@ public class EliteMobEvents {
         setItemSlot(entity, EquipmentSlot.FEET, config.getFeetItem());
         setItemSlot(entity, EquipmentSlot.MAINHAND, config.getHandItem());
         setItemSlot(entity, EquipmentSlot.OFFHAND, config.getOffhandItem());
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableMultimap.builder();
         config.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
-            if (attribute != null) {
-                builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
-            }
-        });
+			ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).ifPresent(attribute -> builder.put(attribute, new AttributeModifier(GeneralUtil.librariesLoc("armor_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation())));
+		});
         entity.getAttributes().addTransientAttributeModifiers(builder.build());
         cap.setElite(true);
         cap.setTexture(config.getTexture());
@@ -134,10 +133,10 @@ public class EliteMobEvents {
     public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
         Player player = event.getEntity();
         Entity target = event.getTarget();
-        if (player instanceof ServerPlayer && target instanceof LivingEntity) {
+        if (player instanceof ServerPlayer serverPlayer && target instanceof LivingEntity) {
             EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getTarget());
             if (cap.isElite()) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new EliteMobMessage(target.getId(), cap.isElite(), cap.getTexture()));
+                PacketDistributor.sendToPlayer(serverPlayer, new EliteMobMessage(target.getId(), cap.isElite(), cap.getTexture()));
             }
         }
     }

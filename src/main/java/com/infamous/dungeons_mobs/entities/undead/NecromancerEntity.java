@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -83,7 +84,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return Skeleton.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.4D).add(AttributeRegistry.SUMMON_CAP.get(), 4);
+        return Skeleton.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.4D).add(AttributeRegistry.FOLLOWER_COST_LIMIT, 4);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.UNDEAD) {
+                && entityIn.getType().is(EntityTypeTags.UNDEAD)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -342,7 +343,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
                 }
 
                 summonedMob.setTarget(target);
-                summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null);
                 mobSummonSpot.playSound(ModSoundEvents.NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                 if (mob.getTeam() != null) {
                     Scoreboard scoreboard = mob.level().getScoreboard();
@@ -360,7 +361,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
 
                 int randomIndex = mob.getRandom().nextInt(necromancerMobSummons.size());
                 String randomMobID = necromancerMobSummons.get(randomIndex);
-                entityType = BuiltInRegistries.ENTITY_TYPE.getValue(GeneralUtil.mcLoc(randomMobID));
+                entityType = BuiltInRegistries.ENTITY_TYPE.get(GeneralUtil.mcLoc(randomMobID));
             }
             if (entityType == null) {
                 entityType = EntityType.ZOMBIE;

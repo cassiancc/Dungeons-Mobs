@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.mixin;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import com.infamous.dungeons_libraries.network.SwitchHandMessage;
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,11 +26,11 @@ public class MinecraftMixin {
         SHOULD_SWITCH_HAND = true;
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/NeoForge/client/event/InputEvent$InteractionKeyMappingTriggered;shouldSwingHand()Z"),
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/client/event/InputEvent$InteractionKeyMappingTriggered;shouldSwingHand()Z"),
             method = "startAttack()Z")
     private void dungeons_libraries_startAttack_onSwing(CallbackInfoReturnable<Boolean> cir) {
         if (SHOULD_SWITCH_HAND) {
-            NetworkHandler.INSTANCE.sendToServer(new SwitchHandMessage());
+            PacketDistributor.sendToServer(new SwitchHandMessage());
             SHOULD_SWITCH_HAND = false;
         }
     }

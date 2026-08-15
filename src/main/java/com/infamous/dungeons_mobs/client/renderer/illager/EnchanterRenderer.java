@@ -20,11 +20,10 @@ public class EnchanterRenderer extends GeoEntityRenderer<EnchanterEntity> {
         //this.addLayer(new GeoHeldItemLayer<>(this, 0.0, 0.0, 0.5));
     }
 
-    protected void applyRotations(EnchanterEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
+    @Override
+    protected void applyRotations(EnchanterEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         float scaleFactor = 0.9375F;
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
-
 }

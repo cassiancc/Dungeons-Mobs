@@ -76,8 +76,6 @@ public class DungeonsLibraries {
             modEventBus.register(CuriosClientIntegration.class);
             modEventBus.register(ArtifactsBarRender.class);
         }
-
-        ModCapabilities.setupCapabilities();
     }
 
     private void setup(final RegisterPayloadHandlersEvent event) {

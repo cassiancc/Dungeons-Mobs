@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -219,7 +220,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
         super.populateDefaultEquipmentSlots(random, p_180481_1_);
         equipArmorSet(ModItems.ILLUSIONER_ARMOR, this);
         if (ModList.get().isLoaded("dungeons_gear")) {
-            Item SHORTBOW = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("shortbow"));
+            Item SHORTBOW = BuiltInRegistries.ITEM.get(GeneralUtil.gearLoc("shortbow"));
 
             SpawnEquipmentHelper.equipMainhand(SHORTBOW.getDefaultInstance(), this);
         } else {
@@ -230,11 +231,10 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_,
-                                        MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_, @Nullable CompoundTag p_213386_5_) {
-        SpawnGroupData iLivingEntityData = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_,
-                p_213386_5_);
+                                        MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_) {
+        SpawnGroupData iLivingEntityData = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_);
         this.populateDefaultEquipmentSlots(this.getRandom(), p_213386_2_);
-        this.populateDefaultEquipmentEnchantments(this.getRandom(), p_213386_2_);
+        this.populateDefaultEquipmentEnchantments(p_213386_1_, this.getRandom(), p_213386_2_);
         return iLivingEntityData;
     }
 
@@ -245,7 +245,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
+                && ((LivingEntity) entityIn).getType().is(EntityTypeTags.ILLAGER)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -253,7 +253,8 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
     }
 
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
+
     }
 
     @Override
@@ -578,7 +579,7 @@ public class DungeonsIllusionerEntity extends AbstractIllager implements GeoAnim
                     PositionUtils.moveToCorrectHeight(cloneSummonSpot);
 
                     IllusionerCloneEntity clone = ModEntityTypes.ILLUSIONER_CLONE.get().create(mob.level());
-                    clone.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(cloneSummonSpot.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                    clone.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(cloneSummonSpot.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
                     clone.setOwner(mob);
                     clone.setHealth(mob.getHealth());
                     for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {

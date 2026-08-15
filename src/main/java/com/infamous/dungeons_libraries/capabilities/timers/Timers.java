@@ -1,10 +1,13 @@
 package com.infamous.dungeons_libraries.capabilities.timers;
 
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -15,15 +18,6 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.TIMER
 
 public class Timers implements INBTSerializable<CompoundTag> {
     private final Map<ResourceLocation, Integer> enchantmentTimers = new HashMap<>();
-
-    public int getEnchantmentTimer(Enchantment enchantment) {
-        return enchantmentTimers.computeIfAbsent(BuiltInRegistries.ENCHANTMENTS.getKey(enchantment), resourceLocation -> -1);
-    }
-
-    public boolean setEnchantmentTimer(Enchantment enchantment, int value) {
-        enchantmentTimers.put(BuiltInRegistries.ENCHANTMENTS.getKey(enchantment), value);
-        return true;
-    }
 
     public boolean setEnchantmentTimer(ResourceLocation enchantment, int value) {
         enchantmentTimers.put(enchantment, value);
@@ -44,7 +38,7 @@ public class Timers implements INBTSerializable<CompoundTag> {
     public static final String TIMER_KEY = "Timer";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         if (TIMERS_CAPABILITY == null) {
             return new CompoundTag();
         }
@@ -61,7 +55,7 @@ public class Timers implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         ListTag listNBT = tag.getList(ENCHANTS_KEY, 10);
         for (int i = 0; i < listNBT.size(); ++i) {
             CompoundTag compoundnbt = listNBT.getCompound(i);

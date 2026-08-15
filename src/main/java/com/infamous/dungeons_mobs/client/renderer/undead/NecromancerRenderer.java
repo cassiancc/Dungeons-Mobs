@@ -20,15 +20,11 @@ public class NecromancerRenderer extends DynamicGeoEntityRenderer<NecromancerEnt
     }
 
     @Override
-    protected void applyRotations(NecromancerEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
+    protected void applyRotations(NecromancerEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         float scaleFactor = 1.3F;
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
-
-
 
     //FIXME
 //

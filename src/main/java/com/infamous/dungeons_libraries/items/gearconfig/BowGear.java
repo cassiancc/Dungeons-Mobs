@@ -7,11 +7,15 @@ import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -25,7 +29,7 @@ import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
 
-    private Multimap<Attribute, AttributeModifier> defaultModifiers;
+    private ItemAttributeModifiers defaultModifiers;
     private BowGearConfig bowGearConfig;
 
     public BowGear(Properties builder) {
@@ -36,17 +40,11 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     @Override
     public void reload() {
         bowGearConfig = BowGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         bowGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            Holder.Reference<Attribute> attribute = ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).orElse(null);
             if (attribute != null) {
-                UUID uuid = randomUUID();
-                if (ATTACK_DAMAGE.equals(attribute)) {
-                    uuid = BASE_ATTACK_DAMAGE_UUID;
-                } else if (ATTACK_SPEED.equals(attribute)) {
-                    uuid = BASE_ATTACK_SPEED_UUID;
-                }
-                builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+                builder.add(attribute, new AttributeModifier(GeneralUtil.librariesLoc("Weapon_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation()), EquipmentSlotGroup.HAND);
             }
         });
         this.defaultModifiers = builder.build();
@@ -58,13 +56,8 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack pStack) {
-        return getGearConfig().getRarity();
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        return defaultModifiers;
     }
 
     @Override

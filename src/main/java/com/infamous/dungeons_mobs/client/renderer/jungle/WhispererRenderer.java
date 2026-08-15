@@ -25,12 +25,10 @@ public class WhispererRenderer extends DynamicGeoEntityRenderer<WhispererEntity>
     }
 
     @Override
-    protected void applyRotations(WhispererEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
+    protected void applyRotations(WhispererEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         float scaleFactor = 1.0F;
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
     //FIXME

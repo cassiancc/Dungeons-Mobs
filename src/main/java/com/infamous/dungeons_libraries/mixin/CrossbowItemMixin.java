@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.mixin;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
+import com.infamous.dungeons_libraries.utils.EnchantmentUtil;
 import com.infamous.dungeons_libraries.utils.RangedAttackHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,7 +44,7 @@ public abstract class CrossbowItemMixin {
 
     @ModifyConstant(method = "tryLoadProjectiles", constant = @Constant(intValue = 3, ordinal = 0))
     private static int handleExtraMultishot(int defaultValue, LivingEntity livingEntity, ItemStack itemStack){
-        return 1 + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, itemStack) * 2;
+        return 1 + EnchantmentUtil.getItemEnchantmentLevel(Enchantments.MULTISHOT, itemStack, livingEntity.level()) * 2;
     }
 
     @Inject(method = "getArrow", at = @At(value = "RETURN"))

@@ -9,6 +9,8 @@ import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.mixin.CooldownAccessor;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -39,12 +41,12 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
     protected final UUID SLOT1_UUID = UUID.fromString("1906bae9-9f26-4194-bb8a-ef95b8cad134");
     protected final UUID SLOT2_UUID = UUID.fromString("b99aa930-03d0-4b2d-aa69-7b5d943dd75c");
 
-    private Multimap<Attribute, AttributeModifier> defaultModifiers;
+    private Multimap<Holder<Attribute>, AttributeModifier> defaultModifiers;
     protected boolean procOnItemUse = false;
     private ArtifactGearConfig artifactGearConfig;
 
     public ArtifactItem(Properties properties) {
-        super(properties.defaultDurability(64));
+        super(properties.durability(64));
         reload();
     }
 
@@ -52,14 +54,10 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
     public void reload() {
         artifactGearConfig = ArtifactGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ((ItemAccessor) this).setMaxDamage(artifactGearConfig.getDurability());
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableMultimap.builder();
         artifactGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-            if (attribute != null) {
-                UUID uuid = randomUUID();
-                builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
-            }
-        });
+			ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).ifPresent(attribute -> builder.put(attribute, new AttributeModifier(GeneralUtil.librariesLoc("weapon_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation())));
+		});
         this.defaultModifiers = builder.build();
     }
 
@@ -67,7 +65,7 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
         int cooldownInTicks = item instanceof ArtifactItem ?
                 ((ArtifactItem) item).getCooldownInSeconds() * 20 : 0;
 
-        AttributeInstance artifactCooldownMultiplierAttribute = playerIn.getAttribute(ARTIFACT_COOLDOWN_MULTIPLIER.get());
+        AttributeInstance artifactCooldownMultiplierAttribute = playerIn.getAttribute(ARTIFACT_COOLDOWN_MULTIPLIER);
         double attributeModifier = artifactCooldownMultiplierAttribute != null ? artifactCooldownMultiplierAttribute.getValue() : 1.0D;
         playerIn.getCooldowns().addCooldown(item, Math.max(0, (int) (cooldownInTicks * attributeModifier)));
     }
@@ -94,7 +92,7 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
 
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return BuiltInRegistries.ITEM.tags().getTag(ARTIFACT_REPAIR_ITEMS).contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        return BuiltInRegistries.ITEM.getTag(ARTIFACT_REPAIR_ITEMS).orElseThrow().contains(repair.getItemHolder()) || super.isValidRepairItem(toRepair, repair);
     }
 
     public InteractionResultHolder<ItemStack> activateArtifact(ArtifactUseContext artifactUseContext) {
@@ -125,16 +123,16 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
     }
 
 
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(int slotIndex) {
+    public Multimap<Holder<Attribute>, AttributeModifier> getDefaultAttributeModifiers(int slotIndex) {
         return getAttributeModifiersForSlot(getUUIDForSlot(slotIndex));
     }
 
-    private ImmutableMultimap<Attribute, AttributeModifier> getAttributeModifiersForSlot(UUID slot_uuid) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+    private ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributeModifiersForSlot(UUID slot_uuid) {
+        ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableMultimap.builder();
         artifactGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            Holder.Reference<Attribute> attribute = ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).orElse(null);
             if (attribute != null) {
-                builder.put(attribute, new AttributeModifier(slot_uuid, "Artifact modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+                builder.put(attribute, new AttributeModifier(GeneralUtil.librariesLoc("artifact_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation()));
             }
         });
         return builder.build();

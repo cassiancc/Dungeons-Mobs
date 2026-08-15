@@ -21,13 +21,13 @@ public class SummonEvents {
         if (FollowerLeaderHelper.isFollower(event.getEntity())) {
             LivingEntity followerAttacker = event.getEntity();
             Follower attackerFollowerCapability = getFollowerCapability(followerAttacker);
-            if (attackerFollowerCapability.getMaster() != null) {
-                LivingEntity attackersOwner = attackerFollowerCapability.getMaster();
+            if (attackerFollowerCapability.getLeader() != null) {
+                LivingEntity attackersOwner = attackerFollowerCapability.getLeader();
                 if (FollowerLeaderHelper.isFollower(event.getNewAboutToBeSetTarget())) {
                     LivingEntity summonableTarget = event.getNewAboutToBeSetTarget();
                     Follower targetFollowerCapability = getFollowerCapability(summonableTarget);
                     if (targetFollowerCapability.getLeader() != null) {
-                        LivingEntity targetsOwner = targetFollowerCapability.getMaster();
+                        LivingEntity targetsOwner = targetFollowerCapability.getLeader();
                         if (targetsOwner.equals(attackersOwner)) {
                             event.setCanceled(true);
                             preventAttackForSummonableMob(followerAttacker);
@@ -35,7 +35,7 @@ public class SummonEvents {
                     }
                 }
             }
-            if (attackerFollowerCapability.getMaster() == event.getNewAboutToBeSetTarget()) {
+            if (attackerFollowerCapability.getLeader() == event.getNewAboutToBeSetTarget()) {
                 event.setCanceled(true);
                 preventAttackForSummonableMob(followerAttacker);
             }

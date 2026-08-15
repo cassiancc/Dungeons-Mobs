@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.capabilities.properties;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
@@ -41,7 +42,7 @@ public class MobProps implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         if (CONVERTIBLE_CAPABILITY == null) {
             return new CompoundTag();
         }
@@ -53,7 +54,7 @@ public class MobProps implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         this.setBurnNearbyTimer(tag.getInt("burnNearbyTimer"));
         this.setFreezeNearbyTimer(tag.getInt("freezeNearbyTimer"));
         this.setGravityPulseTimer(tag.getInt("gravityPulseTimer"));

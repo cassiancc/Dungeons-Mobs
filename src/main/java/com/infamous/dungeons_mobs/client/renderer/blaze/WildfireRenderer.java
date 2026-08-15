@@ -40,15 +40,11 @@ public class WildfireRenderer extends DynamicGeoEntityRenderer<WildfireEntity> {
     }
 
     @Override
-    protected void applyRotations(WildfireEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
+    protected void applyRotations(WildfireEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         float scaleFactor = 1.25F;
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
-
-
 
     //FIXME
 //

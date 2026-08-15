@@ -1,9 +1,8 @@
 package com.infamous.dungeons_libraries.capabilities.artifact;
 
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public class ArtifactUsage {
 
@@ -18,10 +17,10 @@ public class ArtifactUsage {
         return usingArtifact != null && itemStack != null && itemStack.equals(usingArtifact);
     }
 
-    public boolean startUsingArtifact(ItemStack itemStack) {
+    public boolean startUsingArtifact(ItemStack itemStack, Player playerIn) {
         if (usingArtifact != null || !(itemStack.getItem() instanceof ArtifactItem)) return false;
         usingArtifact = itemStack;
-        usingArtifactRemaining = itemStack.getItem().getUseDuration(itemStack);
+        usingArtifactRemaining = itemStack.getItem().getUseDuration(itemStack, playerIn);
         return true;
     }
 

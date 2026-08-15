@@ -11,17 +11,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientHandler {
-    public static void handleCuriosArtifactStopMessage(CuriosArtifactStopMessage packet, IPayloadContext ctx) {
+    public static void handleCuriosArtifactStopMessage(CuriosArtifactStopMessage packet, IPayloadContext context) {
         if (packet != null) {
-            IPayloadContext context = ctx.get();
-            if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            if (context.player().isLocalPlayer()) {
                 context.enqueueWork(() -> {
-                    AbstractClientPlayer player = Minecraft.getInstance().player;
+                    Player player = context.player();
                     if (player != null) {
                         ArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
                         ItemStack artifactStack = cap.getUsingArtifact();
@@ -35,11 +35,10 @@ public class ClientHandler {
         }
     }
 
-    public static void handleEliteMobMessage(EliteMobMessage message, IPayloadContext contextSupplier) {
-        IPayloadContext context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+    public static void handleEliteMobMessage(EliteMobMessage message, IPayloadContext context) {
+        if (context.player().isLocalPlayer()) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId());
+                Entity entity = context.player().level().getEntity(message.entityId());
                 if (entity instanceof LivingEntity) {
                     EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
                     cap.setElite(message.isElite());

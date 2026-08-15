@@ -8,16 +8,12 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import java.util.UUID;
-
 public class GearConfigAttributeModifier {
-
-    public static final Codec<AttributeModifier.Operation> ATTRIBUTE_MODIFIER_OPERATION_CODEC = Codec.INT.flatComapMap(AttributeModifier.Operation::fromValue, d -> DataResult.success(d.toValue()));
 
     public static final Codec<GearConfigAttributeModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("attribute").forGetter(GearConfigAttributeModifier::getAttributeResourceLocation),
             Codec.DOUBLE.fieldOf("amount").forGetter(GearConfigAttributeModifier::getAmount),
-            ATTRIBUTE_MODIFIER_OPERATION_CODEC.fieldOf("operation").forGetter(GearConfigAttributeModifier::getOperation)
+            AttributeModifier.Operation.CODEC.fieldOf("operation").forGetter(GearConfigAttributeModifier::getOperation)
     ).apply(instance, GearConfigAttributeModifier::new));
 
     private final ResourceLocation attributeResourceLocation;
@@ -42,11 +38,11 @@ public class GearConfigAttributeModifier {
         return operation;
     }
 
-    public AttributeModifier toAttributeModifier(UUID uuid, String name){
-        return new AttributeModifier(uuid, name, amount, operation);
+    public AttributeModifier toAttributeModifier(ResourceLocation uuid){
+        return new AttributeModifier(uuid, amount, operation);
     }
 
     public Attribute getAttribute(){
-        return BuiltInRegistries.ATTRIBUTE.getValue(attributeResourceLocation);
+        return BuiltInRegistries.ATTRIBUTE.get(attributeResourceLocation);
     }
 }

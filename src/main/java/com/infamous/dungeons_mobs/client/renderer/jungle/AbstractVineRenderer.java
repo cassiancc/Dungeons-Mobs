@@ -28,12 +28,11 @@ public class AbstractVineRenderer<M extends AbstractVineModel> extends GeoEntity
     }
 
     @Override
-    protected void applyRotations(AbstractVineEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
-        if (this.isShaking(entityLiving)) {
-            rotationYaw += (float) (Math.cos((double) entityLiving.tickCount * 3.25D) * Math.PI * (double) 0.4F);
+    protected void applyRotations(AbstractVineEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        if (this.isShaking(animatable)) {
+            rotationYaw += (float) (Math.cos((double) animatable.tickCount * 3.25D) * Math.PI * (double) 0.4F);
         }
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 
     @Override

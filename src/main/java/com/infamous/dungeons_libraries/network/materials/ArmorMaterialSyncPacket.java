@@ -6,6 +6,7 @@ import com.infamous.dungeons_libraries.network.gearconfig.ArmorGearConfigSyncPac
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
@@ -25,7 +26,7 @@ import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.rel
 
 public class ArmorMaterialSyncPacket implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ArmorMaterialSyncPacket> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("armor_material_config_sync"));
-    private static final Codec<Map<ResourceLocation, ArmorMaterial>> MAPPER =
+    private static final Codec<Map<ResourceLocation, Holder<ArmorMaterial>>> MAPPER =
             Codec.unboundedMap(ResourceLocation.CODEC, DungeonsArmorMaterial.CODEC);
     public static final StreamCodec<ByteBuf, ArmorMaterialSyncPacket> STREAM_CODEC =
             StreamCodec.composite(
@@ -34,13 +35,13 @@ public class ArmorMaterialSyncPacket implements CustomPacketPayload {
                     ArmorMaterialSyncPacket::new
             );
 
-    public final Map<ResourceLocation, ArmorMaterial> data;
+    public final Map<ResourceLocation, Holder<ArmorMaterial>> data;
 
-    public Map<ResourceLocation, ArmorMaterial> data() {
+    public Map<ResourceLocation, Holder<ArmorMaterial>> data() {
         return data;
     }
 
-    public ArmorMaterialSyncPacket(Map<ResourceLocation, ArmorMaterial> data) {
+    public ArmorMaterialSyncPacket(Map<ResourceLocation, Holder<ArmorMaterial>> data) {
         this.data = data.entrySet().stream().filter(entry -> entry.getValue() instanceof DungeonsArmorMaterial).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

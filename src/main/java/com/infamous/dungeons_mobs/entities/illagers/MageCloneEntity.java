@@ -12,8 +12,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -81,12 +83,10 @@ public class MageCloneEntity extends AbstractIllager implements GeoAnimatable, S
         this.targetSelector.addGoal(1, new MageCloneEntity.CopyOwnerTargetGoal(this));
     }
 
-
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DELAYED_APPEAR, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DELAYED_APPEAR, false);
     }
 
     public boolean hasDelayedAppear() {
@@ -228,7 +228,7 @@ public class MageCloneEntity extends AbstractIllager implements GeoAnimatable, S
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
+                && ((LivingEntity) entityIn).getType().is(EntityTypeTags.ILLAGER)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -236,7 +236,8 @@ public class MageCloneEntity extends AbstractIllager implements GeoAnimatable, S
     }
 
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
+
     }
 
     @Override

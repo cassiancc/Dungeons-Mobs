@@ -8,7 +8,7 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 public class GeneralUtil {
     public static ResourceLocation mcLoc(String path) {
-        return new ResourceLocation(path);
+        return ResourceLocation.withDefaultNamespace(path);
     }
 
     public static ResourceLocation librariesLoc(String path) {
@@ -21,7 +21,7 @@ public class GeneralUtil {
 
 	@SuppressWarnings("all")
     public static ResourceLocation loc(String namespace, String path) {
-        return new ResourceLocation(namespace, path);
+        return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 
 	public static ResourceLocation loc(String path) {

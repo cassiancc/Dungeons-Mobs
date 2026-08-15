@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.soulcaster;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +28,7 @@ public class SoulCaster implements INBTSerializable<CompoundTag> {
 
     public void setSouls(float amount, @Nullable LivingEntity living) {
         if (living != null) {
-            this.souls = Mth.clamp(amount, 0, (float) living.getAttributeValue(SOUL_CAP.get()));
+            this.souls = Mth.clamp(amount, 0, (float) living.getAttributeValue(SOUL_CAP));
         } else {
             this.souls = Math.max(amount, 0);
         }
@@ -35,14 +36,14 @@ public class SoulCaster implements INBTSerializable<CompoundTag> {
 
     @Nullable
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putFloat("souls", this.getSouls());
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         this.setSouls(tag.getFloat("souls"), null);
     }
 }

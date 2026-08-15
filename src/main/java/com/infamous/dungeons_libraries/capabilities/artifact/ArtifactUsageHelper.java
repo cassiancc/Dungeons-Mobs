@@ -14,7 +14,7 @@ public class ArtifactUsageHelper {
     }
 
     public static boolean startUsingArtifact(Player playerIn, ArtifactUsage cap, ItemStack itemstack) {
-        boolean result = cap.startUsingArtifact(itemstack);
+        boolean result = cap.startUsingArtifact(itemstack, playerIn);
         return result;
     }
 }

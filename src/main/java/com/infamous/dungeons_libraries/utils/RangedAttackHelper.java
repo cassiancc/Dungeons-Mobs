@@ -54,7 +54,7 @@ public class RangedAttackHelper {
 
     public static float getBowChargeTime(LivingEntity livingEntity, ItemStack stack) {
         float defaultChargeTime = stack.getItem() instanceof BowGear ? ((BowGear) stack.getItem()).getDefaultChargeTime() : 20.0F;
-        int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+        int quickChargeLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack, livingEntity.level());
         float minTime = 1;
         BowEvent.ChargeTime event = new BowEvent.ChargeTime(livingEntity, stack, defaultChargeTime);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
@@ -62,7 +62,7 @@ public class RangedAttackHelper {
     }
 
     public static float getVanillaCrossbowChargeTime(@Nullable LivingEntity livingEntity, ItemStack stack) {
-        int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(livingEntity.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.QUICK_CHARGE), stack);
+        int quickChargeLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack, livingEntity.level());
         float minTime = 1;
         CrossbowEvent.ChargeTime event = new CrossbowEvent.ChargeTime(livingEntity, stack, 25.0F);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);

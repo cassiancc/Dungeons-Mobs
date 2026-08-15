@@ -17,10 +17,10 @@ public class SquallGolemRenderer extends GeoEntityRenderer<SquallGolemEntity> {
         super(renderManager, new SquallGolemModel());
     }
 
-    protected void applyRotations(SquallGolemEntity entityLiving, PoseStack matrixStackIn, float ageInTicks,
-                                  float rotationYaw, float partialTicks) {
+    @Override
+    protected void applyRotations(SquallGolemEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         float scaleFactor = 1.0f;
-        matrixStackIn.scale(scaleFactor, scaleFactor, scaleFactor);
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+        poseStack.scale(scaleFactor, scaleFactor, scaleFactor);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
     }
 }

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.capabilities.convertible;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -69,7 +70,7 @@ public class Convertible implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         if (CONVERTIBLE_CAPABILITY == null) {
             return new CompoundTag();
         }
@@ -80,7 +81,7 @@ public class Convertible implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         this.setPrepareConversionTime(tag.getInt("prepareConversionTime"));
         if (tag.contains("DrownedConversionTime", 99) && tag.getInt("conversionTime") > -1) {
             this.startConversion(tag.getInt("conversionTime"));

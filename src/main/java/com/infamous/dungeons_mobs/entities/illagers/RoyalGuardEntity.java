@@ -163,7 +163,7 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
         AttributeInstance modifiableattributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
 
         if (this.isBlocking()) {
-            if (!modifiableattributeinstance.hasModifier(SPEED_MODIFIER_BLOCKING)) {
+            if (!modifiableattributeinstance.hasModifier(SPEED_MODIFIER_BLOCKING.id())) {
                 modifiableattributeinstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
             }
         } else {

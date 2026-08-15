@@ -2,8 +2,8 @@ package com.infamous.dungeons_libraries.summon;
 
 import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.Leader;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
 import com.infamous.dungeons_libraries.entities.ai.goal.MeleeAttackGoal;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
+import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.FOLLOWER_COST_LIMIT;
 import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.*;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 
@@ -28,17 +28,13 @@ public class SummonHelper {
     }
 
     private static boolean canSummonMob(LivingEntity leader, Entity beeEntity, Leader leaderCap) {
-        AttributeInstance summonCapAttribute = leader.getAttribute(SUMMON_CAP.get());
+        AttributeInstance summonCapAttribute = leader.getAttribute(FOLLOWER_COST_LIMIT);
         if (summonCapAttribute == null) return false;
         return leaderCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(BuiltInRegistries.ENTITY_TYPE.getKey(beeEntity.getType())).getCost() <= summonCapAttribute.getValue();
     }
 
-    public static boolean canSummonMob(LivingEntity master, Master masterCap) {
-        return canSummonMob(master, (Leader) masterCap);
-    }
-
     public static boolean canSummonMob(LivingEntity master, Leader leaderCap) {
-        AttributeInstance summonCostLimitAttribute = master.getAttribute(SUMMON_CAP.get());
+        AttributeInstance summonCostLimitAttribute = master.getAttribute(FOLLOWER_COST_LIMIT);
         if (summonCostLimitAttribute == null) return false;
         return leaderCap.getSummonedMobsCost() < summonCostLimitAttribute.getValue();
     }
@@ -81,7 +77,7 @@ public class SummonHelper {
         AttributeInstance attribute = mobEntity.getAttribute(ATTACK_DAMAGE);
         if (attribute == null) return;
         if (attribute.getValue() == 0) {
-            attribute.addTransientModifier(new AttributeModifier("Summon Attack Damage", 1, AttributeModifier.Operation.ADDITION));
+            attribute.addTransientModifier(new AttributeModifier(GeneralUtil.librariesLoc("Summon_attack_damage"), 1, AttributeModifier.Operation.ADD_VALUE));
         }
         mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
     }

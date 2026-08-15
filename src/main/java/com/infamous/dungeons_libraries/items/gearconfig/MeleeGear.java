@@ -12,15 +12,18 @@ import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +32,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
@@ -37,7 +41,7 @@ import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IReloadableGear, IUniqueGear {
 
-    private Multimap<Attribute, AttributeModifier> defaultModifiers;
+    private ItemAttributeModifiers defaultModifiers;
     private MeleeGearConfig meleeGearConfig;
     private float attackDamage;
 
@@ -51,18 +55,18 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ((TieredItemAccessor) this).setTier(meleeGearConfig.getWeaponMaterial());
         ((ItemAccessor) this).setMaxDamage(this.getTier().getUses());
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
-            if (attribute != null) {
+            Optional<Holder.Reference<Attribute>> attribute = ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation());
+            if (attribute.isPresent()) {
                 ResourceLocation uuid = GeneralUtil.librariesLoc("weapon_modifier");
-                if (ATTACK_DAMAGE.equals(attribute)) {
+                if (ATTACK_DAMAGE.equals(attribute.get())) {
                     uuid = BASE_ATTACK_DAMAGE_ID;
                     this.attackDamage = (float) attributeModifier.getAmount() + this.getTier().getAttackDamageBonus();
-                } else if (ATTACK_SPEED.equals(attribute)) {
+                } else if (ATTACK_SPEED.equals(attribute.get())) {
                     uuid = BASE_ATTACK_SPEED_ID;
                 }
-                builder.put(attribute, new AttributeModifier(uuid, attributeModifier.getAmount(), attributeModifier.getOperation()));
+                builder.add(attribute.get(), new AttributeModifier(uuid, attributeModifier.getAmount(), attributeModifier.getOperation()), EquipmentSlotGroup.MAINHAND);
             }
         });
         this.defaultModifiers = builder.build();
@@ -83,8 +87,8 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        return defaultModifiers;
     }
 
     @OnlyIn(Dist.CLIENT)

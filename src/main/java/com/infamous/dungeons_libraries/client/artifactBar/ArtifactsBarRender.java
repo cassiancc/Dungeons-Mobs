@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -31,30 +33,28 @@ public class ArtifactsBarRender {
     private static final ResourceLocation ARTIFACT_BAR_RESOURCE = GeneralUtil.loc(MODID, "textures/gui/artifact_bar.png");
 
     @SubscribeEvent
-    public static void displayArtifactBar(RegisterGuiLayersEvent event) {
+    public static void displayArtifactBar(RenderGuiLayerEvent event) {
         final Minecraft mc = Minecraft.getInstance();
-//        if(mc != null && BuiltInRegistries.ITEM.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
+//        if(mc != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
 
-        event.wrapLayer(GeneralUtil.librariesLoc("artifact"), (arg, arg2) -> {
-            if (mc.getCameraEntity() instanceof Player renderPlayer) {
-                if (renderPlayer == null) return;
-                GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "artifact_bar"));
-                if (guiElementConfig.isHidden()) return;
+        if (event.getLayer().equals(VanillaGuiLayers.HOTBAR) && mc.getCameraEntity() instanceof Player renderPlayer) {
+            if (renderPlayer == null) return;
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(GeneralUtil.loc(MODID, "artifact_bar"));
+            if (guiElementConfig.isHidden()) return;
 
 
-                Window sr = Minecraft.getInstance().getWindow();
-                int scaledWidth = sr.getGuiScaledWidth();
-                int scaledHeight = sr.getGuiScaledHeight();
+            Window sr = Minecraft.getInstance().getWindow();
+            int scaledWidth = sr.getGuiScaledWidth();
+            int scaledHeight = sr.getGuiScaledHeight();
 
-                int x = guiElementConfig.getXPosition(scaledWidth);
-                int y = guiElementConfig.getYPosition(scaledHeight);
+            int x = guiElementConfig.getXPosition(scaledWidth);
+            int y = guiElementConfig.getYPosition(scaledHeight);
 
-                CuriosApi.getCuriosInventory(renderPlayer).ifPresent(iCuriosItemHandler -> {
-                    renderBar(arg, mc, renderPlayer, x, y, iCuriosItemHandler);
-                });
+            CuriosApi.getCuriosInventory(renderPlayer).ifPresent(iCuriosItemHandler -> {
+                renderBar(event.getGuiGraphics(), mc, renderPlayer, x, y, iCuriosItemHandler);
+            });
 
-            }
-        });
+        }
 
 
     }

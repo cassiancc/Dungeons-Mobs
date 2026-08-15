@@ -29,7 +29,7 @@ public class SoundHelper {
     public static void playGenericExplodeSound(Entity soundEmissionTarget) {
         soundEmissionTarget.level().playLocalSound(
                 soundEmissionTarget.getX(), soundEmissionTarget.getY(), soundEmissionTarget.getZ(),
-                SoundEvents.GENERIC_EXPLODE, soundEmissionTarget.getSoundSource(), volumeLimit, (1.0F + (RNG.nextFloat() - RNG.nextFloat()) * 0.2F) * 0.7F, false);
+                SoundEvents.GENERIC_EXPLODE.value(), soundEmissionTarget.getSoundSource(), volumeLimit, (1.0F + (RNG.nextFloat() - RNG.nextFloat()) * 0.2F) * 0.7F, false);
     }
 
     public static void playBoltImpactSound(Entity soundEmissionTarget) {
@@ -70,7 +70,7 @@ public class SoundHelper {
     }
 
     public static void playHornSound(Entity soundEmissionTarget) {
-        soundEmissionTarget.level().playSound(getPlayerFrom(soundEmissionTarget), soundEmissionTarget.blockPosition(), SoundEvents.RAID_HORN.get(), soundEmissionTarget.getSoundSource(), volumeLimit, standardPitch);
+        soundEmissionTarget.level().playSound(getPlayerFrom(soundEmissionTarget), soundEmissionTarget.blockPosition(), SoundEvents.RAID_HORN.value(), soundEmissionTarget.getSoundSource(), volumeLimit, standardPitch);
 
     }
 

@@ -8,7 +8,7 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.PLAYE
 public class PlayerRewardsHelper {
 
     public static PlayerRewards getPlayerRewardsCapability(Player playerEntity) {
-        return playerEntity.getCapability(PLAYER_REWARDS_CAPABILITY).orElse(new PlayerRewards());
+        return playerEntity.getData(PLAYER_REWARDS_CAPABILITY);
     }
 
 }

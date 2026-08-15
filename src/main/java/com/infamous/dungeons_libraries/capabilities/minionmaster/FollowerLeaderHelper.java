@@ -30,11 +30,11 @@ import static com.infamous.dungeons_libraries.utils.PetHelper.canPetAttackEntity
 public class FollowerLeaderHelper {
 
     public static Leader getLeaderCapability(Entity entity) {
-        return entity.getCapability(LEADER_CAPABILITY).orElse(new Leader());
+        return entity.getData(LEADER_CAPABILITY);
     }
 
     public static Follower getFollowerCapability(Entity entity) {
-        return entity.getCapability(FOLLOWER_CAPABILITY).orElse(new Follower());
+        return entity.getData(FOLLOWER_CAPABILITY);
     }
 
     @Nullable
@@ -112,7 +112,7 @@ public class FollowerLeaderHelper {
             mobEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
                     (entityIterator) -> AbilityHelper.isDefaultEnemy(entityIterator) && canPetAttackEntity(mobEntity, entityIterator)));
 
-            minionCap.getLeader().getCapability(ModCapabilities.LEADER_CAPABILITY).ifPresent(leader -> {
+            minionCap.getLeader().getExistingData(ModCapabilities.LEADER_CAPABILITY).ifPresent(leader -> {
                 leader.addFollower(mobEntity);
             });
             SummonHelper.addSummonGoals(mobEntity);

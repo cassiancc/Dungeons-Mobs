@@ -20,7 +20,6 @@ public class AttributeEvents {
 
     @SubscribeEvent
     public static void onEntityAttributeModificationEvent(EntityAttributeModificationEvent event) {
-        addAttributeToAll(event, SUMMON_CAP);
         addAttributeToAll(event, FOLLOWER_COST_LIMIT);
         addAttributeToAll(event, SOUL_GATHERING);
         addAttributeToAll(event, SOUL_CAP);

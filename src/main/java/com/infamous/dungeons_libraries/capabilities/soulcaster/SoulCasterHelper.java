@@ -19,8 +19,8 @@ public class SoulCasterHelper {
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
         float newAmount = soulCasterCapability.getSouls() + amount + 1;
         soulCasterCapability.setSouls(newAmount, le);
-        if (le instanceof ServerPlayer) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
+        if (le instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new UpdateSoulsMessage(soulCasterCapability.getSouls()));
         }
     }
 
@@ -28,8 +28,8 @@ public class SoulCasterHelper {
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
         float newAmount = amount;
         soulCasterCapability.setSouls(newAmount, le);
-        if (le instanceof ServerPlayer) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
+        if (le instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new UpdateSoulsMessage(soulCasterCapability.getSouls()));
         }
     }
 
@@ -40,8 +40,8 @@ public class SoulCasterHelper {
         if (soulCasterCapability.getSouls() < amount) return false;
         float newAmount = soulCasterCapability.getSouls() - amount;
         soulCasterCapability.setSouls(newAmount, le);
-        if (le instanceof ServerPlayer) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
+        if (le instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new UpdateSoulsMessage(soulCasterCapability.getSouls()));
         }
         return true;
     }
@@ -59,6 +59,6 @@ public class SoulCasterHelper {
     }
 
     public static SoulCaster getSoulCasterCapability(Entity entity) {
-        return entity.getCapability(SOUL_CASTER_CAPABILITY).orElse(new SoulCaster());
+        return entity.getData(SOUL_CASTER_CAPABILITY);
     }
 }

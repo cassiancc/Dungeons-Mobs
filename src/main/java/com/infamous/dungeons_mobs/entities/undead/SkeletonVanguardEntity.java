@@ -13,8 +13,6 @@ import com.infamous.dungeons_mobs.interfaces.IShieldUser;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModItems;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -55,16 +53,13 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
 import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
 public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, GeoAnimatable, SpawnArmoredMob, AnimatableMeleeAttackMob {
 
-    private static final UUID SPEED_MODIFIER_BLOCKING_UUID = UUID.fromString("e4c96392-42f5-4028-ac44-cad469c10d51");
-    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_BLOCKING_UUID,
-            "Blocking speed decrease", -0.05D, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(GeneralUtil.mobsLoc("blocking_speed_decrease"), -0.05D, AttributeModifier.Operation.ADD_VALUE);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -114,7 +109,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
 
         if (ModList.get().isLoaded("dungeons_gear")) {
 
-            Item GLAIVE = BuiltInRegistries.ITEM.getValue(GeneralUtil.gearLoc("glaive"));
+            Item GLAIVE = BuiltInRegistries.ITEM.get(GeneralUtil.gearLoc("glaive"));
             ItemStack glaive = new ItemStack(GLAIVE);
 
             SpawnEquipmentHelper.equipMainhand(glaive, this);
@@ -127,10 +122,8 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
 
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance,
-                                        MobSpawnType spawnReason, @Nullable SpawnGroupData livingEntityDataIn,
-                                        @Nullable CompoundTag compoundNBT) {
-        livingEntityDataIn = super.finalizeSpawn(world, difficultyInstance, spawnReason, livingEntityDataIn,
-                compoundNBT);
+                                        MobSpawnType spawnReason, @Nullable SpawnGroupData livingEntityDataIn) {
+        livingEntityDataIn = super.finalizeSpawn(world, difficultyInstance, spawnReason, livingEntityDataIn);
 
         return livingEntityDataIn;
     }
@@ -169,7 +162,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
         AttributeInstance modifiableattributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
 
         if (this.isBlocking()) {
-            if (!modifiableattributeinstance.hasModifier(SPEED_MODIFIER_BLOCKING)) {
+            if (!modifiableattributeinstance.hasModifier(SPEED_MODIFIER_BLOCKING.id())) {
                 modifiableattributeinstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
             }
         } else {
@@ -266,10 +259,7 @@ public class SkeletonVanguardEntity extends Skeleton implements IShieldUser, Geo
             if (amount >= 3.0F) {
                 int i = 1 + Mth.floor(amount);
                 InteractionHand hand = this.getUsedItemHand();
-                this.useItem.hurtAndBreak(i, this, (skeletonVanguardEntity) -> {
-                    skeletonVanguardEntity.broadcastBreakEvent(hand);
-                    // Forge would have called onPlayerDestroyItem here
-                });
+                this.useItem.hurtAndBreak(i, this, LivingEntity.getSlotForHand(hand));
                 if (this.useItem.isEmpty()) {
                     if (hand == InteractionHand.MAIN_HAND) {
                         this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);

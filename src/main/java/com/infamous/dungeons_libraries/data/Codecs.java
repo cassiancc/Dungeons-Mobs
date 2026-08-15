@@ -3,23 +3,21 @@ package com.infamous.dungeons_libraries.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
-import static net.minecraft.core.registries.Registries.ENCHANTMENT;
-
 public class Codecs {
 
 
     public static final Codec<EnchantmentInstance> ENCHANTMENT_DATA_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("enchantment").forGetter(data -> ENCHANTMENT.getKey(data.enchantment)),
+            Enchantment.CODEC.fieldOf("enchantment").forGetter(data -> data.enchantment),
             Codec.INT.fieldOf("level").forGetter(data -> data.level)
     ).apply(instance, Codecs::getEnchantmentInstance));
 
-    private static EnchantmentInstance getEnchantmentInstance(ResourceLocation resourceLocation, int level) {
-        Enchantment enchantment = ENCHANTMENTS.getValue(resourceLocation);
+    private static EnchantmentInstance getEnchantmentInstance(Holder<Enchantment> enchantment, int level) {
         return new EnchantmentInstance(enchantment, level);
     }
 

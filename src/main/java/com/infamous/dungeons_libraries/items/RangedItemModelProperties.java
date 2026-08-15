@@ -65,7 +65,7 @@ public class RangedItemModelProperties {
     private static float getCrossbowPullProperty(ItemStack stack, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity == null || CrossbowItem.isCharged(stack)) {
             return 0.0F;
-        } else return (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
+        } else return (stack.getUseDuration(livingEntity) - livingEntity.getUseItemRemainingTicks())
                 / getCrossbowChargeTime(livingEntity, stack);
     }
 
@@ -84,7 +84,7 @@ public class RangedItemModelProperties {
         if (livingEntity == null || livingEntity.getUseItem() != stack) {
             return 0.0F;
         } else {
-            return (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
+            return (stack.getUseDuration(livingEntity) - livingEntity.getUseItemRemainingTicks())
                     / RangedAttackHelper.getBowChargeTime(livingEntity, livingEntity.getUseItem());
         }
     }

@@ -9,17 +9,22 @@ import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.CrossbowItemInvoker;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
+import com.infamous.dungeons_libraries.utils.EnchantmentUtil;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -35,7 +40,7 @@ import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
-    private Multimap<Attribute, AttributeModifier> defaultModifiers;
+    private ItemAttributeModifiers defaultModifiers;
     private BowGearConfig crossbowGearConfig;
 
     public CrossbowGear(Properties builder) {
@@ -46,28 +51,18 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
     @Override
     public void reload() {
         crossbowGearConfig = CrossbowGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         crossbowGearConfig.getAttributes().forEach(attributeModifier -> {
-            Attribute attribute = ATTRIBUTE.get(attributeModifier.getAttributeResourceLocation());
-            if (attribute != null) {
-                ResourceLocation uuid = randomUUID();
-                if (ATTACK_DAMAGE.equals(attribute)) {
-                    uuid = BASE_ATTACK_DAMAGE_ID;
-                } else if (ATTACK_SPEED.equals(attribute)) {
-                    uuid = BASE_ATTACK_SPEED_ID;
-                }
-                builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
-            }
-        });
+			ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).ifPresent(attribute -> builder.add(attribute, new AttributeModifier(GeneralUtil.librariesLoc("weapon_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation()), EquipmentSlotGroup.HAND));
+		});
         this.defaultModifiers = builder.build();
         ((ItemAccessor) this).setMaxDamage(crossbowGearConfig.getDurability());
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        return defaultModifiers;
     }
-
 
     public float getDefaultChargeTime() {
         return this.crossbowGearConfig.getDefaultChargeTime();
@@ -76,12 +71,12 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
     @Override
     public void onUseTick(Level world, LivingEntity livingEntity, ItemStack stack, int timeLeft) {
         if (!world.isClientSide) {
-            int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+            int quickChargeLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack, world);
 
             CrossbowItemInvoker crossbowItemInvoker = (CrossbowItemInvoker) this;
             SoundEvent quickChargeSoundEvent = crossbowItemInvoker.callGetStartSound(quickChargeLevel);
-            SoundEvent loadingMiddleSoundEvent = quickChargeLevel == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
-            float chargeTime = (float) (stack.getUseDuration() - timeLeft) / this.getCrossbowChargeTime(livingEntity, stack);
+            SoundEvent loadingMiddleSoundEvent = quickChargeLevel == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE.value() : null;
+            float chargeTime = (float) (stack.getUseDuration(livingEntity) - timeLeft) / this.getCrossbowChargeTime(livingEntity, stack);
             if (chargeTime < 0.2F) {
                 crossbowItemInvoker.setStartSoundPlayed(false);
                 crossbowItemInvoker.setMidLoadSoundPlayed(false);
@@ -125,7 +120,7 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
     }
 
     public float getCrossbowChargeTime(@Nullable LivingEntity livingEntity, ItemStack stack) {
-        int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+        int quickChargeLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack, livingEntity.level());
         float minTime = 1;
         CrossbowEvent.ChargeTime event = new CrossbowEvent.ChargeTime(livingEntity, stack, this.getDefaultChargeTime());
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
@@ -133,13 +128,8 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
-        return (int) getCrossbowChargeTime(null, stack) + 3;
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack pStack) {
-        return getGearConfig().getRarity();
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return (int) getCrossbowChargeTime(entity, stack) + 3;
     }
 
     @Override

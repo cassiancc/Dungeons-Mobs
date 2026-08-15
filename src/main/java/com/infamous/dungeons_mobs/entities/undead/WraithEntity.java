@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -99,7 +100,7 @@ public class WraithEntity extends Monster implements GeoAnimatable {
         if (super.isAlliedTo(entityIn)) {
             return true;
         } else if (entityIn instanceof LivingEntity
-                && ((LivingEntity) entityIn).getMobCategory() == MobCategory.UNDEAD) {
+                && ((LivingEntity) entityIn).getType().is(EntityTypeTags.UNDEAD)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;

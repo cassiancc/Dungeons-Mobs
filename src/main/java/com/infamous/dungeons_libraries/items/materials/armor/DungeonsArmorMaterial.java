@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.items.materials.armor;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.LazyLoadedValue;
@@ -19,15 +20,15 @@ import static net.minecraft.core.registries.BuiltInRegistries.ITEM;
 
 public class DungeonsArmorMaterial {
 
-    public static final Codec<ArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<DungeonsArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getName()),
             Codec.INT.fieldOf("durability").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).durability),
             Codec.INT.listOf().fieldOf("damage_reduction_amounts").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).damageReductionAmounts),
-            Codec.INT.fieldOf("enchantability").forGetter(iArmorMaterial -> iArmorMaterial.getEnchantmentValue()),
+            Codec.INT.fieldOf("enchantability").forGetter(iArmorMaterial -> iArmorMaterial.value().enchantmentValue()),
             ResourceLocation.CODEC.fieldOf("repair_item").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).repairItemResourceLocation),
             BuiltInRegistries.SOUND_EVENT.byNameCodec().fieldOf("equip_sound").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEquipSound()),
-            Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> iArmorMaterial.getToughness()),
-            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> iArmorMaterial.getKnockbackResistance()),
+            Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> iArmorMaterial.value().toughness()),
+            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> iArmorMaterial.value().knockbackResistance()),
             ArmorMaterialBaseType.CODEC.fieldOf("base_type").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).baseType)
     ).apply(instance, DungeonsArmorMaterial::new));
 

@@ -32,7 +32,7 @@ public class ItemEvents {
             float originalDamage = event.getOriginalDamage();
 
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-            AttributeInstance magicDamageMultiplierAttribute = attacker.getAttribute(MAGIC_DAMAGE_MULTIPLIER.get());
+            AttributeInstance magicDamageMultiplierAttribute = attacker.getAttribute(MAGIC_DAMAGE_MULTIPLIER);
             double attributeModifier = magicDamageMultiplierAttribute != null ? magicDamageMultiplierAttribute.getValue() : 1.0D;
             double additionalDamage = originalDamage * attributeModifier;
 

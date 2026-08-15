@@ -11,10 +11,12 @@ import com.infamous.dungeons_mobs.goals.BasicModdedAttackGoal;
 import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.mod.ModItems;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -36,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -79,9 +82,10 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, Ge
         return new WallClimberNavigation(this, p_175447_1_);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_FLAGS_ID, (byte) 0);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_FLAGS_ID, (byte) 0);
     }
 
     public void tick() {
@@ -145,15 +149,15 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, Ge
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_,
-                                        MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_, @Nullable CompoundTag p_213386_5_) {
-        SpawnGroupData iLivingEntityData = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_,
-                p_213386_5_);
+                                        MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_) {
+        SpawnGroupData iLivingEntityData = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_);
         this.populateDefaultEquipmentSlots(this.getRandom(), p_213386_2_);
-        this.populateDefaultEquipmentEnchantments(this.getRandom(), p_213386_2_);
+        this.populateDefaultEquipmentEnchantments(p_213386_1_, this.getRandom(), p_213386_2_);
         return iLivingEntityData;
     }
 
-    public void applyRaidBuffs(int waveNumber, boolean bool) {
+    @Override
+    public void applyRaidBuffs(ServerLevel level, int waveNumber, boolean unused) {
         ItemStack itemStack = new ItemStack(ModItems.MOUNTAINEER_AXE.get());
         Raid raid = this.getCurrentRaid();
         int i = 1;
@@ -166,9 +170,9 @@ public class MountaineerEntity extends Vindicator implements SpawnArmoredMob, Ge
             flag = this.random.nextFloat() <= raid.getEnchantOdds();
         }
         if (flag) {
-            Map<Enchantment, Integer> map = Maps.newHashMap();
-            map.put(Enchantments.SHARPNESS, i);
-            EnchantmentHelper.setEnchantments(map, itemStack);
+            ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(itemStack.getEnchantments());
+            enchantments.set(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SHARPNESS), i);
+            EnchantmentHelper.setEnchantments(itemStack, enchantments.toImmutable());
         }
 
         SpawnEquipmentHelper.equipMainhand(itemStack, this);

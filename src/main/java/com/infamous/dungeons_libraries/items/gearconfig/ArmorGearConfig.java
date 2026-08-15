@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMateri
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Rarity;
@@ -49,7 +50,7 @@ public class ArmorGearConfig {
         return builtInEnchantments;
     }
 
-    public ArmorMaterial getArmorMaterial() {
+    public Holder<ArmorMaterial> getArmorMaterial() {
         return DungeonsArmorMaterials.getArmorMaterial(materialResource);
     }
 
