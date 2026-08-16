@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
@@ -190,7 +191,7 @@ public class NecromancerOrbEntity extends StraightMovingProjectileEntity impleme
     }
 
     public void onHitEntity(Entity entity) {
-        if (entity instanceof Mob && ((Mob) entity).getMobCategory() == MobCategory.UNDEAD) {
+        if (entity instanceof Mob && ((Mob) entity).getType().is(EntityTypeTags.UNDEAD)) {
 
         } else if (!this.level().isClientSide) {
             super.onHitEntity(entity);

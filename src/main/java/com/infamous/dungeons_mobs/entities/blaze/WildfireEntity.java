@@ -120,7 +120,8 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
         if (this.isAlive()) {
             for (Entity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(5.0D), NO_BLAZE_AND_ALIVE)) {
                 entity.hurt(entity.damageSources().mobAttack(this), 7.0F);
-                entity.setSecondsOnFire(3);
+                entity.setSharedFlagOnFire(true);
+                entity.setRemainingFireTicks(3*20);
 
                 this.strongKnockback(entity);
             }
@@ -136,13 +137,13 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_,
-                                        MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_, CompoundTag p_213386_5_) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyInstance,
+                                        MobSpawnType mobSpawnType, SpawnGroupData spawnGroupData) {
         this.setShieldHealth(individualShieldHealth * 4);
         this.setShields(4);
-        this.populateDefaultEquipmentSlots(this.getRandom(), p_213386_2_);
-        this.populateDefaultEquipmentEnchantments(this.getRandom(), p_213386_2_);
-        return super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+        this.populateDefaultEquipmentSlots(this.getRandom(), difficultyInstance);
+        this.populateDefaultEquipmentEnchantments(level, this.getRandom(), difficultyInstance);
+        return super.finalizeSpawn(level, difficultyInstance, mobSpawnType, spawnGroupData);
     }
 
     @Override
@@ -470,7 +471,7 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
                     }
 
                     summonedMob.setTarget(target);
-                    summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null, null);
+                    summonedMob.finalizeSpawn(((ServerLevel) mob.level()), mob.level().getCurrentDifficultyAt(summonPos), MobSpawnType.MOB_SUMMONED, null);
                     blazeSummonSpot.playSound(ModSoundEvents.NECROMANCER_SUMMON.get(), 1.0F, 1.0F);
                     if (mob.getTeam() != null) {
                         Scoreboard scoreboard = mob.level().getScoreboard();
@@ -601,7 +602,7 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
                 double d1 = target.getX() - mob.getX();
                 double d2 = target.getY(0.5D) - mob.getY(0.75D);
                 double d3 = target.getZ() - mob.getZ();
-                SmallFireball smallfireballentity = new SmallFireball(mob.level(), mob, d1, d2, d3);
+                SmallFireball smallfireballentity = new SmallFireball(mob.level(), mob, new Vec3(d1, d2, d3));
                 smallfireballentity.setPos(smallfireballentity.getX(), mob.getY(0.5D) + 0.5D, smallfireballentity.getZ());
                 mob.level().addFreshEntity(smallfireballentity);
                 mob.playSound(ModSoundEvents.WILDFIRE_SHOOT.get(), 1.0F, 1.0F);

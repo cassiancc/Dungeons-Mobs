@@ -24,6 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -44,11 +45,11 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
     }
 
     public SlimeballEntity(Level world, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(ModEntityTypes.SLIMEBALL.get(), x, y, z, accelX, accelY, accelZ, world);
+        super(ModEntityTypes.SLIMEBALL.get(), x, y, z, new Vec3(accelX, accelY, accelZ), world);
     }
 
     public SlimeballEntity(Level world, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(ModEntityTypes.SLIMEBALL.get(), shooter, accelX, accelY, accelZ, world);
+        super(ModEntityTypes.SLIMEBALL.get(), shooter,new Vec3(accelX, accelY, accelZ), world);
     }
 
     public void setStack(ItemStack stack) {

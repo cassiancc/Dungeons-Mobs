@@ -1,9 +1,13 @@
 package com.infamous.dungeons_mobs.network.message;
 
+import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.capabilities.ancient.Ancient;
 import com.infamous.dungeons_mobs.capabilities.ancient.AncientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.fml.LogicalSide;
@@ -11,7 +15,11 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.function.Supplier;
 
-public class AncientMessage {
+public class AncientMessage implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<AncientMessage> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("ancient_message"));
+    public static final StreamCodec<FriendlyByteBuf, AncientMessage> STREAM_CODEC = StreamCodec.ofMember(
+            AncientMessage::encode, AncientMessage::decode
+    );
     private final int entityId;
     private final boolean ancient;
 
@@ -44,5 +52,10 @@ public class AncientMessage {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeInt(this.entityId);
         buffer.writeBoolean(ancient);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

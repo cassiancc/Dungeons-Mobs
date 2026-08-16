@@ -338,8 +338,4 @@ public abstract class StraightMovingProjectileEntity extends Projectile {
     public float getBrightness() {
         return 1.0F;
     }
-
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 }

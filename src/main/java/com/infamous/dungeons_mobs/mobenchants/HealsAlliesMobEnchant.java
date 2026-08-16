@@ -19,12 +19,12 @@ public class HealsAlliesMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingDamageEvent.Post event) {
         LivingEntity defender = event.getEntity();
         executeIfPresentWithLevel(defender, HEALS_ALLIES.get(), (level) -> {
             applyToNearbyEntities(defender, 1.5F,
                     getCanHealPredicate(defender), (LivingEntity nearbyEntity) ->
-                            nearbyEntity.heal(event.getAmount() * HEAL_PERCENTAGE * level)
+                            nearbyEntity.heal(event.getOriginalDamage() * HEAL_PERCENTAGE * level)
             );
         });
     }

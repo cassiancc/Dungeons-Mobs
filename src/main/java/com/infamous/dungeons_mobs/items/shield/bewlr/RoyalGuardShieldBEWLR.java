@@ -43,12 +43,12 @@ public class RoyalGuardShieldBEWLR extends BlockEntityWithoutLevelRenderer {
 
         Material material = flag ? LOCATION_ROYAL_GUARD_SHIELD_BASE : LOCATION_ROYAL_GUARD_SHIELD_NO_PATTERN;
         VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer, this.royalGuardShieldModel.renderType(material.atlasLocation()), true, stack.hasFoil()));
-        this.royalGuardShieldModel.handle().render(matrixStack, vertexconsumer, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.royalGuardShieldModel.handle().render(matrixStack, vertexconsumer, combinedLight, combinedOverlay, -1);
         if (flag) {
             List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity.createPatterns(ShieldItem.getColor(stack), BannerBlockEntity.getItemPatterns(stack));
             BannerRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay, this.royalGuardShieldModel.plate(), material, false, list, stack.hasFoil());
         } else {
-            this.royalGuardShieldModel.plate().render(matrixStack, vertexconsumer, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.royalGuardShieldModel.plate().render(matrixStack, vertexconsumer, combinedLight, combinedOverlay, -1);
         }
 
         matrixStack.popPose();

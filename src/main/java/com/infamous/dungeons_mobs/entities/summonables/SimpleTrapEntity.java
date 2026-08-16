@@ -34,8 +34,8 @@ public class SimpleTrapEntity extends AbstractTrapEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(TRAP_TYPE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(TRAP_TYPE, 0);
     }
 
     @Override

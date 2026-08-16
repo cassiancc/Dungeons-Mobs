@@ -27,6 +27,6 @@ public class MageArmorGearRenderer extends ArmorGearRenderer<MageArmorGear> {
         if (geoModelProvider instanceof MageArmorGearModel) {
             ((MageArmorGearModel<MageArmorGear>) geoModelProvider).setWearer(this.livingEntity);
         }
-        super.renderRecursively(poseStack, animatable, getBodyBone(), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.renderRecursively(poseStack, animatable, getBodyBone(model), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }

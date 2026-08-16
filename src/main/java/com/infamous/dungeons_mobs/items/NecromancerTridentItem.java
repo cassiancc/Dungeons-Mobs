@@ -9,6 +9,7 @@ import com.infamous.dungeons_mobs.mod.ModEntityTypes;
 import com.infamous.dungeons_mobs.network.NetworkHandler;
 import com.infamous.dungeons_mobs.utils.PositionUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +41,7 @@ public class NecromancerTridentItem extends ArtifactItem implements IHasInventor
                     itemUseContextPlayer.level().addFreshEntity(tridentStorm);
                     PositionUtils.moveToCorrectHeight(tridentStorm);
                 }
-                itemUseContextItem.hurtAndBreak(1, itemUseContextPlayer, (entity) -> NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), new BreakItemMessage(entity.getId(), itemUseContextItem)));
+                itemUseContextItem.hurtAndBreak(1, (ServerLevel) world, itemUseContextPlayer, (item) -> PacketDistributor.sendToPlayersTrackingEntityAndSelf(itemUseContextPlayer, new BreakItemMessage(itemUseContextPlayer.getId(), itemUseContextItem)));
                 ArtifactItem.putArtifactOnCooldown(itemUseContextPlayer, itemUseContextItem.getItem());
             }
             return InteractionResultHolder.consume(itemUseContextItem);

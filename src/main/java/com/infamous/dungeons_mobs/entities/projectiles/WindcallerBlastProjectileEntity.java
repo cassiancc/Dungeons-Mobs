@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class WindcallerBlastProjectileEntity extends AbstractHurtingProjectile {
 
@@ -27,13 +28,13 @@ public class WindcallerBlastProjectileEntity extends AbstractHurtingProjectile {
         this.setNoGravity(true);
     }
 
-    public WindcallerBlastProjectileEntity(Level p_i1771_1_, LivingEntity p_i1771_2_, double p_i1771_3_, double p_i1771_5_, double p_i1771_7_) {
-        super(ModEntityTypes.WINDCALLER_BLAST_PROJECTILE.get(), p_i1771_2_, p_i1771_3_, p_i1771_5_, p_i1771_7_, p_i1771_1_);
+    public WindcallerBlastProjectileEntity(Level level, LivingEntity livingEntity, double x, double y, double z) {
+        super(ModEntityTypes.WINDCALLER_BLAST_PROJECTILE.get(), livingEntity, new Vec3(x, y, z), level);
         this.setNoGravity(true);
     }
 
-    public WindcallerBlastProjectileEntity(Level p_i1772_1_, double p_i1772_2_, double p_i1772_4_, double p_i1772_6_, double p_i1772_8_, double p_i1772_10_, double p_i1772_12_) {
-        super(ModEntityTypes.WINDCALLER_BLAST_PROJECTILE.get(), p_i1772_2_, p_i1772_4_, p_i1772_6_, p_i1772_8_, p_i1772_10_, p_i1772_12_, p_i1772_1_);
+    public WindcallerBlastProjectileEntity(Level level, double p_i1772_2_, double p_i1772_4_, double p_i1772_6_, double p_i1772_8_, double p_i1772_10_, double p_i1772_12_) {
+        super(ModEntityTypes.WINDCALLER_BLAST_PROJECTILE.get(), p_i1772_2_, p_i1772_4_, p_i1772_6_, new Vec3(p_i1772_8_, p_i1772_10_, p_i1772_12_), level);
         this.setNoGravity(true);
     }
 

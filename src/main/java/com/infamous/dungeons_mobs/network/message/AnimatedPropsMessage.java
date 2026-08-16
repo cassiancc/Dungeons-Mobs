@@ -1,9 +1,13 @@
 package com.infamous.dungeons_mobs.network.message;
 
+import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.capabilities.animatedprops.AnimatedProps;
 import com.infamous.dungeons_mobs.capabilities.animatedprops.AnimatedPropsHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.neoforged.fml.LogicalSide;
@@ -11,7 +15,11 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.function.Supplier;
 
-public class AnimatedPropsMessage {
+public class AnimatedPropsMessage implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<AnimatedPropsMessage> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("animated_props"));
+    public static final StreamCodec<FriendlyByteBuf, AnimatedPropsMessage> STREAM_CODEC = StreamCodec.ofMember(
+            AnimatedPropsMessage::encode, AnimatedPropsMessage::decode
+    );
     private final int entityId;
     private final AnimatedProps cap;
 
@@ -49,5 +57,10 @@ public class AnimatedPropsMessage {
         buffer.writeInt(cap.getAttackAnimationTick());
         buffer.writeInt(cap.getAttackAnimationLength());
         buffer.writeInt(cap.getAttackAnimationActionPoint());
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

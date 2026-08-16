@@ -23,8 +23,8 @@ import java.util.function.Supplier;
 
 public record CuriosArtifactStartMessage(int slot, BlockHitResult hitResult) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<CuriosArtifactStartMessage> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("curios_artifact_start"));
-    public static final StreamCodec<FriendlyByteBuf, CuriosArtifactStartMessage> STREAM_CODEC = Packet.codec(
-            CuriosArtifactStartMessage::decode, CuriosArtifactStartMessage::new
+    public static final StreamCodec<FriendlyByteBuf, CuriosArtifactStartMessage> STREAM_CODEC = StreamCodec.ofMember(
+            CuriosArtifactStartMessage::encode, CuriosArtifactStartMessage::decode
     );
 
     public static void encode(CuriosArtifactStartMessage packet, FriendlyByteBuf buf) {

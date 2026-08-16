@@ -10,7 +10,9 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -68,11 +70,11 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
         return Monster.createMonsterAttributes().add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 14.0D);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACK_TICKS, 0);
-        this.entityData.define(ENCHANT_TICKS, 0);
-        this.entityData.define(ENCHANTMENT_TARGETS, new ObjectArrayList<>());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ATTACK_TICKS, 0);
+        builder.define(ENCHANT_TICKS, 0);
+        builder.define(ENCHANTMENT_TARGETS, new ObjectArrayList<>());
     }
 
     public int getAttackTicks() {
@@ -199,7 +201,7 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
     public boolean isAlliedTo(Entity entityIn) {
         if (super.isAlliedTo(entityIn)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getMobCategory() == MobCategory.ILLAGER) {
+        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getType().is(EntityTypeTags.ILLAGER)) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -207,7 +209,7 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
     }
 
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
 
     }
 
@@ -312,8 +314,8 @@ public class EnchanterEntity extends SpellcasterIllager implements GeoAnimatable
             if (selectedMonsterEntity != null && selectedMonsterEntity.isAlive()) {
                 if (selectedMonsterEntity instanceof IEnchantCap enchantCap) {
                     MobEnchantCapability cap = enchantCap.getEnchantCap();
-                    cap.addMobEnchant(selectedMonsterEntity, STRONG.get(), 2);
-                    cap.addMobEnchant(selectedMonsterEntity, PROTECTION.get(), 2);
+                    cap.addMobEnchant(selectedMonsterEntity, STRONG, 2);
+                    cap.addMobEnchant(selectedMonsterEntity, PROTECTION, 2);
                     selectedMonsterEntity.refreshDimensions();
                 }
                 EnchanterEntity.this.addEnchantmentTarget(selectedMonsterEntity);

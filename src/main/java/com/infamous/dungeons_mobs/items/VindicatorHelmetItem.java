@@ -1,6 +1,9 @@
 package com.infamous.dungeons_mobs.items;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import com.infamous.dungeons_mobs.client.models.armor.VindicatorHelmetModel;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +22,7 @@ import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.VINDI
 public class VindicatorHelmetItem extends ArmorItem {
     private final boolean isDiamond;
 
-    public VindicatorHelmetItem(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builderIn, boolean isDiamondIn) {
+    public VindicatorHelmetItem(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, Properties builderIn, boolean isDiamondIn) {
         super(materialIn, slot, builderIn);
         this.isDiamond = isDiamondIn;
     }
@@ -42,13 +45,12 @@ public class VindicatorHelmetItem extends ArmorItem {
         });
     }
 
-    @Nullable
-    @Override
     @OnlyIn(Dist.CLIENT)
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (this.isDiamond) {
-            return MODID + ":textures/models/armor/diamond_vindicator_helmet.png";
+            return GeneralUtil.mobsLoc("textures/models/armor/diamond_vindicator_helmet.png");
         }
-        return MODID + ":textures/models/armor/gold_vindicator_helmet.png";
+        return GeneralUtil.mobsLoc("textures/models/armor/gold_vindicator_helmet.png");
     }
 }

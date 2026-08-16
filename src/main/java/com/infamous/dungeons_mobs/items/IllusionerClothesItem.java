@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.items;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -17,7 +18,7 @@ import static software.bernie.geckolib.animation.Animation.LoopType.LOOP;
 
 public class IllusionerClothesItem extends ArmorItem implements GeoItem, GeoAnimatable {
 
-    public IllusionerClothesItem(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builderIn) {
+    public IllusionerClothesItem(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, Properties builderIn) {
         super(materialIn, slot, builderIn);
     }
 

@@ -27,6 +27,6 @@ public class IceologerArmorGearRenderer extends ArmorGearRenderer<IceologerArmor
         if (geoModelProvider instanceof IceologerArmorGearModel) {
             ((IceologerArmorGearModel<IceologerArmorGear>) geoModelProvider).setWearer(this.livingEntity);
         }
-        super.renderRecursively(poseStack, animatable, getBodyBone(), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.renderRecursively(poseStack, animatable, getBodyBone(model), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }
