@@ -49,6 +49,6 @@ public record ArmorGearConfigSyncPacket(Map<ResourceLocation, ArmorGearConfig> d
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return type();
+        return TYPE;
     }
 }

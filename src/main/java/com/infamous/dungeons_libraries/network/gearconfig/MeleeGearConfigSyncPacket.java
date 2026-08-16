@@ -49,6 +49,6 @@ public record MeleeGearConfigSyncPacket(Map<ResourceLocation, MeleeGearConfig> d
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return type();
+        return TYPE;
     }
 }

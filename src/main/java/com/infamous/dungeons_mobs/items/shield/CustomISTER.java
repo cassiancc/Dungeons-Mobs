@@ -121,7 +121,7 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
     public static ModelResourceLocation getTridentMRL(DyeColor dyeColor, boolean inHand) {
         String path = String.format("%s_trident%s", dyeColor.getName(), inHand ? "_in_hand" : "");
         ResourceLocation resourceLoc = GeneralUtil.mobsLoc( path);
-        return new ModelResourceLocation(resourceLoc, "inventory");
+        return new ModelResourceLocation(resourceLoc, "standalone");
     }
 
 }

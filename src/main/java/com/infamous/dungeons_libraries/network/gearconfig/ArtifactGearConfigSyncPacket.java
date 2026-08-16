@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.reloadAllItems;
 
 public record ArtifactGearConfigSyncPacket(Map<ResourceLocation, ArtifactGearConfig> data) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<ArtifactGearConfigSyncPacket> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("elite_mob"));
+    public static final CustomPacketPayload.Type<ArtifactGearConfigSyncPacket> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("artifact_gear"));
 
 
     private static final Codec<Map<ResourceLocation, ArtifactGearConfig>> MAPPER =

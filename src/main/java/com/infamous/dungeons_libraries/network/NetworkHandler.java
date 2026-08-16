@@ -9,11 +9,13 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class NetworkHandler {
     public static PayloadRegistrar INSTANCE;
+    private static boolean registered;
 
     public NetworkHandler() {
     }
 
     public static void init(PayloadRegistrar registrar) {
+        if (registered) return; // fixme 1.21
         INSTANCE = registrar;
         INSTANCE.commonBidirectional(UpdateSoulsMessage.TYPE, UpdateSoulsMessage.STREAM_CODEC, UpdateSoulsMessage.UpdateSoulsHandler::handle);
         INSTANCE.commonBidirectional(ArmorGearConfigSyncPacket.TYPE, ArmorGearConfigSyncPacket.STREAM_CODEC, ArmorGearConfigSyncPacket::onPacketReceived);
@@ -28,5 +30,6 @@ public class NetworkHandler {
         INSTANCE.playBidirectional(BreakItemMessage.TYPE, BreakItemMessage.STREAM_CODEC, BreakItemMessage.BreakItemHandler::handle);
         INSTANCE.playBidirectional(SwitchHandMessage.TYPE, SwitchHandMessage.STREAM_CODEC, SwitchHandMessage.SwitchHandHandler::handle);
         INSTANCE.commonBidirectional(ArtifactGearConfigSyncPacket.TYPE, ArtifactGearConfigSyncPacket.STREAM_CODEC, ArtifactGearConfigSyncPacket::onPacketReceived);
+        registered = true;
     }
 }
