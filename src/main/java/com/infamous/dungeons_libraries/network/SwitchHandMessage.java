@@ -14,11 +14,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.function.Supplier;
 
 public class SwitchHandMessage implements CustomPacketPayload {
+    public static SwitchHandMessage INSTANCE = new SwitchHandMessage();
     public static final CustomPacketPayload.Type<SwitchHandMessage> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("switch_hand"));
     public static final StreamCodec<ByteBuf, SwitchHandMessage> STREAM_CODEC =
-            StreamCodec.unit(new SwitchHandMessage());
+            StreamCodec.unit(INSTANCE);
 
-    public SwitchHandMessage() {
+    private SwitchHandMessage() {
     }
 
     public static void encode(SwitchHandMessage packet, FriendlyByteBuf buf) {
@@ -26,7 +27,7 @@ public class SwitchHandMessage implements CustomPacketPayload {
     }
 
     public static SwitchHandMessage decode(FriendlyByteBuf buf) {
-        return new SwitchHandMessage();
+        return INSTANCE;
     }
 
     @Override

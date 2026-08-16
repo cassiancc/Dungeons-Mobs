@@ -13,10 +13,11 @@ import java.util.function.Supplier;
 
 public class CuriosArtifactStopMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<CuriosArtifactStopMessage> TYPE = new CustomPacketPayload.Type<>(GeneralUtil.librariesLoc("curios_artifact_stop"));
+    public static final CuriosArtifactStopMessage INSTANCE = new CuriosArtifactStopMessage();
     public static final StreamCodec<ByteBuf, CuriosArtifactStopMessage> STREAM_CODEC =
-            StreamCodec.unit(new CuriosArtifactStopMessage());
+            StreamCodec.unit(INSTANCE);
 
-    public CuriosArtifactStopMessage() {
+    private CuriosArtifactStopMessage() {
     }
 
     public void encode(FriendlyByteBuf buf) {
@@ -24,7 +25,7 @@ public class CuriosArtifactStopMessage implements CustomPacketPayload {
     }
 
     public static CuriosArtifactStopMessage decode(FriendlyByteBuf buf) {
-        return new CuriosArtifactStopMessage();
+        return INSTANCE;
     }
 
     public static void handle(CuriosArtifactStopMessage packet, IPayloadContext ctx) {

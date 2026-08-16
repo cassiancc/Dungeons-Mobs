@@ -1,18 +1,18 @@
 {
-  "type": "forge:add_spawns",
+  "type": "neoforge:add_spawns",
   "biomes": {
-  "type": "forge:and",
+  "type": "neoforge:and",
   "values": [
     "#minecraft:is_end",
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": "minecraft:the_end"
     }
   ]
 },
   "spawners": {
-    "type": "dungeons_mobs:endersent",
-    "weight": 1,
+    "type": "dungeons_mobs:blastling",
+    "weight": 30,
     "minCount": 1,
     "maxCount": 1
   }

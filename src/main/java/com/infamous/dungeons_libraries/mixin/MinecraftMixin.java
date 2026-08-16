@@ -30,7 +30,7 @@ public class MinecraftMixin {
             method = "startAttack()Z")
     private void dungeons_libraries_startAttack_onSwing(CallbackInfoReturnable<Boolean> cir) {
         if (SHOULD_SWITCH_HAND) {
-            PacketDistributor.sendToServer(new SwitchHandMessage());
+            PacketDistributor.sendToServer(SwitchHandMessage.INSTANCE);
             SHOULD_SWITCH_HAND = false;
         }
     }

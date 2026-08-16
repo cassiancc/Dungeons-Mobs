@@ -1,5 +1,5 @@
 {
-  "type": "dungeons_mobs:add_spawns",
+  "type": "neoforge:add_spawns",
   "structures": "minecraft:desert_pyramid",
   "spawners": {
     "type": "dungeons_mobs:skeleton_vanguard",
