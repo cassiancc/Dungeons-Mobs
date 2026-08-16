@@ -19,7 +19,7 @@ public class RegenerationMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void onLivingUpdate(EntityTickEvent event) {
+    public static void onLivingUpdate(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity livingEntity) {
             executeIfPresentWithLevel(livingEntity, REGENERATION, (level) -> {

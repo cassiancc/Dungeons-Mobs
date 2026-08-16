@@ -33,7 +33,7 @@ public class GeneralUtil {
 	}
 
 	public static ResourceLocation parse(String string) {
-		return mcLoc(string);
+		return ResourceLocation.parse(string);
 	}
 
     public static ResourceLocation forgeLoc(String path) {

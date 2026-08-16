@@ -12,7 +12,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.minecraft.core.registries.BuiltInRegistries;
 
-@EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class DualWieldHandler {
     public static void switchHand(ServerPlayer player) {
         if (!DungeonsLibrariesConfig.ENABLE_DUAL_WIELDING.get()) return;

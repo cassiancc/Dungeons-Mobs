@@ -6,7 +6,6 @@ import com.infamous.dungeons_libraries.items.interfaces.IComboWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
-import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.mixin.TieredItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
@@ -44,6 +43,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     private ItemAttributeModifiers defaultModifiers;
     private MeleeGearConfig meleeGearConfig;
     private float attackDamage;
+    private int maxDamage;
 
     public MeleeGear(Item.Properties properties) {
         super(Tiers.WOOD, properties);
@@ -51,10 +51,15 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     }
 
     @Override
+    public int getMaxDamage(ItemStack stack) {
+        return maxDamage;
+    }
+
+    @Override
     public void reload() {
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
         ((TieredItemAccessor) this).setTier(meleeGearConfig.getWeaponMaterial());
-        ((ItemAccessor) this).setMaxDamage(this.getTier().getUses());
+        this.maxDamage = this.getTier().getUses();
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Optional<Holder.Reference<Attribute>> attribute = ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation());

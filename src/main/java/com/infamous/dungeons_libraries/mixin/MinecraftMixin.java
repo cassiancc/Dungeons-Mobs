@@ -20,7 +20,7 @@ public class MinecraftMixin {
         SHOULD_SWITCH_HAND = true;
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/NeoForge/common/CommonHooks;onEmptyLeftClick(Lnet/minecraft/world/entity/player/Player;)V", remap = false),
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/common/CommonHooks;onEmptyLeftClick(Lnet/minecraft/world/entity/player/Player;)V", remap = false),
             method = "startAttack()Z")
     private void dungeons_libraries_startAttack_onMiss(CallbackInfoReturnable<Boolean> cir) {
         SHOULD_SWITCH_HAND = true;

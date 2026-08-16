@@ -7,7 +7,6 @@ import com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfig
 import com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.mixin.CooldownAccessor;
-import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Holder;
@@ -23,7 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -33,7 +31,6 @@ import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.ARTIFACT_COOLDOWN_MULTIPLIER;
 import static com.infamous.dungeons_libraries.items.ItemTagWrappers.ARTIFACT_REPAIR_ITEMS;
-import static java.util.UUID.randomUUID;
 import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public abstract class ArtifactItem extends Item implements IReloadableGear {
@@ -44,6 +41,7 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
     private Multimap<Holder<Attribute>, AttributeModifier> defaultModifiers;
     protected boolean procOnItemUse = false;
     private ArtifactGearConfig artifactGearConfig;
+    private int maxDamage;
 
     public ArtifactItem(Properties properties) {
         super(properties.durability(64));
@@ -51,9 +49,14 @@ public abstract class ArtifactItem extends Item implements IReloadableGear {
     }
 
     @Override
+    public int getMaxDamage(ItemStack stack) {
+        return maxDamage;
+    }
+
+    @Override
     public void reload() {
         artifactGearConfig = ArtifactGearConfigRegistry.getConfig(BuiltInRegistries.ITEM.getKey(this));
-        ((ItemAccessor) this).setMaxDamage(artifactGearConfig.getDurability());
+        this.maxDamage = artifactGearConfig.getDurability();
         ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableMultimap.builder();
         artifactGearConfig.getAttributes().forEach(attributeModifier -> {
 			ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).ifPresent(attribute -> builder.put(attribute, new AttributeModifier(GeneralUtil.librariesLoc("weapon_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation())));

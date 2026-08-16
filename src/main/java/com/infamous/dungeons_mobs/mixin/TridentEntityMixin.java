@@ -62,6 +62,4 @@ public abstract class TridentEntityMixin extends AbstractArrow implements IHasIt
         this.entityData.set(DATA_ITEM_STACK, dataItem);
     }
 
-    @Accessor
-    public abstract ItemStack getTridentItem();
 }

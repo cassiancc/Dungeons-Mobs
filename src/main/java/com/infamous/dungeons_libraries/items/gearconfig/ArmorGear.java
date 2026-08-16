@@ -1,30 +1,23 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.client.renderer.gearconfig.ArmorGearRenderer;
 import com.infamous.dungeons_libraries.items.interfaces.IArmor;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterial;
-import com.infamous.dungeons_libraries.mixin.ArmorItemAccessor;
-import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -42,7 +35,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static java.util.UUID.randomUUID;
 import static net.minecraft.world.item.ArmorMaterials.CHAIN;
 import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
@@ -59,6 +51,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
     private int defense;
     private float toughness;
     private DungeonsArmorMaterial material;
+    private int maxDamage;
 
     public ArmorGear(ArmorItem.Type slotType, Properties properties, ResourceLocation armorSet, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties.rarity(ArmorGearConfigRegistry.getConfig(armorSet).getRarity()));
@@ -70,6 +63,11 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
     }
 
     @Override
+    public int getMaxDamage(ItemStack stack) {
+        return maxDamage;
+    }
+
+    @Override
     public void reload() {
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
         if (armorGearConfig == ArmorGearConfig.DEFAULT) {
@@ -78,7 +76,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
         this.material = armorGearConfig.getArmorMaterial();
         this.defense = material.getDefenseForType(this.type);
         this.toughness =material.getToughness();
-        ((ItemAccessor) this).setMaxDamage(material.getDefenseForType(this.type));
+        this.maxDamage = material.getDefenseForType(this.type);
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         builder.add(Attributes.ARMOR, new AttributeModifier(GeneralUtil.librariesLoc("armor_modifier"), material.getDefenseForType(this.type), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
         builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(GeneralUtil.librariesLoc("armor_toughness"), material.getToughness(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));

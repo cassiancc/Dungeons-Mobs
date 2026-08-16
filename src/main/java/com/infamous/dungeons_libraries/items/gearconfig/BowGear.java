@@ -1,40 +1,37 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.items.interfaces.IRangedWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
-import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
-import java.util.UUID;
 
-import static java.util.UUID.randomUUID;
-import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
-import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 
 public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
 
     private ItemAttributeModifiers defaultModifiers;
     private BowGearConfig bowGearConfig;
+    private int maxDamage;
 
     public BowGear(Properties builder) {
         super(builder.durability(384));
         reload();
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return maxDamage;
     }
 
     @Override
@@ -48,7 +45,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
             }
         });
         this.defaultModifiers = builder.build();
-        ((ItemAccessor) this).setMaxDamage(bowGearConfig.getDurability());
+        this.maxDamage = bowGearConfig.getDurability();
     }
 
     public float getDefaultChargeTime() {

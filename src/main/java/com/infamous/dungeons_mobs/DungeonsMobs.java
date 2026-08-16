@@ -22,7 +22,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.fml.common.Mod;
@@ -37,9 +39,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 import static com.infamous.dungeons_mobs.mod.ModEntityTypes.SPAWN_EGGS;
 
-// The value here should match an entry in the META-INF/mods.toml file
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
+@EventBusSubscriber(modid = MODID)
 @Mod("dungeons_mobs")
 public class DungeonsMobs {
     // Directly reference a log4j logger.
@@ -63,15 +67,12 @@ public class DungeonsMobs {
 //    	GeckoLib.initialize();
         // Register the setup method for modloading
         container.registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC, "dungeons-mobs-common.toml");
-        modEventBus.addListener(this::setup);
-        modEventBus.addListener(this::setupNetworking);
-        modEventBus.addListener(this::setupSpawnPlacements);
+        modEventBus.addListener(DungeonsMobs::setup);
+        modEventBus.addListener(DungeonsMobs::setupNetworking);
+        modEventBus.addListener(DungeonsMobs::setupSpawnPlacements);
         // Register the doClientStuff method for modloading
-        modEventBus.addListener(this::doClientStuff);
-        modEventBus.addListener(this::onLoadComplete);
-
-        // Register ourselves for server and other game events we are interested in
-        NeoForge.EVENT_BUS.register(this);
+        modEventBus.addListener(DungeonsMobs::doClientStuff);
+        modEventBus.addListener(DungeonsMobs::onLoadComplete);
 
         // Registering custom tags
         EntityTags.register();
@@ -101,27 +102,32 @@ public class DungeonsMobs {
         //ANCIENT_DATA.subscribeAsSyncable(CHANNEL, AncientDatas::toPacket);
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
+    @SubscribeEvent
+    protected static void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(EntitySpawnPlacements::createPlacementTypes);
         event.enqueueWork(RaidEntries::initWaveMemberEntries);
         event.enqueueWork(SensorMapModifier::replaceSensorMaps);
     }
 
-    private void setupNetworking(final RegisterPayloadHandlersEvent event) {
+    @SubscribeEvent
+    protected static void setupNetworking(final RegisterPayloadHandlersEvent event) {
         NetworkHandler.init(event.registrar("1"));
     }
 
-    private void setupSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
+    @SubscribeEvent
+    protected static void setupSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
         EntitySpawnPlacements.initSpawnPlacements(event);
     }
 
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
+    @SubscribeEvent
+    protected static void doClientStuff(final FMLClientSetupEvent event) {
         // ITEM MODEL PROPERTIES
         event.enqueueWork(ModItemModelProperties::registerProperties);
     }
 
-    private void onLoadComplete(final FMLLoadCompleteEvent event) {
+    @SubscribeEvent
+    protected static void onLoadComplete(final FMLLoadCompleteEvent event) {
         if (DungeonsMobsConfig.COMMON.ENABLE_STRONGER_HUSKS.get()) {
             EntityType.HUSK.dimensions = EntityDimensions.scalable(0.6F * 1.2F, 1.95F * 1.2F);
         }

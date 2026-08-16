@@ -29,39 +29,36 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 public class EntitySpawnPlacements {
 
-    public static SpawnPlacementType IN_WATER_ON_GROUND;
+    public static SpawnPlacementType IN_WATER_ON_GROUND = (iWorldReader, blockPos, entityType) -> {
+		BlockState blockstate = iWorldReader.getBlockState(blockPos);
+		FluidState fluidstate = iWorldReader.getFluidState(blockPos);
+		BlockPos above = blockPos.above();
+		BlockPos below = blockPos.below();
+		BlockState stateAtPos = iWorldReader.getBlockState(blockPos);
+		boolean inWater = fluidstate.is(FluidTags.WATER) && iWorldReader.getFluidState(below).is(FluidTags.WATER) && !iWorldReader.getBlockState(above).isRedstoneConductor(iWorldReader, above);
+		if (!stateAtPos.isValidSpawn(iWorldReader, below, entityType)) {
+			return false;
+		} else {
+			boolean validEmptySpawn = isValidEmptySpawnBlockNoFluidCheck(iWorldReader, blockPos, blockstate, entityType) && isValidEmptySpawnBlockNoFluidCheck(iWorldReader, above, iWorldReader.getBlockState(above), entityType);
+			return validEmptySpawn && inWater;
+		}
+	};
 
-    public static SpawnPlacementType ON_GROUND_ALLOW_LEAVES;
+    public static SpawnPlacementType ON_GROUND_ALLOW_LEAVES = (levelReader, blockPos, entityType) -> {
+		BlockState blockstate = levelReader.getBlockState(blockPos);
+		FluidState fluidstate = levelReader.getFluidState(blockPos);
+		BlockPos above = blockPos.above();
+		BlockPos below = blockPos.below();
+		BlockState stateBelow = levelReader.getBlockState(below);
+		if (!stateBelow.isValidSpawn(levelReader, below, entityType) && !(stateBelow.is(BlockTags.LEAVES))) {
+			return false;
+		} else {
+			return NaturalSpawner.isValidEmptySpawnBlock(levelReader, blockPos, blockstate, fluidstate, entityType)
+					&& NaturalSpawner.isValidEmptySpawnBlock(levelReader, above, levelReader.getBlockState(above), levelReader.getFluidState(above), entityType);
+		}
+	};
 
-    public static void createPlacementTypes() {
-        IN_WATER_ON_GROUND = (iWorldReader, blockPos, entityType) -> {
-			BlockState blockstate = iWorldReader.getBlockState(blockPos);
-			FluidState fluidstate = iWorldReader.getFluidState(blockPos);
-			BlockPos above = blockPos.above();
-			BlockPos below = blockPos.below();
-			BlockState stateAtPos = iWorldReader.getBlockState(blockPos);
-			boolean inWater = fluidstate.is(FluidTags.WATER) && iWorldReader.getFluidState(below).is(FluidTags.WATER) && !iWorldReader.getBlockState(above).isRedstoneConductor(iWorldReader, above);
-			if (!stateAtPos.isValidSpawn(iWorldReader, below, entityType)) {
-				return false;
-			} else {
-				boolean validEmptySpawn = isValidEmptySpawnBlockNoFluidCheck(iWorldReader, blockPos, blockstate, entityType) && isValidEmptySpawnBlockNoFluidCheck(iWorldReader, above, iWorldReader.getBlockState(above), entityType);
-				return validEmptySpawn && inWater;
-			}
-		};
-        ON_GROUND_ALLOW_LEAVES = (levelReader, blockPos, entityType) -> {
-			BlockState blockstate = levelReader.getBlockState(blockPos);
-			FluidState fluidstate = levelReader.getFluidState(blockPos);
-			BlockPos above = blockPos.above();
-			BlockPos below = blockPos.below();
-			BlockState stateBelow = levelReader.getBlockState(below);
-			if (!stateBelow.isValidSpawn(levelReader, below, entityType) && !(stateBelow.is(BlockTags.LEAVES))) {
-				return false;
-			} else {
-				return NaturalSpawner.isValidEmptySpawnBlock(levelReader, blockPos, blockstate, fluidstate, entityType)
-						&& NaturalSpawner.isValidEmptySpawnBlock(levelReader, above, levelReader.getBlockState(above), levelReader.getFluidState(above), entityType);
-			}
-		};
-    }
+    public static void createPlacementTypes() {}
 
     public static boolean isValidEmptySpawnBlockNoFluidCheck(BlockGetter blockReader, BlockPos blockPos, BlockState blockState, EntityType<?> entityType) {
         if (blockState.isCollisionShapeFullBlock(blockReader, blockPos)) {

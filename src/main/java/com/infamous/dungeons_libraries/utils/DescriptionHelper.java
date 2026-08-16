@@ -21,7 +21,6 @@ import java.util.Map;
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static net.minecraft.world.item.component.ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT;
 
-@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class DescriptionHelper {
 
 

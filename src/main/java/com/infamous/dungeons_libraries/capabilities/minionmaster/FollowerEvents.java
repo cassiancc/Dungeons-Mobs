@@ -68,7 +68,7 @@ public class FollowerEvents {
      */
 
     @SubscribeEvent
-    public static void onLivingEntityTick(EntityTickEvent event) {
+    public static void onLivingEntityTick(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof LivingEntity entityLiving) {
             if (entityLiving.level().isClientSide()) return;
             Follower cap = getFollowerCapability(entityLiving);

@@ -84,18 +84,15 @@ dependencies {
     implementation("com.eliotlash.mclib:mclib:20")
     forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
     modImplementation("curse.maven:enchantwithmob-913523:${enchant_with_mob_version}")
-    modImplementation("curse.maven:bagus-lib-866533:6944371")
+    modImplementation("curse.maven:bagus-lib-866533:7612281")
 
     modImplementation("curse.maven:configured-457570:${configured_version}")
-    // MixinExtras
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
 }
 
 processResources {
     inputs.property 'version', project.version
 
-    filesMatching('META-INF/mods.toml') {
+    filesMatching('META-INF/neoforge.mods.toml') {
         expand version: inputs.properties.version
     }
 }

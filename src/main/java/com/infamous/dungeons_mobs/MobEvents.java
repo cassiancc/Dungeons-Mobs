@@ -1,6 +1,5 @@
 package com.infamous.dungeons_mobs;
 
-import com.infamous.dungeons_libraries.utils.AbilityHelper;
 import com.infamous.dungeons_mobs.capabilities.convertible.Convertible;
 import com.infamous.dungeons_mobs.capabilities.convertible.ConvertibleHelper;
 import com.infamous.dungeons_mobs.config.DungeonsMobsConfig;
@@ -11,13 +10,11 @@ import com.infamous.dungeons_mobs.entities.undead.FrozenZombieEntity;
 import com.infamous.dungeons_mobs.goals.SmartTridentAttackGoal;
 import com.infamous.dungeons_mobs.interfaces.IHasItemStackData;
 import com.infamous.dungeons_mobs.mixin.GoalSelectorAccessor;
-import com.infamous.dungeons_mobs.mixin.TridentEntityAccessor;
 import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -29,7 +26,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.EventPriority;
@@ -37,12 +33,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMobGriefingEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
-import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.*;
@@ -63,12 +56,12 @@ public class MobEvents {
             drownedEntity.goalSelector.addGoal(2, new SmartTridentAttackGoal(drownedEntity, 1.0D, 40, 10.0F));
         }
         if (event.getEntity() instanceof ThrownTrident) {
-            ((IHasItemStackData) event.getEntity()).setDataItem(((TridentEntityAccessor) event.getEntity()).getTridentItem());
+            ((IHasItemStackData) event.getEntity()).setDataItem(((ThrownTrident) event.getEntity()).getPickupItemStackOrigin());
         }
     }
 
     @SubscribeEvent
-    public static void onLivingUpdate(EntityTickEvent event) {
+    public static void onLivingUpdate(EntityTickEvent.Post event) {
         Entity livingEntity = event.getEntity();
         if (livingEntity instanceof Mob mob && ConvertibleHelper.convertsInWater((Mob) livingEntity)) {
             if (!mob.level().isClientSide() && mob.isAlive() && !mob.isNoAi()) {

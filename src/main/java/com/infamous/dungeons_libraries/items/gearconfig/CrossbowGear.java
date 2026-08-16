@@ -7,7 +7,6 @@ import com.infamous.dungeons_libraries.items.interfaces.IRangedWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.CrossbowItemInvoker;
-import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.EnchantmentUtil;
 import com.infamous.dungeons_libraries.utils.GeneralUtil;
@@ -25,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -42,10 +42,16 @@ import static net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE;
 public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
     private ItemAttributeModifiers defaultModifiers;
     private BowGearConfig crossbowGearConfig;
+    private int maxDamage;
 
     public CrossbowGear(Properties builder) {
         super(builder.durability(384));
         reload();
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return maxDamage;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
 			ATTRIBUTE.getHolder(attributeModifier.getAttributeResourceLocation()).ifPresent(attribute -> builder.add(attribute, new AttributeModifier(GeneralUtil.librariesLoc("weapon_modifier"), attributeModifier.getAmount(), attributeModifier.getOperation()), EquipmentSlotGroup.HAND));
 		});
         this.defaultModifiers = builder.build();
-        ((ItemAccessor) this).setMaxDamage(crossbowGearConfig.getDurability());
+        this.maxDamage = crossbowGearConfig.getDurability();
     }
 
     @Override
@@ -74,7 +80,7 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
             int quickChargeLevel = EnchantmentUtil.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack, world);
 
             CrossbowItemInvoker crossbowItemInvoker = (CrossbowItemInvoker) this;
-            SoundEvent quickChargeSoundEvent = crossbowItemInvoker.callGetStartSound(quickChargeLevel);
+            List<ChargingSounds> quickChargeSoundEvent = stack.get(EnchantmentEffectComponents.CROSSBOW_CHARGING_SOUNDS);
             SoundEvent loadingMiddleSoundEvent = quickChargeLevel == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE.value() : null;
             float chargeTime = (float) (stack.getUseDuration(livingEntity) - timeLeft) / this.getCrossbowChargeTime(livingEntity, stack);
             if (chargeTime < 0.2F) {
@@ -84,7 +90,7 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
 
             if (chargeTime >= 0.2F && !crossbowItemInvoker.getStartSoundPlayed() && chargeTime < 1.0F) {
                 crossbowItemInvoker.setStartSoundPlayed(true);
-                world.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), quickChargeSoundEvent, SoundSource.PLAYERS, 0.5F, 1.0F);
+                world.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), quickChargeSoundEvent.getFirst().start().get(), SoundSource.PLAYERS, 0.5F, 1.0F);
             }
 
             if (chargeTime >= 0.5F && loadingMiddleSoundEvent != null && !crossbowItemInvoker.getMidLoadSoundPlayed() && chargeTime < 1.0F) {

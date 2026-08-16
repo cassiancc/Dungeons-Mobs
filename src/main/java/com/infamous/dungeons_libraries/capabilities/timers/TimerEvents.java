@@ -10,7 +10,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class TimerEvents {
 
     @SubscribeEvent
-    public static void onLivingUpdate(EntityTickEvent event) {
+    public static void onLivingUpdate(EntityTickEvent.Post event) {
         Timers timersCapability = TimersHelper.getTimersCapability(event.getEntity());
         timersCapability.tickTimers();
     }

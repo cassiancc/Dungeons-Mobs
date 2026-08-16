@@ -47,7 +47,7 @@ public class DungeonsMobsConfig {
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_PILLAGERS_IN_RAIDS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_SQUALL_GOLEMS_IN_RAIDS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_REDSTONE_GOLEMS_IN_RAIDS;
-        
+
          */
 
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_STRONGER_HUSKS;

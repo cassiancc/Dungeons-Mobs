@@ -19,7 +19,9 @@ import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMateri
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
@@ -29,6 +31,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ATTACHMENT_TYPES;
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
 import static com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry.ARTIFACT_GEAR_CONFIGS;
@@ -40,6 +43,7 @@ import static com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmo
 import static com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials.WEAPON_MATERIALS;
 
 
+@EventBusSubscriber(modid = MODID)
 @Mod("dungeons_libraries")
 public class DungeonsLibraries {
     // Directly reference a log4j logger.
@@ -49,11 +53,9 @@ public class DungeonsLibraries {
     public DungeonsLibraries(IEventBus modEventBus, ModContainer container) {
         // Register the setup method for modloading
         container.registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
-        modEventBus.addListener(this::setup);
+        modEventBus.addListener(DungeonsLibraries::setup);
         // Register the doClientStuff method for modloading
-        modEventBus.addListener(this::doClientStuff);
-        // Register ourselves for server and other game events we are interested in
-        NeoForge.EVENT_BUS.register(this);
+        modEventBus.addListener(DungeonsLibraries::doClientStuff);
         ItemTagWrappers.init();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ATTACHMENT_TYPES.register(modEventBus);
@@ -78,12 +80,14 @@ public class DungeonsLibraries {
         }
     }
 
-    private void setup(final RegisterPayloadHandlersEvent event) {
+    @SubscribeEvent
+    private static void setup(final RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar("0");
         NetworkHandler.init(registrar);
     }
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
+    @SubscribeEvent
+    private static void doClientStuff(final FMLClientSetupEvent event) {
         event.enqueueWork(RangedItemModelProperties::init);
     }
 

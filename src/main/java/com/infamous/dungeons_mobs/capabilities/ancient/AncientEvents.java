@@ -37,7 +37,7 @@ public class AncientEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingUpdate(EntityTickEvent event) {
+    public static void onLivingUpdate(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (!entity.level().isClientSide() && entity instanceof LivingEntity entityLiving) {
             Ancient cap = AncientHelper.getAncientCapability(entityLiving);
@@ -58,7 +58,7 @@ public class AncientEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingUpdateEvent(EntityTickEvent event) {
+    public static void onLivingUpdateEvent(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity livingEntity) {
             Ancient cap = AncientHelper.getAncientCapability(livingEntity);

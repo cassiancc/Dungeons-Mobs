@@ -27,7 +27,7 @@ public class GravityPulseMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void OnLivingUpdate(EntityTickEvent event) {
+    public static void OnLivingUpdate(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
 
         if (entity instanceof LivingEntity livingEntity) {

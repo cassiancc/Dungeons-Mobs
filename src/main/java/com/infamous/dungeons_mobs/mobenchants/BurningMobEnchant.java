@@ -24,7 +24,7 @@ public class BurningMobEnchant extends MobEnchant {
     }
 
     @SubscribeEvent
-    public static void OnLivingUpdate(EntityTickEvent event) {
+    public static void OnLivingUpdate(EntityTickEvent.Post event) {
         Entity e = event.getEntity();
         if (e instanceof LivingEntity entity) {
 

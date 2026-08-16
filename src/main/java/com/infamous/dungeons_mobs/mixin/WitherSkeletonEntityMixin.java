@@ -31,7 +31,7 @@ public abstract class WitherSkeletonEntityMixin extends AbstractSkeleton {
     private void getWitherArrow(ItemStack ammoStack, float velocity, ItemStack weapon, CallbackInfoReturnable<AbstractArrow> cir) {
         AbstractArrow arrow = cir.getReturnValue();
         arrow.clearFire();
-        if (arrow instanceof Arrow && ((ArrowAccessor) arrow).getEffects().isEmpty()) {
+        if (arrow instanceof Arrow && !((ArrowAccessor) arrow).callGetPotionContents().getAllEffects().iterator().hasNext()) {
             int difficultyFactor = 0;
             if (this.level().getDifficulty() == Difficulty.NORMAL) {
                 difficultyFactor = 5;

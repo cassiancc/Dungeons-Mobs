@@ -1,5 +1,5 @@
 modLoader="javafml" 
-loaderVersion="[43,)" 
+loaderVersion="[4,)"
 license="MIT License"
 issueTrackerURL="https://github.com/cassiancc/Dungeons-Mobs"
 
@@ -13,7 +13,7 @@ logoFile="logo.png"
 credits="Infamous Mods"
 authors="the_infamous_1, cassiancc"
 description='''
-A port of Minecraft: Dungeons mobs to Minecraft: Java Edition, updated to 1.20.1.
+A port of Minecraft: Dungeons mobs to Minecraft: Java Edition, updated to 1.21.1.
 '''
 [[mods]]
 modId="dungeons_libraries" #mandatory
@@ -25,106 +25,106 @@ authors="the_infamous_1, Patrigan, cassiancc" #optional
 description='''Library mod for the Dungeons Suite. Brings a lot of tools for modmakers to spice up their combat.'''
 
 [[dependencies.dungeons_mobs]] 
-    modId="forge"
-    mandatory=true 
-    versionRange="[43,)"
+    modId="neoforge"
+    type="required" 
+    versionRange="[21,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]]
     modId="minecraft"
-    mandatory=true
-    versionRange="[1.20.1,)"
+    type="required"
+    versionRange="[1.21.1,1.21.2)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]]
     modId="geckolib"
-    mandatory=true
+    type="required"
     versionRange="[4.7.4,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]]
     modId="curios"
-    mandatory=false
+    type="optional"
     versionRange="[1.19.2-5.1.1.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="enchantwithmob" 
-    mandatory=false 
+    type="optional"
     versionRange="[1.19.2-7.0.1,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="jei" 
-    mandatory=false 
+    type="optional"
     versionRange="[11.2.0.247,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="justenoughresources" 
-    mandatory=false 
+    type="optional"
     versionRange="[1.2.1.189,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="jeed" 
-    mandatory=false 
+    type="optional"
     versionRange="[1.18,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="roughlyenoughitems" 
-    mandatory=false 
+    type="optional"
     versionRange="[9.1.580,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="roughlyenoughresources" 
-    mandatory=false 
+    type="optional"
     versionRange="[2.5.2,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="architectury" 
-    mandatory=false 
+    type="optional"
     versionRange="[6.4.62,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="clothconfig" 
-    mandatory=false 
+    type="optional"
     versionRange="[8.2.88,)" 
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dungeons_mobs]] 
     modId="configured" 
-    mandatory=false 
+    type="optional"
     versionRange="[2.0.1,)" 
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.dungeons_mobs]] 
     modId="catalogue" 
-    mandatory=false 
+    type="optional"
     versionRange="[1.7.0,)" 
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.dungeons_mobs]] 
     modId="appleskin" 
-    mandatory=false 
+    type="optional"
     versionRange="[2.4.2,)" 
     ordering="NONE"
     side="CLIENT"
