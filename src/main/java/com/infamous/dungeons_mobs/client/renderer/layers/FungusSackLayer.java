@@ -34,8 +34,8 @@ public class FungusSackLayer<T extends LivingEntity, M extends EntityModel<T>> e
             matrixStack.translate(0.0D, 0.0D, 0.0D);
             this.getParentModel().copyPropertiesTo(this.fungusSackModel);
             this.fungusSackModel.setupAnim(wearer, p_225628_5_, p_225628_6_, p_225628_8_, p_225628_9_, p_225628_10_);
-            VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(renderTypeBuffer, RenderType.armorCutoutNoCull(resourcelocation), false, false);
-            this.fungusSackModel.renderToBuffer(matrixStack, ivertexbuilder, p_225628_3_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(renderTypeBuffer, RenderType.armorCutoutNoCull(resourcelocation), false);
+            this.fungusSackModel.renderToBuffer(matrixStack, ivertexbuilder, p_225628_3_, OverlayTexture.NO_OVERLAY, -1);
             matrixStack.popPose();
         }
     }

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_mobs.entities.illagers;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractIllager;
@@ -18,7 +19,7 @@ public class ArchIllagerEntity extends AbstractIllager {
     }
 
     @Override
-    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
 
     }
 

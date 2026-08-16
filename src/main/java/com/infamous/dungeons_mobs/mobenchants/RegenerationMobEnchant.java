@@ -22,7 +22,7 @@ public class RegenerationMobEnchant extends MobEnchant {
     public static void onLivingUpdate(EntityTickEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity livingEntity) {
-            executeIfPresentWithLevel(livingEntity, REGENERATION.get(), (level) -> {
+            executeIfPresentWithLevel(livingEntity, REGENERATION, (level) -> {
                 if (livingEntity.getHealth() < livingEntity.getMaxHealth() && livingEntity.tickCount % getTickCountForLevel(level) == 0) {
                     livingEntity.heal(1.0F);
                     PROXY.spawnParticles(livingEntity, ParticleTypes.HEART);

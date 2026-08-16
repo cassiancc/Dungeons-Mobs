@@ -223,20 +223,10 @@ public class SunkenSkeletonEntity extends AbstractSkeleton implements CrossbowAt
     }
 
     @Override
-    public void shootCrossbowProjectile(LivingEntity target, ItemStack crossbow, Projectile projectile, float inaccuracy) {
-        this.shootCrossbowProjectile(this, target, projectile, inaccuracy, 1.6F);
-    }
+    public void performCrossbowAttack(LivingEntity user, float velocity) {
+        CrossbowAttackMob.super.performCrossbowAttack(user, velocity);
+        user.playSound(this.isInWater() ? ModSoundEvents.SUNKEN_SKELETON_SHOOT.get() : SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (user.getRandom().nextFloat() * 0.4F + 0.8F));
 
-    @Override
-    public void shootCrossbowProjectile(LivingEntity p_234279_1_, LivingEntity p_234279_2_,
-                                        Projectile p_234279_3_, float p_234279_4_, float p_234279_5_) {
-        double d0 = p_234279_2_.getX() - p_234279_1_.getX();
-        double d1 = p_234279_2_.getZ() - p_234279_1_.getZ();
-        double d2 = Mth.sqrt((float) (d0 * d0 + d1 * d1));
-        double d3 = p_234279_2_.getY(0.3333333333333333D) - p_234279_3_.getY() + d2 * (double) 0.2F;
-        Vector3f vector3f = this.getProjectileShotVector(p_234279_1_, new Vec3(d0, d3, d1), p_234279_4_);
-        p_234279_3_.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_234279_5_, (float) (14 - p_234279_1_.level().getDifficulty().getId() * 4));
-        p_234279_1_.playSound(this.isInWater() ? ModSoundEvents.SUNKEN_SKELETON_SHOOT.get() : SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (p_234279_1_.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 
     @Override

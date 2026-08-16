@@ -31,7 +31,7 @@ public class GravityPulseMobEnchant extends MobEnchant {
         Entity entity = event.getEntity();
 
         if (entity instanceof LivingEntity livingEntity) {
-            executeIfPresentWithLevel(livingEntity, GRAVITY_PULSE.get(), (level) -> {
+            executeIfPresentWithLevel(livingEntity, GRAVITY_PULSE, (level) -> {
                 MobProps comboCap = MobPropsHelper.getMobPropsCapability(livingEntity);
                 if (comboCap == null) return;
                 int gravityPulseTimer = comboCap.getGravityPulseTimer();

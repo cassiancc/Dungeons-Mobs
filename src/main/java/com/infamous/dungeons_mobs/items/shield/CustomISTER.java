@@ -21,14 +21,17 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.infamous.dungeons_mobs.client.models.geom.ModModelLayers.VANGUARD_SHIELD;
 import static com.infamous.dungeons_mobs.items.shield.ShieldTextures.*;
@@ -52,17 +55,29 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         Item item = stack.getItem();
         if (item instanceof RoyalGuardShieldItem) {
-            boolean flag = stack.getTagElement("BlockEntityTag") != null;
+            boolean flag = stack.has(DataComponents.BLOCK_ENTITY_DATA);
             matrixStack.pushPose();
             matrixStack.scale(1.0F, -1.0F, -1.0F);
             Material rendermaterial = flag ? LOCATION_ROYAL_GUARD_SHIELD_BASE : LOCATION_ROYAL_GUARD_SHIELD_NO_PATTERN;
             VertexConsumer ivertexbuilder = rendermaterial.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer, this.royalGuardShieldModel.renderType(rendermaterial.atlasLocation()), true, stack.hasFoil()));
-            this.royalGuardShieldModel.handle().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.royalGuardShieldModel.handle().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, -1);
             if (flag) {
-                List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity.createPatterns(ShieldItem.getColor(stack), BannerBlockEntity.getItemPatterns(stack));
-                BannerRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay, this.royalGuardShieldModel.plate(), rendermaterial, false, list, stack.hasFoil());
+                BannerPatternLayers bannerPatternLayers = stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
+                DyeColor dyeColor2 = stack.get(DataComponents.BASE_COLOR);
+                BannerRenderer.renderPatterns(
+                        matrixStack,
+                        buffer,
+                        combinedLight,
+                        combinedOverlay,
+                        this.royalGuardShieldModel.plate(),
+                        rendermaterial,
+                        false,
+                        Objects.requireNonNullElse(dyeColor2, DyeColor.WHITE),
+                        bannerPatternLayers,
+                        stack.hasFoil()
+                );
             } else {
-                this.royalGuardShieldModel.plate().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                this.royalGuardShieldModel.plate().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, -1);
             }
 
             matrixStack.popPose();
@@ -72,7 +87,7 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
             Material rendermaterial = LOCATION_VANGUARD_SHIELD;
             VertexConsumer ivertexbuilder = rendermaterial.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer, this.royalGuardShieldModel.renderType(rendermaterial.atlasLocation()), true, stack.hasFoil()));
             //this.modelVanguardShield.getHandle().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
-            this.modelVanguardShield.getRoot().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.modelVanguardShield.getRoot().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, -1);
 
             matrixStack.popPose();
         } else if (item instanceof ColoredTridentItem) {
@@ -94,7 +109,7 @@ public class CustomISTER extends BlockEntityWithoutLevelRenderer {
         matrixStack.scale(1.0F, -1.0F, -1.0F);
         ResourceLocation texture = getTridentTexture(item.getTridentColor());
         VertexConsumer foilBufferDirect = ItemRenderer.getFoilBufferDirect(buffer, this.tridentModel.renderType(texture), false, stack.hasFoil());
-        this.tridentModel.renderToBuffer(matrixStack, foilBufferDirect, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.tridentModel.renderToBuffer(matrixStack, foilBufferDirect, combinedLight, combinedOverlay, -1);
         matrixStack.popPose();
     }
 

@@ -28,7 +28,7 @@ public class BurningMobEnchant extends MobEnchant {
         Entity e = event.getEntity();
         if (e instanceof LivingEntity entity) {
 
-        executeIfPresentWithLevel(entity, BURNING.get(), (level) -> {
+        executeIfPresentWithLevel(entity, BURNING, (level) -> {
             MobProps comboCap = MobPropsHelper.getMobPropsCapability(entity);
             if (comboCap == null) return;
             int burnNearbyTimer = comboCap.getBurnNearbyTimer();

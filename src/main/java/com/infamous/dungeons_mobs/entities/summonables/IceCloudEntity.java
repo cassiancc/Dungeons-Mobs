@@ -147,6 +147,11 @@ public class IceCloudEntity extends Entity implements GeoAnimatable {
         return Mth.sqrt(f * f + f2 * f2);
     }
 
+    @Override
+    public boolean canUsePortal(boolean allowPassengers) {
+        return true;
+    }
+
     public void baseTick() {
         super.baseTick();
 
@@ -165,24 +170,8 @@ public class IceCloudEntity extends Entity implements GeoAnimatable {
         }
 
         HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-        boolean flag = false;
-        if (raytraceresult.getType() == HitResult.Type.BLOCK) {
-            BlockPos blockpos = ((BlockHitResult) raytraceresult).getBlockPos();
-            BlockState blockstate = this.level().getBlockState(blockpos);
-            if (blockstate.is(Blocks.NETHER_PORTAL)) {
-                this.handleInsidePortal(blockpos);
-                flag = true;
-            } else if (blockstate.is(Blocks.END_GATEWAY)) {
-                BlockEntity blockEntity = this.level().getBlockEntity(blockpos);
-                if (blockEntity instanceof TheEndGatewayBlockEntity && TheEndGatewayBlockEntity.canEntityTeleport(this)) {
-                    TheEndGatewayBlockEntity.teleportEntity(this.level(), blockpos, blockstate, this, (TheEndGatewayBlockEntity) blockEntity);
-                }
 
-                flag = true;
-            }
-        }
-
-        if (raytraceresult.getType() != HitResult.Type.MISS && !flag) {
+        if (raytraceresult.getType() != HitResult.Type.MISS) {
             this.onHit(raytraceresult);
         }
 

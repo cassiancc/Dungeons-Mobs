@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import static com.infamous.dungeons_mobs.DungeonsMobs.MODID;
 
 public class ModRecipes {
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZERS, MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
 
     public static final Supplier<RecipeSerializer<?>> SHIELD_RECIPE = RECIPES.register("shield_decoration",
             () -> CustomShieldRecipes.SERIALIZER);

@@ -21,9 +21,9 @@ public class AnimatedPropsEvents {
     public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
         Player player = event.getEntity();
         Entity target = event.getTarget();
-        if (player instanceof ServerPlayer && target instanceof Vindicator) {
+        if (player instanceof ServerPlayer serverPlayer && target instanceof Vindicator) {
             AnimatedProps cap = AnimatedPropsHelper.getAnimatedPropsCapability((Vindicator) target);
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new AnimatedPropsMessage(target.getId(), cap));
+            PacketDistributor.sendToPlayer(serverPlayer, new AnimatedPropsMessage(target.getId(), cap));
         }
     }
 }

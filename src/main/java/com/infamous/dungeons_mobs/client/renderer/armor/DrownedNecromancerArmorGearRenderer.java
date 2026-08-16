@@ -63,6 +63,6 @@ public class DrownedNecromancerArmorGearRenderer extends ArmorGearRenderer<Drown
         if (geoModelProvider instanceof DrownedNecromancerArmorGearModel<DrownedNecromancerArmorGear>) {
             ((DrownedNecromancerArmorGearModel<DrownedNecromancerArmorGear>) geoModelProvider).setWearer((LivingEntity) this.currentEntity);
         }
-        super.renderRecursively(poseStack, animatable, getBodyBone(), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.renderRecursively(poseStack, animatable, getBodyBone(model), renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }

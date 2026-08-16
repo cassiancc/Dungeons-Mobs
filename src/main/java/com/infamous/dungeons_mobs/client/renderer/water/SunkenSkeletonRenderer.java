@@ -39,11 +39,11 @@ public class SunkenSkeletonRenderer<T extends SunkenSkeletonEntity> extends Huma
     }
 
     @Override
-    protected void setupRotations(T skeleton, PoseStack matrixStack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
-        super.setupRotations(skeleton, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
-        float swimAmount = skeleton.getSwimAmount(p_225621_5_);
+    protected void setupRotations(T skeleton, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+        super.setupRotations(skeleton, poseStack, bob, yBodyRot, partialTick, scale);
+        float swimAmount = skeleton.getSwimAmount(partialTick);
         if (swimAmount > 0.0F) {
-            matrixStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(swimAmount, skeleton.getXRot(), -10.0F - skeleton.getXRot())));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(swimAmount, skeleton.getXRot(), -10.0F - skeleton.getXRot())));
         }
     }
 

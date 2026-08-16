@@ -106,8 +106,8 @@ public class EntityEvents {
 	public static void preventEntityAttack(AttackEntityEvent event) {
 		Player owner = event.getEntity();
 		
-		if (owner.hasEffect(ENSNARED.get())) {
-			if (event.isCancelable()) event.setCanceled(true);
+		if (owner.hasEffect(ENSNARED)) {
+			event.setCanceled(true);
 		}
 	}
 	

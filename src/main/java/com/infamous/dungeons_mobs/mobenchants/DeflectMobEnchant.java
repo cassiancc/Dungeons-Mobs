@@ -34,7 +34,7 @@ public class DeflectMobEnchant extends MobEnchant {
                 event.setCanceled(true);
                 return;
             }
-            executeIfPresentWithLevel(victim, DEFLECT.get(), (level) -> {
+            executeIfPresentWithLevel(victim, DEFLECT, (level) -> {
                 if (projectile.level().isClientSide) {
                     deflectProjectile(projectile, victim);
                     projectile.setOwner(victim);

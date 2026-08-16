@@ -11,6 +11,7 @@ import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import com.infamous.dungeons_mobs.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,7 @@ public class WindcallerStaffItem extends ArtifactItem implements IHasInventorySp
 
     public InteractionResultHolder<ItemStack> procArtifact(ArtifactUseContext itemUseContext) {
         Level world = itemUseContext.getLevel();
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return InteractionResultHolder.success(itemUseContext.getItemStack());
         } else {
             ItemStack itemUseContextItem = itemUseContext.getItemStack();
@@ -34,7 +35,7 @@ public class WindcallerStaffItem extends ArtifactItem implements IHasInventorySp
 
             if (player != null) {
                 shoot(player, itemUseContextPos.getX(), itemUseContextPos.getY() + 0.5, itemUseContextPos.getZ());
-                itemUseContextItem.hurtAndBreak(1, player, (entity) -> NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), new BreakItemMessage(entity.getId(), itemUseContextItem)));
+                itemUseContextItem.hurtAndBreak(1, (ServerLevel) player.level(), player, (entity) -> PacketDistributor.sendToPlayer((ServerPlayer) player, new BreakItemMessage(player.getId(), itemUseContextItem)));
                 ArtifactItem.putArtifactOnCooldown(player, itemUseContextItem.getItem());
             }
             return InteractionResultHolder.consume(itemUseContextItem);

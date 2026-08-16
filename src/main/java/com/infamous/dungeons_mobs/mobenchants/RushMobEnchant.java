@@ -19,7 +19,7 @@ public class RushMobEnchant extends MobEnchant {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent event) {
         LivingEntity defender = event.getEntity();
-        executeIfPresentWithLevel(defender, RUSH.get(), (level) -> {
+        executeIfPresentWithLevel(defender, RUSH, (level) -> {
             defender.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10 + 20 * level, 3, false, false));
         });
 

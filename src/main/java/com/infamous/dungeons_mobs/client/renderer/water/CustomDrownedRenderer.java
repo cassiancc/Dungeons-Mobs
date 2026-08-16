@@ -35,11 +35,11 @@ public class CustomDrownedRenderer extends AbstractZombieRenderer<Drowned, Drown
     }
 
     @Override
-    protected void setupRotations(Drowned drowned, PoseStack matrixStack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
-        super.setupRotations(drowned, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
-        float swimAmount = drowned.getSwimAmount(p_225621_5_);
+    protected void setupRotations(Drowned drowned, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+        super.setupRotations(drowned, poseStack, bob, yBodyRot, partialTick, scale);
+        float swimAmount = drowned.getSwimAmount(partialTick);
         if (swimAmount > 0.0F) {
-            matrixStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(swimAmount, drowned.getXRot(), -10.0F - drowned.getXRot())));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(swimAmount, drowned.getXRot(), -10.0F - drowned.getXRot())));
         }
     }
 

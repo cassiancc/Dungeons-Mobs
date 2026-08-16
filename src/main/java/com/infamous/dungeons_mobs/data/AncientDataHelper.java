@@ -64,7 +64,7 @@ public class AncientDataHelper {
         Set<String> nouns = new HashSet<>();
         if (entity instanceof IEnchantCap enchantCap) {
             enchantCap.getEnchantCap().getMobEnchants().forEach(mobEnchantment -> {
-                MobEnchantmentAncientData mobEnchantmentAncientData = getMobEnchantmentAncientData(MobEnchants.getRegistry().get().getKey(mobEnchantment.getMobEnchant()));
+                MobEnchantmentAncientData mobEnchantmentAncientData = getMobEnchantmentAncientData(mobEnchantment.getMobEnchant().unwrapKey().orElseThrow().location());
                 adjectives.addAll(mobEnchantmentAncientData.getAdjectives());
                 nouns.addAll(mobEnchantmentAncientData.getNouns());
             });

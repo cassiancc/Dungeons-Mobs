@@ -6,10 +6,12 @@ import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.api.distmarker.Dist;
@@ -116,8 +118,8 @@ public class DrownedNecromancerOrbEntity extends StraightMovingProjectileEntity 
                 LivingEntity livingentity = (LivingEntity) entity1;
                 flag = entity.hurt(entity.damageSources().indirectMagic(this, livingentity), 8.0F);
                 if (flag) {
-                    if (entity.isAlive()) {
-                        this.doEnchantDamageEffects(livingentity, entity);
+                    if (entity.isAlive() && this.level() instanceof ServerLevel serverLevel) {
+                        EnchantmentHelper.doPostAttackEffects(serverLevel, entity, entity.damageSources().magic());
                     }
                 }
             } else {

@@ -63,8 +63,8 @@ public abstract class SpiderEntityMixin extends Monster implements IWebShooter {
     }
 
     @Inject(at = @At("RETURN"), method = "defineSynchedData")
-    private void registerData(CallbackInfo callbackInfo) {
-        this.entityData.define(WEBSHOOTING, false);
+    private void registerData(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(WEBSHOOTING, false);
     }
 
     @Override

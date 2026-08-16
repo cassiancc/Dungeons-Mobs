@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public class ModParticleTypes {
 
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPES, DungeonsMobs.MODID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, DungeonsMobs.MODID);
 
     public static final Supplier<SimpleParticleType> SNOWFLAKE = PARTICLES.register("snowflake", () -> new SimpleParticleType(true));
     public static final Supplier<SimpleParticleType> REDSTONE_SPARK = PARTICLES.register("redstone_spark", () -> new SimpleParticleType(true));

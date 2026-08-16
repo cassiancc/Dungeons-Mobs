@@ -1,6 +1,7 @@
 package com.infamous.dungeons_mobs.interfaces;
 
 import com.infamous.dungeons_mobs.entities.magic.MagicType;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -18,8 +19,8 @@ public interface IMagicUser {
             float f = magicUser.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) magicUser.tickCount * 0.6662F) * 0.25F;
             float f1 = Mth.cos(f);
             float f2 = Mth.sin(f);
-            magicUser.level().addParticle(ParticleTypes.ENTITY_EFFECT, magicUser.getX() + (double) f1 * 0.6D, magicUser.getY() + 1.8D, magicUser.getZ() + (double) f2 * 0.6D, d0, d1, d2);
-            magicUser.level().addParticle(ParticleTypes.ENTITY_EFFECT, magicUser.getX() - (double) f1 * 0.6D, magicUser.getY() + 1.8D, magicUser.getZ() - (double) f2 * 0.6D, d0, d1, d2);
+            magicUser.level().addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, -1), magicUser.getX() + (double) f1 * 0.6D, magicUser.getY() + 1.8D, magicUser.getZ() + (double) f2 * 0.6D, d0, d1, d2);
+            magicUser.level().addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, -1), magicUser.getX() - (double) f1 * 0.6D, magicUser.getY() + 1.8D, magicUser.getZ() - (double) f2 * 0.6D, d0, d1, d2);
         }
     }
 

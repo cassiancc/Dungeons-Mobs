@@ -30,12 +30,12 @@ public class RedstoneCubeRenderer extends MobRenderer<RedstoneCubeEntity, Redsto
     }
 
     @Override
-    protected void setupRotations(RedstoneCubeEntity redstoneCubeEntity, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-        super.setupRotations(redstoneCubeEntity, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+    protected void setupRotations(RedstoneCubeEntity redstoneCubeEntity, PoseStack poseStack, float bob, float yBodyRot, float partialTicks, float scale) {
+        super.setupRotations(redstoneCubeEntity, poseStack, bob, yBodyRot, partialTicks, scale);
         if (redstoneCubeEntity.isRolling()) {
             float rotationPerTick = 360.0F / 20.0F;
             float rotationAmount = ((float) redstoneCubeEntity.tickCount + partialTicks) * -rotationPerTick;
-            this.rollCube(matrixStackIn, rotationAmount);
+            this.rollCube(poseStack, rotationAmount);
         }
     }
 

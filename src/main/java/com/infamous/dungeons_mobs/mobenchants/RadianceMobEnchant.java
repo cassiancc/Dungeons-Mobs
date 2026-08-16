@@ -30,7 +30,7 @@ public class RadianceMobEnchant extends MobEnchant {
             attacker = event.getSource().getEntity();
         }
         if (attacker instanceof LivingEntity)
-            executeIfPresentWithLevel((LivingEntity) attacker, RADIANCE.get(), (level) -> {
+            executeIfPresentWithLevel((LivingEntity) attacker, RADIANCE, (level) -> {
                 LivingEntity source = event.getSource().is(DamageTypeTags.IS_PROJECTILE) ? event.getEntity() : (LivingEntity) attacker;
                 applyToNearbyEntities(source, 1.5F,
                         getCanHealPredicate(source), (LivingEntity nearbyEntity) -> {

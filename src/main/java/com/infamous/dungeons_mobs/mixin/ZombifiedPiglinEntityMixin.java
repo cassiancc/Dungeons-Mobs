@@ -69,8 +69,8 @@ public abstract class ZombifiedPiglinEntityMixin extends Zombie implements ISmar
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_, MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_, @Nullable CompoundTag p_213386_5_) {
-        SpawnGroupData spawnData = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_, MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_) {
+        SpawnGroupData spawnData = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_);
         this.setCrossbowUser(this.isHolding(itemStack -> itemStack.getItem() instanceof CrossbowItem));
         return spawnData;
     }
@@ -88,10 +88,10 @@ public abstract class ZombifiedPiglinEntityMixin extends Zombie implements ISmar
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_IS_CHARGING_CROSSBOW, false);
-        this.entityData.define(DATA_IS_CROSSBOW_USER, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_IS_CHARGING_CROSSBOW, false);
+        builder.define(DATA_IS_CROSSBOW_USER, false);
     }
 
     @Override
@@ -112,11 +112,6 @@ public abstract class ZombifiedPiglinEntityMixin extends Zombie implements ISmar
     @Override
     public void setChargingCrossbow(boolean chargingCrossbow) {
         this.entityData.set(DATA_IS_CHARGING_CROSSBOW, chargingCrossbow);
-    }
-
-    @Override
-    public void shootCrossbowProjectile(LivingEntity target, ItemStack weapon, Projectile projectile, float inaccuracy) {
-        this.shootCrossbowProjectile(this, target, projectile, inaccuracy, 1.6F);
     }
 
     @Override

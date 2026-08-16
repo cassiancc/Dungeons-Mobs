@@ -17,9 +17,9 @@ public abstract class CropsBlockMixin {
 
     @Inject(at = @At("HEAD"), method = "entityInside(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V")
     private void onEntityCollision(BlockState p_52277_, Level worldIn, BlockPos pos, Entity entityIn, CallbackInfo ci) {
-        if (entityIn instanceof RedstoneGolemEntity && net.neoforged.neoforge.event.EventHooks.getMobGriefingEvent(worldIn, entityIn)) {
+        if (entityIn instanceof RedstoneGolemEntity && net.neoforged.neoforge.event.EventHooks.canEntityGrief(worldIn, entityIn)) {
             worldIn.destroyBlock(pos, true, entityIn);
-        } else if (entityIn instanceof SquallGolemEntity && net.neoforged.neoforge.event.EventHooks.getMobGriefingEvent(worldIn, entityIn)) {
+        } else if (entityIn instanceof SquallGolemEntity && net.neoforged.neoforge.event.EventHooks.canEntityGrief(worldIn, entityIn)) {
             worldIn.destroyBlock(pos, true, entityIn);
         }
     }

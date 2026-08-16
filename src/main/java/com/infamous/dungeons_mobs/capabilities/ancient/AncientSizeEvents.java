@@ -22,8 +22,8 @@ public class AncientSizeEvents {
 
         Ancient cap = AncientHelper.getAncientCapability(entity);
         if (cap.isAncient()) {
-            float totalWidth = event.getNewSize().width * 1.2F;
-            float totalHeight = event.getNewSize().height * 1.2F;
+            float totalWidth = event.getNewSize().width() * 1.2F;
+            float totalHeight = event.getNewSize().height() * 1.2F;
 //            event.setNewEyeHeight(event.getNewEyeHeight() * 1.2F);
             event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
         }

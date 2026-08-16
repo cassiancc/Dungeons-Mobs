@@ -40,14 +40,14 @@ public abstract class MansionTemplateMixin extends TemplateStructurePiece {
     private void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, RandomSource rand, BoundingBox sbb, CallbackInfo callbackInfo) {
         if (!function.startsWith("Chest") && !function.equals("Warrior") && !function.equals("Mage")) {
             ResourceLocation entityResourceLocation = GeneralUtil.loc(function);
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(entityResourceLocation);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(entityResourceLocation);
             if (entityType != null) {
                 Entity entity = entityType.create(worldIn.getLevel());
                 if (entity instanceof Mob) {
                     Mob mansionSpawn = (Mob) entity;
                     mansionSpawn.setPersistenceRequired();
                     mansionSpawn.moveTo(pos, 0.0F, 0.0F);
-                    mansionSpawn.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(mansionSpawn.blockPosition()), MobSpawnType.STRUCTURE, null, null);
+                    mansionSpawn.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(mansionSpawn.blockPosition()), MobSpawnType.STRUCTURE, null);
                     worldIn.addFreshEntity(mansionSpawn);
                     worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
                     callbackInfo.cancel();

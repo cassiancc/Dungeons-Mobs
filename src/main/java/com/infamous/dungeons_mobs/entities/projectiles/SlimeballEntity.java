@@ -53,7 +53,7 @@ public class SlimeballEntity extends AbstractHurtingProjectile implements ItemSu
     }
 
     public void setStack(ItemStack stack) {
-        if (stack.getItem() != Items.SLIME_BALL || stack.hasTag()) {
+        if (stack.getItem() != Items.SLIME_BALL) {
             this.getEntityData().set(STACK, Util.make(stack.copy(), (itemStack) -> {
                 itemStack.setCount(1);
             }));

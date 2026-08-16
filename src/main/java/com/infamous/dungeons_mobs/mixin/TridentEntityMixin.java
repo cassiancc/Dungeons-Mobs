@@ -32,24 +32,24 @@ public abstract class TridentEntityMixin extends AbstractArrow implements IHasIt
         this.setDataItem(stack.copy());
     }
 
-    @Inject(at = @At("RETURN"), method = "getPickupItem", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getDefaultPickupItem", cancellable = true)
     private void pickupDataItem(CallbackInfoReturnable<ItemStack> cir) {
         cir.setReturnValue(this.getDataItem());
     }
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
-    private void defineItemStackData(CallbackInfo ci) {
-        this.entityData.define(DATA_ITEM_STACK, new ItemStack(Items.TRIDENT));
+    private void defineItemStackData(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(DATA_ITEM_STACK, new ItemStack(Items.TRIDENT));
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
     private void writeItemStackDataToTag(CompoundTag tag, CallbackInfo ci) {
-        this.writeDataItem(tag, "Trident");
+        this.writeDataItem(tag, "Trident", level().registryAccess());
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
     private void readItemStackDataFromTag(CompoundTag tag, CallbackInfo ci) {
-        this.readDataItem(tag, "Trident");
+        this.readDataItem(tag, "Trident", level().registryAccess());
     }
 
     @Override

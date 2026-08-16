@@ -17,10 +17,12 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.infamous.dungeons_mobs.items.shield.ShieldTextures.LOCATION_ROYAL_GUARD_SHIELD_BASE;
 import static com.infamous.dungeons_mobs.items.shield.ShieldTextures.LOCATION_ROYAL_GUARD_SHIELD_NO_PATTERN;
@@ -45,8 +47,20 @@ public class RoyalGuardShieldBEWLR extends BlockEntityWithoutLevelRenderer {
         VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer, this.royalGuardShieldModel.renderType(material.atlasLocation()), true, stack.hasFoil()));
         this.royalGuardShieldModel.handle().render(matrixStack, vertexconsumer, combinedLight, combinedOverlay, -1);
         if (flag) {
-            List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity.createPatterns(ShieldItem.getColor(stack), BannerBlockEntity.getItemPatterns(stack));
-            BannerRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay, this.royalGuardShieldModel.plate(), material, false, list, stack.hasFoil());
+            BannerPatternLayers bannerPatternLayers = stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
+            DyeColor dyeColor2 = stack.get(DataComponents.BASE_COLOR);
+            BannerRenderer.renderPatterns(
+                    matrixStack,
+                    buffer,
+                    combinedLight,
+                    combinedOverlay,
+                    this.royalGuardShieldModel.plate(),
+                    material,
+                    false,
+                    Objects.requireNonNullElse(dyeColor2, DyeColor.WHITE),
+                    bannerPatternLayers,
+                    stack.hasFoil()
+            );
         } else {
             this.royalGuardShieldModel.plate().render(matrixStack, vertexconsumer, combinedLight, combinedOverlay, -1);
         }

@@ -29,7 +29,7 @@ public class ChillingMobEnchant extends MobEnchant {
         Entity entity = event.getEntity();
 
         if (entity instanceof LivingEntity livingEntity) {
-            executeIfPresentWithLevel(livingEntity, CHILLING.get(), (level) -> {
+            executeIfPresentWithLevel(livingEntity, CHILLING, (level) -> {
                 MobProps comboCap = MobPropsHelper.getMobPropsCapability(livingEntity);
                 if (comboCap == null) return;
                 int freezeNearbyTimer = comboCap.getFreezeNearbyTimer();

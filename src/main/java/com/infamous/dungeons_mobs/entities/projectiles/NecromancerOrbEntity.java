@@ -9,10 +9,12 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -169,9 +171,9 @@ public class NecromancerOrbEntity extends StraightMovingProjectileEntity impleme
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DELAYED_FORM, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DELAYED_FORM, false);
     }
 
     public boolean hasDelayedForm() {
@@ -197,12 +199,11 @@ public class NecromancerOrbEntity extends StraightMovingProjectileEntity impleme
             super.onHitEntity(entity);
             Entity entity1 = this.getOwner();
             boolean flag;
-            if (entity1 instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity) entity1;
-                flag = entity.hurt(entity.damageSources().indirectMagic(this, livingentity), 6.0F);
+            if (entity1 instanceof LivingEntity livingentity) {
+				flag = entity.hurt(entity.damageSources().indirectMagic(this, livingentity), 6.0F);
                 if (flag) {
-                    if (entity.isAlive()) {
-                        this.doEnchantDamageEffects(livingentity, entity);
+                    if (entity.isAlive() && level() instanceof ServerLevel serverLevel) {
+                        EnchantmentHelper.doPostAttackEffects( serverLevel, entity, damageSources().indirectMagic(this, livingentity));
                     }
                 }
             } else {

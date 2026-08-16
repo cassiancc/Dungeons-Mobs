@@ -31,7 +31,7 @@ public class CustomDrownedOuterLayer<T extends Drowned> extends RenderLayer<T, D
     }
 
     public void render(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int p_225628_3_, T drowned, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-        coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, getLayerTexture(drowned), matrixStack, renderTypeBuffer, p_225628_3_, drowned, p_225628_5_, p_225628_6_, p_225628_8_, p_225628_9_, p_225628_10_, p_225628_7_, 1.0F, 1.0F, 1.0F);
+        coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, getLayerTexture(drowned), matrixStack, renderTypeBuffer, p_225628_3_, drowned, p_225628_5_, p_225628_6_, p_225628_8_, p_225628_9_, p_225628_10_, p_225628_7_, -1);
     }
 
     protected ResourceLocation getLayerTexture(T drowned) {

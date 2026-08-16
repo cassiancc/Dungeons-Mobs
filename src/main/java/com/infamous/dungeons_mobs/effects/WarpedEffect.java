@@ -1,6 +1,5 @@
 package com.infamous.dungeons_mobs.effects;
 
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,15 +10,16 @@ public class WarpedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+    public boolean applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         pLivingEntity.hurt(pLivingEntity.damageSources().magic(), 1.0F);
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
-        int j = 40 >> pAmplifier;
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        int j = 40 >> amplifier;
         if (j > 0) {
-            return pDuration % j == 0;
+            return duration % j == 0;
         } else {
             return true;
         }

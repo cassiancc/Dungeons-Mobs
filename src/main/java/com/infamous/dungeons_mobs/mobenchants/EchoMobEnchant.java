@@ -25,7 +25,7 @@ public class EchoMobEnchant extends MobEnchant {
         LivingEntity defender = event.getEntity();
         Entity entity = event.getSource().getEntity();
         if (entity instanceof LivingEntity attacker && isMelee(event.getSource()) && !(event.getSource().is(ModDamageSources.ECHO))) {
-            executeIfPresentWithLevel(attacker, ECHO.get(), (level) -> {
+            executeIfPresentWithLevel(attacker, ECHO, (level) -> {
                 if (attacker.getRandom().nextFloat() <= ECHO_CHANCE * level) {
                     defender.hurt(defender.damageSources().source(ModDamageSources.ECHO, attacker), event.getAmount());
                     defender.invulnerableTime = 0;

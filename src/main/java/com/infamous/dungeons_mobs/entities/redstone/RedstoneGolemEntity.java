@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -357,8 +358,11 @@ public class RedstoneGolemEntity extends Raider implements GeoAnimatable {
         private Processor() {
         }
 
-        protected PathType evaluateBlockPathType(BlockGetter blockReader, BlockPos blockPos, PathType pathNodeType) {
-            return pathNodeType == PathType.LEAVES ? PathType.OPEN : super.evaluateBlockPathType(blockReader, blockPos, pathNodeType);
+        @Override
+        public PathType getPathType(PathfindingContext context, int x, int y, int z) {
+            PathType pathType = super.getPathType(context, x, y, z);
+            if (pathType == PathType.LEAVES) return PathType.OPEN;
+            return pathType;
         }
     }
 

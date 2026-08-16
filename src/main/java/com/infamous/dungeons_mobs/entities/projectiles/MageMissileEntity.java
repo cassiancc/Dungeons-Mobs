@@ -6,6 +6,7 @@ import com.infamous.dungeons_mobs.mod.ModSoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.api.distmarker.Dist;
@@ -146,8 +148,8 @@ public class MageMissileEntity extends StraightMovingProjectileEntity implements
                 }
             }
             if (flag) {
-                if (entity.isAlive() && this.getOwner() != null && this.getOwner() instanceof LivingEntity) {
-                    this.doEnchantDamageEffects((LivingEntity) this.getOwner(), entity);
+                if (entity.isAlive() && this.getOwner() != null && this.getOwner() instanceof LivingEntity && this.level() instanceof ServerLevel serverLevel) {
+                    EnchantmentHelper.doPostAttackEffects(serverLevel, entity, entity.damageSources().magic());
                 }
             }
 

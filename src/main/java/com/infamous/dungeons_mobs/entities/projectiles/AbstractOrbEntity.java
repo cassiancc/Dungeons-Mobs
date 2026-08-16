@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class AbstractOrbEntity extends Fireball {
 
@@ -16,11 +17,11 @@ public abstract class AbstractOrbEntity extends Fireball {
     }
 
     protected AbstractOrbEntity(EntityType<? extends AbstractOrbEntity> entityType, Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(entityType, shooter, accelX, accelY, accelZ, worldIn);
+        super(entityType, shooter, new Vec3(accelX, accelY, accelZ), worldIn);
     }
 
     protected AbstractOrbEntity(EntityType<? extends AbstractOrbEntity> entityType, Level worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(entityType, x, y, z, accelX, accelY, accelZ, worldIn);
+        super(entityType, x, y, z, new Vec3(accelX, accelY, accelZ), worldIn);
     }
 
     /**

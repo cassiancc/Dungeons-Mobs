@@ -299,15 +299,9 @@ public class RoyalGuardEntity extends AbstractIllager implements GeoAnimatable, 
 
     @Override
     public void disableShield(boolean guaranteeDisable) {
-        float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
-        if (guaranteeDisable) {
-            f += 0.75F;
-        }
-        if (this.random.nextFloat() < f) {
-            this.shieldCooldownTime = 100;
-            this.stopUsingItem();
-            this.level().broadcastEntityEvent(this, (byte) 30);
-        }
+        this.shieldCooldownTime = 100;
+        this.stopUsingItem();
+        this.level().broadcastEntityEvent(this, (byte) 30);
     }
 
     @Override

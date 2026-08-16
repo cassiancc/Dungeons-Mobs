@@ -5,6 +5,7 @@ import com.infamous.dungeons_mobs.utils.PositionUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ public abstract class AbstractNecromancerStaffItem extends AbstractStaffItem {
         playerIn.level().addFreshEntity(projectile);
         playerIn.playSound(ModSoundEvents.NECROMANCER_SHOOT.get(), 1.0F, 1.0F);
         playerIn.getCooldowns().addCooldown(itemStack.getItem(), 20);
-        itemStack.hurtAndBreak(1, playerIn, playerEntity -> playerEntity.broadcastBreakEvent(hand));
+        itemStack.hurtAndBreak(1, playerIn, LivingEntity.getSlotForHand(hand));
     }
 
     protected abstract Projectile createOrb(Player playerIn, double xDifference, double yDifference, double zDifference);

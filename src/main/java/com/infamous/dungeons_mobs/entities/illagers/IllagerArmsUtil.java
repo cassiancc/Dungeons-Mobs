@@ -7,7 +7,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.client.ClientHooks;
 
 public class IllagerArmsUtil {
     public static boolean armorHasCrossedArms(AbstractIllager p_241739_3_, ItemStack itemstack) {
@@ -16,21 +18,15 @@ public class IllagerArmsUtil {
 
     private static ResourceLocation getArmorResourceStatic(Entity entity, ItemStack stack, EquipmentSlot slot) {
         ArmorItem item = (ArmorItem) stack.getItem();
-        String texture = item.getMaterial().getName();
-        String domain = "minecraft";
-        int idx = texture.indexOf(':');
-        if (idx != -1) {
-            domain = texture.substring(0, idx);
-            texture = texture.substring(idx + 1);
-        }
-        String defaultString = String.format("%s:textures/models/armor/%s_layer_%d%s.png", domain, texture, 1, "crossed" == null ? "" : String.format("_%s", "crossed"));
+        ResourceLocation texture = item.getMaterial().getKey().location();
+        ArmorMaterial.Layer defaultString = new ArmorMaterial.Layer(GeneralUtil.loc(String.format("%s:textures/models/armor/%s_layer_%d%s.png", texture.getNamespace(), texture.getPath(), 1, "crossed" == null ? "" : String.format("_%s", "crossed"))));
 
-        String s1 = net.neoforged.neoforge.client.ClientHooks.getArmorTexture(entity, stack, defaultString, slot, "crossed");
-        if (!s1.endsWith("_crossed.png")) {
-            s1 = s1.replace(".png", "_crossed.png");
+        ResourceLocation s1 = ClientHooks.getArmorTexture(entity, stack, defaultString, false, slot);
+        if (!s1.getPath().endsWith("_crossed.png")) {
+            s1 = s1.withPath(p-> p.replace(".png", "_crossed.png"));
         }
 
-        return GeneralUtil.loc(s1);
+        return s1;
     }
 
     public static boolean resourceExists(ResourceLocation resourceLocation) {

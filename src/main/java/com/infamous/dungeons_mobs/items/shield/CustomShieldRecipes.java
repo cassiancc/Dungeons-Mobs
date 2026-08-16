@@ -1,30 +1,30 @@
 package com.infamous.dungeons_mobs.items.shield;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class CustomShieldRecipes extends CustomRecipe {
 
     public static final RecipeSerializer<CustomShieldRecipes> SERIALIZER = new SimpleCraftingRecipeSerializer<>(CustomShieldRecipes::new);
 
-    public CustomShieldRecipes(ResourceLocation idIn, CraftingBookCategory pCategory) {
-        super(idIn, pCategory);
+    public CustomShieldRecipes(CraftingBookCategory pCategory) {
+        super(pCategory);
     }
 
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(CraftingInput inv, Level worldIn) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack itemstack1 = ItemStack.EMPTY;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack itemstack2 = inv.getItem(i);
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
@@ -42,7 +42,7 @@ public class CustomShieldRecipes extends CustomRecipe {
                         return false;
                     }
 
-                    if (itemstack2.getTagElement("BlockEntityTag") != null) {
+                    if (itemstack2.has(DataComponents.BLOCK_ENTITY_DATA)) {
                         return false;
                     }
 
@@ -54,11 +54,11 @@ public class CustomShieldRecipes extends CustomRecipe {
         return !itemstack.isEmpty() && !itemstack1.isEmpty();
     }
 
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider registryAccess) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack itemstack1 = ItemStack.EMPTY;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack itemstack2 = inv.getItem(i);
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
@@ -72,10 +72,10 @@ public class CustomShieldRecipes extends CustomRecipe {
         if (itemstack1.isEmpty()) {
             return itemstack1;
         } else {
-            CompoundTag compoundnbt = itemstack.getTagElement("BlockEntityTag");
+            CompoundTag compoundnbt = itemstack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
             CompoundTag compoundnbt1 = compoundnbt == null ? new CompoundTag() : compoundnbt.copy();
             compoundnbt1.putInt("Base", ((BannerItem) itemstack.getItem()).getColor().getId());
-            itemstack1.addTagElement("BlockEntityTag", compoundnbt1);
+            itemstack1.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(compoundnbt1));
             return itemstack1;
         }
     }

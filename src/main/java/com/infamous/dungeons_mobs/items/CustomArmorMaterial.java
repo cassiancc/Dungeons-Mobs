@@ -1,81 +1,49 @@
 package com.infamous.dungeons_mobs.items;
 
+import com.infamous.dungeons_libraries.utils.GeneralUtil;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Supplier;
 
-public enum CustomArmorMaterial {
-    PURE_NETHERITE("pure_netherite", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.0F, 0.0F, () -> {
-        return Ingredient.of(Tags.Items.INGOTS_NETHERITE);
-    });
+public class CustomArmorMaterial {
+    public static Holder<ArmorMaterial> PURE_NETHERITE = register("pure_netherite", Util.make(new EnumMap<>(ArmorItem.Type.class), (enumMap) -> {
+        enumMap.put(ArmorItem.Type.BOOTS, 2);
+        enumMap.put(ArmorItem.Type.LEGGINGS, 5);
+        enumMap.put(ArmorItem.Type.CHESTPLATE, 6);
+        enumMap.put(ArmorItem.Type.HELMET, 2);
+        enumMap.put(ArmorItem.Type.BODY, 9);
+    }), 9, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
 
-    private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
-    private final String name;
-    private final int durabilityMultiplier;
-    private final int[] slotProtections;
-    private final int enchantmentValue;
-    private final SoundEvent sound;
-    private final float toughness;
-    private final float knockbackResistance;
-    private final LazyLoadedValue<Ingredient> repairIngredient;
-
-    CustomArmorMaterial(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_, SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
-        this.name = p_i231593_3_;
-        this.durabilityMultiplier = p_i231593_4_;
-        this.slotProtections = p_i231593_5_;
-        this.enchantmentValue = p_i231593_6_;
-        this.sound = p_i231593_7_;
-        this.toughness = p_i231593_8_;
-        this.knockbackResistance = p_i231593_9_;
-        this.repairIngredient = new LazyLoadedValue<>(p_i231593_10_);
+    private static Holder<ArmorMaterial> register(String name, EnumMap<ArmorItem.Type, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> repairIngredient) {
+        List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(GeneralUtil.librariesLoc(name)));
+        return register(name, defense, enchantmentValue, equipSound, toughness, knockbackResistance, repairIngredient, list);
     }
 
-    @Override
-    public int getDurabilityForType(ArmorItem.Type pType) {
-        return HEALTH_PER_SLOT[pType.getSlot().getIndex()] * this.durabilityMultiplier;
-    }
+    private static Holder<ArmorMaterial> register(String name, EnumMap<ArmorItem.Type, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> repairIngridient, List<ArmorMaterial.Layer> layers) {
+        EnumMap<ArmorItem.Type, Integer> enumMap = new EnumMap<>(ArmorItem.Type.class);
 
-    @Override
-    public int getDefenseForType(ArmorItem.Type pType) {
-        return this.slotProtections[pType.getSlot().getIndex()];
-    }
+        for(ArmorItem.Type type : ArmorItem.Type.values()) {
+            enumMap.put(type, defense.get(type));
+        }
 
-    public int getEnchantmentValue() {
-        return this.enchantmentValue;
+        return Registry.registerForHolder(BuiltInRegistries.ARMOR_MATERIAL, GeneralUtil.librariesLoc(name), new ArmorMaterial(enumMap, enchantmentValue, equipSound, repairIngridient, layers, toughness, knockbackResistance));
     }
-
-    public SoundEvent getEquipSound() {
-        return this.sound;
-    }
-
-    public Ingredient getRepairIngredient() {
-        return this.repairIngredient.get();
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public String getName() {
-        return this.name;
-    }
-
-    public float getToughness() {
-        return this.toughness;
-    }
-
-    public float getKnockbackResistance() {
-        return this.knockbackResistance;
-    }
-
-	public Holder<ArmorMaterial> toVanilla() {
-		return Holder.direct(new ArmorMaterial(HEALTH_PER_SLOT, getEnchantmentValue(), Holder.direct(getEquipSound(), getRepairIngredient())));
-	}
 }
