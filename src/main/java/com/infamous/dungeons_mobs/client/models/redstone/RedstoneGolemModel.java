@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -47,8 +48,7 @@ public class RedstoneGolemModel extends GeoModel<RedstoneGolemEntity> {
 
         var head = this.getAnimationProcessor().getBone("head");
 
-        // FIXME
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
         if (extraData.headPitch() != 0 || extraData.netHeadYaw() != 0) {
             head.setRotX(head.getRotX() + (extraData.headPitch() * ((float) Math.PI / 180F)));
             head.setRotY(head.getRotY() + (extraData.netHeadYaw() * ((float) Math.PI / 180F)));
