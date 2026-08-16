@@ -1,0 +1,76 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_MOUNTAINEER",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "MOUNTAINEER"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_GEOMANCER",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "GEOMANCER"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_ILLUSIONER",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "ILLUSIONER"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_MAGE",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "MAGE"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_ICEOLOGERS",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "ICEOLOGERS"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_WINDCALLERS",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "WINDCALLERS"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_SQUALL_GOLEM",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "SQUALL_GOLEM"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "DUNGEONS_REDSTONE_GOLEMS",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "com/infamous/dungeons_mobs/mod/ModEntityTypes",
+        "field": "REDSTONE_GOLEMS"
+      }
+    }
+  ]
+}

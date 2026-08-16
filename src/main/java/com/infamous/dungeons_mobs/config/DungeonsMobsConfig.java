@@ -35,6 +35,7 @@ public class DungeonsMobsConfig {
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_JUNGLE_TEMPLE_DUNGEONS_MOBS;
 
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_BIOME_SPECIFIC_RAIDERS;
+        /*
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_MOUNTAINEERS_IN_RAIDS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_MOUNTAINEERS_IN_RAIDS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ROYAL_GUARDS_IN_RAIDS;
@@ -46,6 +47,8 @@ public class DungeonsMobsConfig {
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_PILLAGERS_IN_RAIDS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_SQUALL_GOLEMS_IN_RAIDS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_REDSTONE_GOLEMS_IN_RAIDS;
+        
+         */
 
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_STRONGER_HUSKS;
         public final ModConfigSpec.ConfigValue<Boolean> ENABLE_RANGED_SPIDERS;
@@ -172,6 +175,7 @@ public class DungeonsMobsConfig {
                             + "they will replace their equivalent Illager type (Vindicator, Evoker, Ravager) in raids taking place in their allowed biomes. [true / false]")
                     .define("enableBiomeSpecificRaiders", false);
 
+            /*
             ENABLE_MOUNTAINEERS_IN_RAIDS = builder
                     .comment("Enable the addition of Mountaineers to raids. [true / false]")
                     .define("enableMountaineersInRaids", false);
@@ -205,6 +209,8 @@ public class DungeonsMobsConfig {
             ENABLE_REDSTONE_GOLEMS_IN_RAIDS = builder
                     .comment("Enable the addition of Redstone Golems to raids. [true / false]")
                     .define("enableRedstoneGolemsInRaids", true);
+
+             */
             builder.pop();
 
             builder.comment("Vanilla Mob Configuration").push("vanilla_mob_configuration");

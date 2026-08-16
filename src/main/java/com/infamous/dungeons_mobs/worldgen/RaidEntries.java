@@ -14,6 +14,7 @@ public class RaidEntries {
       WITCH(EntityType.WITCH, new int[]{0, 0, 0, 0, 3, 0, 0, 1}),
       RAVAGER(EntityType.RAVAGER, new int[]{0, 0, 0, 1, 0, 1, 0, 2});
          */
+        /*
 
         // WARRIOR
         if (DungeonsMobsConfig.COMMON.ENABLE_MOUNTAINEERS_IN_RAIDS.get()) {
@@ -53,5 +54,7 @@ public class RaidEntries {
         if (DungeonsMobsConfig.COMMON.ENABLE_REDSTONE_GOLEMS_IN_RAIDS.get()) {
             Raid.RaiderType.create("redstone_golem", ModEntityTypes.REDSTONE_GOLEM.get(), new int[]{0, 0, 0, 0, 0, 0, 0, 1});
         }
+
+         */
     }
 }
