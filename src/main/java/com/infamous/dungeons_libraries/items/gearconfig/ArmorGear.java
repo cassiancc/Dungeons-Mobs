@@ -172,7 +172,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return null;
+        return cache;
     }
 
     @Override
