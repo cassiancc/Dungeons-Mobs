@@ -16,7 +16,7 @@ public class IceologerArmorGearRenderer extends ArmorGearRenderer<IceologerArmor
     private final LivingEntity livingEntity;
 
     public IceologerArmorGearRenderer(LivingEntity livingEntity) {
-        super(new IceologerArmorGearModel<>().getWearer());
+        super(new IceologerArmorGearModel<>(livingEntity).getWearer());
         this.livingEntity = livingEntity;
     }
 

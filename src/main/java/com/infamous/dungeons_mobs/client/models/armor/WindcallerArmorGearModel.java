@@ -12,6 +12,10 @@ import software.bernie.geckolib.loading.math.MathParser;
 
 public class WindcallerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
+    public WindcallerArmorGearModel(LivingEntity wearer) {
+        this.wearer = wearer;
+    }
+
     LivingEntity wearer;
 
     public LivingEntity getWearer() {

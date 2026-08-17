@@ -18,7 +18,7 @@ public class NecromancerArmorGearRenderer extends ArmorGearRenderer<NecromancerA
     public String leggingsBodyBone = "armorLeggingsTop";
 
     public NecromancerArmorGearRenderer(LivingEntity livingEntity) {
-        super(new NecromancerArmorGearModel<>(), livingEntity);
+        super(new NecromancerArmorGearModel<>(livingEntity), livingEntity);
         this.livingEntity = livingEntity;
     }
 

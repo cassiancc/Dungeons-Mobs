@@ -12,6 +12,10 @@ import software.bernie.geckolib.loading.math.MathParser;
 
 public class IceologerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
+    public IceologerArmorGearModel(LivingEntity wearer) {
+        this.wearer = wearer;
+    }
+
     LivingEntity wearer;
 
     public LivingEntity getWearer() {

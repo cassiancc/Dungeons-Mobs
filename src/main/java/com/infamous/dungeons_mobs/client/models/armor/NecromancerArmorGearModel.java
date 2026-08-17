@@ -12,6 +12,10 @@ import software.bernie.geckolib.loading.math.MathParser;
 
 public class NecromancerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
+    public NecromancerArmorGearModel(LivingEntity wearer) {
+        this.wearer = wearer;
+    }
+
     LivingEntity wearer;
 
     public LivingEntity getWearer() {

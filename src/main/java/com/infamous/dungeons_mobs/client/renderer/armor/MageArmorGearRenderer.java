@@ -16,7 +16,7 @@ public class MageArmorGearRenderer extends ArmorGearRenderer<MageArmorGear> {
     private final LivingEntity livingEntity;
 
     public MageArmorGearRenderer(LivingEntity livingEntity) {
-        super(new MageArmorGearModel<>(), livingEntity);
+        super(new MageArmorGearModel<>(livingEntity), livingEntity);
         this.livingEntity = livingEntity;
     }
 
