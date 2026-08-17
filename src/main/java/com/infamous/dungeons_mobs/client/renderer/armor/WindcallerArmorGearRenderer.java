@@ -16,7 +16,7 @@ public class WindcallerArmorGearRenderer extends ArmorGearRenderer<WindcallerArm
     private final LivingEntity livingEntity;
 
     public WindcallerArmorGearRenderer(LivingEntity livingEntity) {
-        super(new WindcallerArmorGearModel<>(), livingEntity);
+        super(new WindcallerArmorGearModel<>(livingEntity), livingEntity);
         this.livingEntity = livingEntity;
     }
 

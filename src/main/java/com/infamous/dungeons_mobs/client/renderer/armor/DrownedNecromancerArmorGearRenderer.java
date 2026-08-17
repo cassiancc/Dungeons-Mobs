@@ -16,7 +16,7 @@ public class DrownedNecromancerArmorGearRenderer extends ArmorGearRenderer<Drown
     public String hoodBone = "armorHood";
 
     public DrownedNecromancerArmorGearRenderer(LivingEntity livingEntity) {
-        super(new DrownedNecromancerArmorGearModel<>(), livingEntity);
+        super(new DrownedNecromancerArmorGearModel<>(livingEntity), livingEntity);
     }
 
     //FIXME

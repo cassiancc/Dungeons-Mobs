@@ -16,7 +16,7 @@ public class IllusionerArmorGearRenderer extends ArmorGearRenderer<IllusionerArm
     private final LivingEntity livingEntity;
 
     public IllusionerArmorGearRenderer(LivingEntity livingEntity) {
-        super(new IllusionerArmorGearModel<>(), livingEntity);
+        super(new IllusionerArmorGearModel<>(livingEntity), livingEntity);
         this.livingEntity = livingEntity;
     }
 

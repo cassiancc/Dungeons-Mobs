@@ -12,6 +12,10 @@ import software.bernie.geckolib.core.molang.MolangParser;
 
 public class WindcallerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
+    public WindcallerArmorGearModel(LivingEntity wearer) {
+        this.wearer = wearer;
+    }
+
     LivingEntity wearer;
 
     public LivingEntity getWearer() {

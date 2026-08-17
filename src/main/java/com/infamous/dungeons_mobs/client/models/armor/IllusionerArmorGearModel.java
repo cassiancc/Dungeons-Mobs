@@ -13,6 +13,10 @@ import software.bernie.geckolib.core.molang.MolangParser;
 
 public class IllusionerArmorGearModel<T extends ArmorGear> extends ArmorGearModel<T> {
 
+    public IllusionerArmorGearModel(LivingEntity wearer) {
+        this.wearer = wearer;
+    }
+
     LivingEntity wearer;
 
     public LivingEntity getWearer() {
