@@ -52,6 +52,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
     private float toughness;
     private DungeonsArmorMaterial material;
     private int maxDamage;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public ArmorGear(ArmorItem.Type slotType, Properties properties, ResourceLocation armorSet, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties.rarity(ArmorGearConfigRegistry.getConfig(armorSet).getRarity()));
@@ -131,8 +132,6 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
         return armorSet;
     }
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
@@ -177,7 +176,7 @@ public class ArmorGear extends ArmorItem implements GeoItem, IReloadableGear, IA
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return null;
+        return cache;
     }
 
     @Override

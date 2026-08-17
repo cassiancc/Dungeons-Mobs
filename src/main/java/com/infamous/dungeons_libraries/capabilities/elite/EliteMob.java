@@ -17,7 +17,7 @@ public class EliteMob {
                     Codec.BOOL.optionalFieldOf("has_spawned", false).forGetter(EliteMob::hasSpawned),
                     ResourceLocation.CODEC.optionalFieldOf("texture", EMPTY_TEXTURE).forGetter(EliteMob::getTexture)
             )
-            .apply(instance, (e, f, g)->new EliteMob(e, f, g)));
+            .apply(instance, EliteMob::new));
     private ResourceLocation texture;
     private boolean isElite;
     private boolean hasSpawned;

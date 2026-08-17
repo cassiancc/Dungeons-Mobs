@@ -5,6 +5,6 @@
     "#minecraft:is_hill",
     "#c:is_mountain/peak",
     "#c:is_mountain",
-    "#c:is_slope"
+    "#c:is_mountain/slope"
   ]
 }

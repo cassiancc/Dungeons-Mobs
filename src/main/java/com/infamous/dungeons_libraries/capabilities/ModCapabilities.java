@@ -7,6 +7,7 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
 import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewards;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.timers.Timers;
+import com.infamous.dungeons_libraries.entities.elite.EliteMobConfig;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -30,6 +31,6 @@ public class ModCapabilities {
     public static final Supplier<AttachmentType<ArtifactUsage>> ARTIFACT_USAGE_CAPABILITY = ATTACHMENT_TYPES.register(
             "artifact_usage", () -> AttachmentType.builder(ArtifactUsage::new).build());
     public static final Supplier<AttachmentType<EliteMob>> ELITE_MOB_CAPABILITY = ATTACHMENT_TYPES.register(
-            "elite_mob", () -> AttachmentType.builder(()->new EliteMob(false, false, null)).serialize(EliteMob.CODEC).build());
+            "elite_mob", () -> AttachmentType.builder(()->new EliteMob(false, false, EliteMobConfig.EMPTY_TEXTURE)).serialize(EliteMob.CODEC).build());
 
 }

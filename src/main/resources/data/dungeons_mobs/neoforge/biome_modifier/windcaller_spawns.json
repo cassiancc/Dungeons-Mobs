@@ -8,7 +8,7 @@
         "type": "neoforge:or",
         "values": [
           "#c:is_mountain/peak",
-          "#c:is_slope"
+          "#c:is_mountain/slope"
         ]
       }
 	]
