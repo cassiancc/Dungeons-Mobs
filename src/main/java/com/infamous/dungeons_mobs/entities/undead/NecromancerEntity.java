@@ -83,7 +83,7 @@ public class NecromancerEntity extends Skeleton implements GeoAnimatable, SpawnA
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return Skeleton.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.4D).add(AttributeRegistry.SUMMON_CAP.get(), 4);
+        return Skeleton.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ARMOR, 5.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.4D).add(AttributeRegistry.FOLLOWER_COST_LIMIT.get(), 4);
     }
 
     @Override

@@ -2,7 +2,8 @@ package com.infamous.dungeons_mobs.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Leader;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactUseContext;
 import com.infamous.dungeons_libraries.items.interfaces.ISoulConsumer;
@@ -30,8 +31,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
-import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMasterCapability;
+import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.FOLLOWER_COST_LIMIT;
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getLeaderCapability;
 
 public class NecromancerStaffItem extends ArtifactItem implements IHasInventorySprite, ISoulConsumer {
     public NecromancerStaffItem(Properties properties) {
@@ -58,7 +59,7 @@ public class NecromancerStaffItem extends ArtifactItem implements IHasInventoryS
             }
 
             if (itemUseContextPlayer != null) {
-                Master summonerCap = getMasterCapability(itemUseContextPlayer);
+                Leader summonerCap = getLeaderCapability(itemUseContextPlayer);
                 if (summonerCap != null) {
                     Entity summoned = SummonHelper.summonEntity(itemUseContextPlayer, itemUseContextPlayer.blockPosition(), EntityType.ZOMBIE);
                     if (summoned != null) {
@@ -95,7 +96,7 @@ public class NecromancerStaffItem extends ArtifactItem implements IHasInventoryS
 
     private ImmutableMultimap<Attribute, AttributeModifier> getAttributeModifiersForSlot(UUID slot_uuid) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(SUMMON_CAP.get(), new AttributeModifier(slot_uuid, "Artifact modifier", 3, AttributeModifier.Operation.ADDITION));
+        builder.put(FOLLOWER_COST_LIMIT.get(), new AttributeModifier(slot_uuid, "Artifact modifier", 3, AttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 

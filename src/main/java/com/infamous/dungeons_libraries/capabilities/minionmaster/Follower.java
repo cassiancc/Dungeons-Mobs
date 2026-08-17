@@ -20,7 +20,7 @@ import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.FOLLOWER_CAPABILITY;
 
-public class Follower implements INBTSerializable<CompoundTag>, Minion {
+public class Follower implements INBTSerializable<CompoundTag> {
 
     private UUID leaderUUID;
     private ResourceLocation levelOnLoad;
@@ -160,36 +160,5 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
         if (tag.contains(FOLLOWER_DURATION_KEY)) {
             this.setFollowerDuration(tag.getInt(FOLLOWER_DURATION_KEY));
         }
-    }
-
-    // Methods deprecated after 1.20.0
-    @Deprecated(forRemoval = true)
-    @Override
-    public @Nullable LivingEntity getMaster() {
-        return getLeader();
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public void setMaster(LivingEntity master) {
-        setLeader(master);
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public boolean isMinion() {
-        return isFollower();
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public int getMinionTimer() {
-        return getFollowerDuration();
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public void setMinionTimer(int minionTimer) {
-          setFollowerDuration(minionTimer);
     }
 }

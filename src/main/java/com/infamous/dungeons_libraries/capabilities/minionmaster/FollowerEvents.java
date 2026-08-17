@@ -92,7 +92,7 @@ public class FollowerEvents {
             if(entity instanceof Mob mob) {
                 FollowerLeaderHelper.addFollowerGoals(mob);
             }
-            List<Entity> minions = leaderCapability.getAllMinions();
+            List<Entity> minions = leaderCapability.getAllFollowers();
             for (Entity minion : minions) {
                 if (minion instanceof Mob) {
                     Follower minionCapability = getFollowerCapability(minion);
@@ -130,8 +130,8 @@ public class FollowerEvents {
     private static void updateAliveList(Leader leader) {
         List<Entity> aliveSummons = leader.getSummonedMobs().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
         leader.setSummonedMobs(aliveSummons);
-        List<Entity> aliveMinions = leader.getOtherMinions().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
-        leader.setOtherMinions(aliveMinions);
+        List<Entity> aliveMinions = leader.getOtherFollowers().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
+        leader.setOtherFollowers(aliveMinions);
     }
 
 }

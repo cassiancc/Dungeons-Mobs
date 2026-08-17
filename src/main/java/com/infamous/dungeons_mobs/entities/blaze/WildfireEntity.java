@@ -1,7 +1,7 @@
 package com.infamous.dungeons_mobs.entities.blaze;
 
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Leader;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper;
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
 import com.infamous.dungeons_libraries.summon.SummonHelper;
@@ -62,7 +62,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
+import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.FOLLOWER_COST_LIMIT;
 import static com.infamous.dungeons_mobs.entities.SpawnEquipmentHelper.equipArmorSet;
 import static software.bernie.geckolib.core.animation.Animation.LoopType.LOOP;
 
@@ -98,7 +98,7 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MAX_HEALTH, 50.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.5D).add(SUMMON_CAP.get(), 6D);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MAX_HEALTH, 50.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.5D).add(FOLLOWER_COST_LIMIT.get(), 6D);
     }
 
     protected void registerGoals() {
@@ -405,9 +405,9 @@ public class WildfireEntity extends Monster implements GeoAnimatable, SpawnArmor
         @Override
         public boolean canUse() {
             target = mob.getTarget();
-            Master master = MinionMasterHelper.getMasterCapability(mob);
+            Leader master = FollowerLeaderHelper.getLeaderCapability(mob);
             List<Entity> summons = master.getSummonedMobs();
-            AttributeInstance attribute = mob.getAttribute(SUMMON_CAP.get());
+            AttributeInstance attribute = mob.getAttribute(FOLLOWER_COST_LIMIT.get());
 
             return target != null && mob.random.nextInt((80 * (summons.size() + 1))) == 0 && attribute != null && master.getSummonedMobsCost() < attribute.getValue() && mob.hasLineOfSight(target) && animationsUseable();
         }

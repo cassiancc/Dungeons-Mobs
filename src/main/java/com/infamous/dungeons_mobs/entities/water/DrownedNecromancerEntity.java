@@ -94,7 +94,7 @@ public class DrownedNecromancerEntity extends Drowned implements GeoAnimatable, 
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return Drowned.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(ForgeMod.SWIM_SPEED.get(), 2.5D).add(Attributes.FOLLOW_RANGE, 30.0D).add(Attributes.MAX_HEALTH, 75.0D).add(Attributes.ARMOR, 12.5D).add(Attributes.KNOCKBACK_RESISTANCE, 0.6D).add(AttributeRegistry.SUMMON_CAP.get(), 4);
+        return Drowned.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.2D).add(ForgeMod.SWIM_SPEED.get(), 2.5D).add(Attributes.FOLLOW_RANGE, 30.0D).add(Attributes.MAX_HEALTH, 75.0D).add(Attributes.ARMOR, 12.5D).add(Attributes.KNOCKBACK_RESISTANCE, 0.6D).add(AttributeRegistry.FOLLOWER_COST_LIMIT.get(), 4);
     }
 
     @Override

@@ -20,7 +20,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Leader implements INBTSerializable<CompoundTag>, Master {
+public class Leader implements INBTSerializable<CompoundTag> {
 
     private Set<Entity> summonedMobs;
     private List<UUID> summonedMobsUUID = new ArrayList<>();
@@ -146,32 +146,5 @@ public class Leader implements INBTSerializable<CompoundTag>, Master {
         if (tag.contains(LEVEL_KEY)) {
             this.setLevelOnLoad(GeneralUtil.parse(tag.getString(LEVEL_KEY)));
         }
-    }
-
-    // Following methods to be removed in 1.20.0
-
-    @Override
-    public void copyFrom(Master summoner) {
-        this.copyFrom((Leader) summoner);
-    }
-
-    @Override
-    public List<Entity> getAllMinions() {
-        return getAllFollowers();
-    }
-
-    @Override
-    public boolean addMinion(Entity entity) {
-        return addFollower(entity);
-    }
-
-    @Override
-    public List<Entity> getOtherMinions() {
-        return getOtherFollowers();
-    }
-
-    @Override
-    public void setOtherMinions(List<Entity> otherMinions) {
-        setOtherFollowers(otherMinions);
     }
 }
